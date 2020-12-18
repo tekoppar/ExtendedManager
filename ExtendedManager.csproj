@@ -1,0 +1,707 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{B3294E28-2BD4-4E39-92FA-E04A620C7E7F}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>OriWotW</RootNamespace>
+    <AssemblyName>ExtendedManager</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <OutputType>WinExe</OutputType>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <OutputType>WinExe</OutputType>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>
+    </StartupObject>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Console|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <OutputType>Exe</OutputType>
+    <DefineConstants>TRACE;DEBUG;Console</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>8.0</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+    <Optimize>false</Optimize>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\icon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Manager|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <OutputType>WinExe</OutputType>
+    <DefineConstants>TRACE;DEBUG;Console;Manager</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>8.0</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Optimize>false</Optimize>
+    <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Bcl.AsyncInterfaces.1.1.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Win32.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Win32.Primitives.4.3.0\lib\net46\Microsoft.Win32.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.WindowsAPICodePack-Core.1.1.0.0\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack.Shell, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.WindowsAPICodePack-Shell.1.1.0.0\lib\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack.ShellExtensions, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.WindowsAPICodePack-Shell.1.1.0.0\lib\Microsoft.WindowsAPICodePack.ShellExtensions.dll</HintPath>
+    </Reference>
+    <Reference Include="RawInput, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\RawInput.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.AppContext, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.AppContext.4.3.0\lib\net46\System.AppContext.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Console, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Console.4.3.0\lib\net46\System.Console.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Diagnostics.DiagnosticSource.4.3.0\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Globalization.Calendars, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Globalization.Calendars.4.3.0\lib\net46\System.Globalization.Calendars.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Compression, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>packages\System.IO.Compression.4.3.0\lib\net46\System.IO.Compression.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.IO.Compression.ZipFile, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>packages\System.IO.Compression.ZipFile.4.3.0\lib\net46\System.IO.Compression.ZipFile.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.FileSystem, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.IO.FileSystem.4.3.0\lib\net46\System.IO.FileSystem.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.IO.FileSystem.Primitives.4.3.0\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Net.Http.4.3.0\lib\net46\System.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Sockets, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Net.Sockets.4.3.0\lib\net46\System.Net.Sockets.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Runtime.CompilerServices.Unsafe.5.0.0-preview.7.20364.11\lib\net45\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Algorithms, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Security.Cryptography.Algorithms.4.3.0\lib\net461\System.Security.Cryptography.Algorithms.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Encoding, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Security.Cryptography.Encoding.4.3.0\lib\net46\System.Security.Cryptography.Encoding.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Security.Cryptography.Primitives.4.3.0\lib\net46\System.Security.Cryptography.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.X509Certificates, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Security.Cryptography.X509Certificates.4.3.0\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Encodings.Web, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Text.Encodings.Web.5.0.0-preview.7.20364.11\lib\netstandard2.0\System.Text.Encodings.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Json, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Text.Json.5.0.0-preview.7.20364.11\lib\net461\System.Text.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.RegularExpressions, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Text.RegularExpressions.4.3.1\lib\net463\System.Text.RegularExpressions.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Xml.ReaderWriter, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Xml.ReaderWriter.4.3.0\lib\net46\System.Xml.ReaderWriter.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Il2Cpp\BinaryStream.cs" />
+    <Compile Include="Il2Cpp\Il2CppData.cs" />
+    <Compile Include="Il2Cpp\Il2CppClass.cs" />
+    <Compile Include="Il2Cpp\Il2CppDecompiler.cs" />
+    <Compile Include="Il2Cpp\Il2CppExecutor.cs" />
+    <Compile Include="Il2Cpp\PE.cs" />
+    <Compile Include="Il2Cpp\Metadata.cs" />
+    <Compile Include="Il2Cpp\MetadataClass.cs" />
+    <Compile Include="Il2Cpp\Il2CppReader.cs" />
+    <Compile Include="Il2Cpp\PlusSearch.cs" />
+    <Compile Include="Logic\Inject.cs" />
+    <Compile Include="Logic\InjectCommunication.cs" />
+    <Compile Include="Logic\MathTE.cs" />
+    <Compile Include="Logic\Utility.cs" />
+    <Compile Include="Memory\Ability.cs" />
+    <Compile Include="Memory\AreaType.cs" />
+    <Compile Include="Memory\FPSTimer.cs" />
+    <Compile Include="Memory\GameSettings.cs" />
+    <Compile Include="Memory\GameState.cs" />
+    <Compile Include="Memory\MathHelpers.cs" />
+    <Compile Include="Memory\PlatformBehaviour.cs" />
+    <Compile Include="Memory\RaceSystem.cs" />
+    <Compile Include="Memory\Screen.cs" />
+    <Compile Include="Memory\CharacterStateWrapper.cs" />
+    <Compile Include="Memory\PlayerInput.cs" />
+    <Compile Include="Memory\PlayerAbilities.cs" />
+    <Compile Include="Memory\GameWorld.cs" />
+    <Compile Include="Memory\GameWorldArea.cs" />
+    <Compile Include="Memory\SeinController.cs" />
+    <Compile Include="Memory\QuestsController.cs" />
+    <Compile Include="Memory\SeinGrenade.cs" />
+    <Compile Include="Memory\UberStateLUT.cs" />
+    <Compile Include="Memory\UberStateValueStore.cs" />
+    <Compile Include="Memory\Vector3.cs" />
+    <Compile Include="Memory\WorldMapIcon.cs" />
+    <Compile Include="Memory\SeinLeash.cs" />
+    <Compile Include="Memory\MessageWrapper.cs" />
+    <Compile Include="Memory\WeaponMasterScreen.cs" />
+    <Compile Include="Memory\SeinTarget.cs" />
+    <Compile Include="Memory\SeinBash.cs" />
+    <Compile Include="Memory\SeinStandingOnEdge.cs" />
+    <Compile Include="Memory\SeinWallSlide.cs" />
+    <Compile Include="Memory\SeinDashNew.cs" />
+    <Compile Include="Memory\SeinJump.cs" />
+    <Compile Include="Memory\SeinDoubleJump.cs" />
+    <Compile Include="Memory\SeinAbilities.cs" />
+    <Compile Include="Memory\SeinCharacter.cs" />
+    <Compile Include="Memory\SeinEnergy.cs" />
+    <Compile Include="Memory\Shard.cs" />
+    <Compile Include="Memory\Stats.cs" />
+    <Compile Include="Memory\Vector2.cs" />
+    <Compile Include="Memory\ProgramPointer.cs" />
+    <Compile Include="Memory\Vector4.cs" />
+    <Compile Include="Memory\UberState.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="RaceStuff\RaceFixer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RaceStuff\RaceFixer.Designer.cs">
+      <DependentUpon>RaceFixer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RaceStuff\RaceSettings.cs" />
+    <Compile Include="UI\Backup saves\BackupsaveUI.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Backup saves\BackupsaveUI.Designer.cs">
+      <DependentUpon>BackupsaveUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\VisualEditor\ColorWheel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\VisualEditor\ColorWheel.Designer.cs">
+      <DependentUpon>ColorWheel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\ControllerUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\ControllerUI.Designer.cs">
+      <DependentUpon>ControllerUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Memory\MemoryManager.cs" />
+    <Compile Include="UI\Grid.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UI\HitboxSplit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\HitboxSplit.Designer.cs">
+      <DependentUpon>HitboxSplit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\HotKeys.cs" />
+    <Compile Include="UI\Input\InputDesigner.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Input\InputDesigner.Designer.cs">
+      <DependentUpon>InputDesigner.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Input\InputEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Input\InputEditor.Designer.cs">
+      <DependentUpon>InputEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Input\InputSelector.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Input\InputSelector.Designer.cs">
+      <DependentUpon>InputSelector.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Input\InputTrainer.cs" />
+    <Compile Include="UI\Input\InputTrainerUI.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Input\InputTrainerUI.Designer.cs">
+      <DependentUpon>InputTrainerUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Input\KeyInput.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Input\KeyInput.Designer.cs">
+      <DependentUpon>KeyInput.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\keyToChar.cs" />
+    <Compile Include="UI\Manager.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Manager.Designer.cs">
+      <DependentUpon>Manager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RaceStuff\RaceEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RaceStuff\RaceEditor.Designer.cs">
+      <DependentUpon>RaceEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\RaceTimer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\RaceTimer.Designer.cs">
+      <DependentUpon>RaceTimer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\SeinStateUI.cs" />
+    <Compile Include="UI\VisualEditor\SeinVisualEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\VisualEditor\SeinVisualEditor.Designer.cs">
+      <DependentUpon>SeinVisualEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\VisualEditor\TColorPicker.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\VisualEditor\TColorPicker.Designer.cs">
+      <DependentUpon>TColorPicker.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Teleporter\TeleportLocation.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Teleporter\TeleportLocation.Designer.cs">
+      <DependentUpon>TeleportLocation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Teleporter\TeleportUI.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Teleporter\TeleportUI.Designer.cs">
+      <DependentUpon>TeleportUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\UberInput.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\UberInput.Designer.cs">
+      <DependentUpon>UberInput.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\UberstateEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\UberstateEditor.Designer.cs">
+      <DependentUpon>UberstateEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Backup saves\BackupSaveSlot.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Backup saves\BackupSaveSlot.Designer.cs">
+      <DependentUpon>BackupSaveSlot.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Memory\MemoryReader.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UI\VisualEditor\Vector4Control.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\VisualEditor\Vector4Control.Designer.cs">
+      <DependentUpon>Vector4Control.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\VisualEditor\WotwEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\VisualEditor\WotwEditor.Designer.cs">
+      <DependentUpon>WotwEditor.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Icons\abilityIconBash.png" />
+    <None Include="bin\Icons\abilityIconBash-off.png" />
+    <None Include="bin\Icons\abilityIconBlaze.png" />
+    <None Include="bin\Icons\abilityIconBlaze-off.png" />
+    <None Include="bin\Icons\abilityIconBlazeUpgrade.png" />
+    <None Include="bin\Icons\abilityIconBlazeUpgrade-off.png" />
+    <None Include="bin\Icons\abilityIconBow.png" />
+    <None Include="bin\Icons\abilityIconBow-off.png" />
+    <None Include="bin\Icons\abilityIconChakramUpgrade.png" />
+    <None Include="bin\Icons\abilityIconChakramUpgrade-off.png" />
+    <None Include="bin\Icons\abilityIconChargeJump.png" />
+    <None Include="bin\Icons\abilityIconChargeJump-off.png" />
+    <None Include="bin\Icons\abilityIconDoubleJump.png" />
+    <None Include="bin\Icons\abilityIconDoubleJump-off.png" />
+    <None Include="bin\Icons\abilityIconDrill.png" />
+    <None Include="bin\Icons\abilityIconDrill-off.png" />
+    <None Include="bin\Icons\abilityIconGlide.png" />
+    <None Include="bin\Icons\abilityIconGlide-off.png" />
+    <None Include="bin\Icons\abilityIconGoldenSein.png" />
+    <None Include="bin\Icons\abilityIconGoldenSein-off.png" />
+    <None Include="bin\Icons\abilityIconHammer.png" />
+    <None Include="bin\Icons\abilityIconHammer-off.png" />
+    <None Include="bin\Icons\abilityIconHomingMissile.png" />
+    <None Include="bin\Icons\abilityIconHomingMissile-off.png" />
+    <None Include="bin\Icons\abilityIconShockwave.png" />
+    <None Include="bin\Icons\abilityIconShockwave-off.png" />
+    <None Include="bin\Icons\abilityIconSpiritSentryUpgrade.png" />
+    <None Include="bin\Icons\abilityIconSpiritSentryUpgrade-off.png" />
+    <None Include="bin\Icons\abilityIconSpiritSpearUpgrade.png" />
+    <None Include="bin\Icons\abilityIconSpiritSpearUpgrade-off.png" />
+    <None Include="bin\Icons\abilityIconSword.png" />
+    <None Include="bin\Icons\abilityIconSword-off.png" />
+    <None Include="bin\Icons\abilityIconSwordstaff.png" />
+    <None Include="bin\Icons\abilityIconSwordstaff-off.png" />
+    <None Include="bin\Icons\abilityIconTeleport.png" />
+    <None Include="bin\Icons\abilityIconTeleport-off.png" />
+    <None Include="bin\Icons\abilityIconTorch.png" />
+    <None Include="bin\Icons\abilityIconTorch-off.png" />
+    <None Include="bin\Icons\abilityPointIcon.png" />
+    <None Include="bin\Icons\abilityPointIcon-off.png" />
+    <None Include="bin\Icons\ShardAggressor.png" />
+    <None Include="bin\Icons\ShardAggressor-off.png" />
+    <None Include="bin\Icons\ShardAntiair.png" />
+    <None Include="bin\Icons\ShardAntiair-off.png" />
+    <None Include="bin\Icons\ShardBarrier.png" />
+    <None Include="bin\Icons\ShardBarrier-off.png" />
+    <None Include="bin\Icons\ShardBloodPact.png" />
+    <None Include="bin\Icons\ShardBloodPact-off.png" />
+    <None Include="bin\Icons\ShardCombatLuck.png" />
+    <None Include="bin\Icons\ShardCombatLuck-off.png" />
+    <None Include="bin\Icons\ShardCounterStrike.png" />
+    <None Include="bin\Icons\ShardCounterStrike-off.png" />
+    <None Include="bin\Icons\ShardEnergy.png" />
+    <None Include="bin\Icons\ShardEnergyLuck.png" />
+    <None Include="bin\Icons\ShardEnergyLuck-off.png" />
+    <None Include="bin\Icons\ShardEnergy-off.png" />
+    <None Include="bin\Icons\shardFocus.png" />
+    <None Include="bin\Icons\shardFocus-off.png" />
+    <None Include="bin\Icons\ShardFracture.png" />
+    <None Include="bin\Icons\ShardFracture-off.png" />
+    <None Include="bin\Icons\ShardFrenzy.png" />
+    <None Include="bin\Icons\ShardFrenzy-off.png" />
+    <None Include="bin\Icons\ShardGlue.png" />
+    <None Include="bin\Icons\ShardGlue-off.png" />
+    <None Include="bin\Icons\ShardHollowEnergy.png" />
+    <None Include="bin\Icons\ShardHollowEnergy-off.png" />
+    <None Include="bin\Icons\ShardLastResort.png" />
+    <None Include="bin\Icons\ShardLastResort-off.png" />
+    <None Include="bin\Icons\ShardMirrorStrike.png" />
+    <None Include="bin\Icons\ShardMirrorStrike-off.png" />
+    <None Include="bin\Icons\ShardPierce.png" />
+    <None Include="bin\Icons\ShardPierce-off.png" />
+    <None Include="bin\Icons\ShardReckless.png" />
+    <None Include="bin\Icons\ShardReckless-off.png" />
+    <None Include="bin\Icons\ShardRecycler.png" />
+    <None Include="bin\Icons\ShardRecycler-off.png" />
+    <None Include="bin\Icons\ShardRicochet.png" />
+    <None Include="bin\Icons\ShardRicochet-off.png" />
+    <None Include="bin\Icons\ShardSense.png" />
+    <None Include="bin\Icons\ShardSense-off.png" />
+    <None Include="bin\Icons\ShardSpiritMagnet.png" />
+    <None Include="bin\Icons\ShardSpiritMagnet-off.png" />
+    <None Include="bin\Icons\ShardSpiritPower.png" />
+    <None Include="bin\Icons\ShardSpiritPower-off.png" />
+    <None Include="bin\Icons\ShardStinger.png" />
+    <None Include="bin\Icons\ShardStinger-off.png" />
+    <None Include="bin\Icons\ShardSuppressor.png" />
+    <None Include="bin\Icons\ShardSuppressor-off.png" />
+    <None Include="bin\Icons\ShardSwap.png" />
+    <None Include="bin\Icons\ShardSwap-off.png" />
+    <None Include="bin\Icons\ShardTripleJump.png" />
+    <None Include="bin\Icons\ShardTripleJump-off.png" />
+    <None Include="bin\Icons\ShardUltraBash.png" />
+    <None Include="bin\Icons\ShardUltraBash-off.png" />
+    <None Include="bin\Icons\ShardUltraLeash.png" />
+    <None Include="bin\Icons\ShardUltraLeash-off.png" />
+    <None Include="bin\Icons\ShardUnknown.png" />
+    <None Include="bin\Icons\ShardUnknown-off.png" />
+    <None Include="bin\Icons\ShardUntouchable.png" />
+    <None Include="bin\Icons\ShardUntouchable-off.png" />
+    <None Include="bin\Icons\ShardVitality.png" />
+    <None Include="bin\Icons\ShardVitalityLuck.png" />
+    <None Include="bin\Icons\ShardVitalityLuck-off.png" />
+    <None Include="bin\Icons\ShardVitality-off.png" />
+    <None Include="bin\Icons\abilityIconChakramSpell.png" />
+    <None Include="bin\Icons\abilityIconChakramSpell-off.png" />
+    <None Include="bin\Icons\abilityIconDamageUpgradeA.png" />
+    <None Include="bin\Icons\abilityIconDamageUpgradeA-off.png" />
+    <None Include="bin\Icons\abilityIconDamageUpgradeB.png" />
+    <None Include="bin\Icons\abilityIconDamageUpgradeB-off.png" />
+    <None Include="bin\Icons\abilityIconMeditateSpell.png" />
+    <None Include="bin\Icons\abilityIconMeditateSpell-off.png" />
+    <None Include="bin\Icons\abilityIconFeatherFlap.png" />
+    <None Include="bin\Icons\abilityIconFeatherFlap-off.png" />
+    <None Include="bin\Icons\abilityIconWaterDash.png" />
+    <None Include="bin\Icons\abilityIconWaterDash-off.png" />
+    <None Include="bin\Icons\abilityIconWaterBreath.png" />
+    <None Include="bin\Icons\abilityIconWaterBreath-off.png" />
+    <None Include="bin\Icons\abilityIconGrenade.png" />
+    <None Include="bin\Icons\abilityIconGrenade-off.png" />
+    <None Include="bin\Icons\abilityIconTurretSpell.png" />
+    <None Include="bin\Icons\abilityIconTurretSpell-off.png" />
+    <None Include="bin\Icons\abilityIconSpiritSpearSpell.png" />
+    <None Include="bin\Icons\abilityIconSpiritSpearSpell-off.png" />
+    <None Include="bin\Icons\abilityIconSpiritLeash.png" />
+    <None Include="bin\Icons\abilityIconSpiritLeash-off.png" />
+    <None Include="bin\Icons\abilityIconGlowSpell.png" />
+    <None Include="bin\Icons\abilityIconGlowSpell-off.png" />
+    <None Include="bin\Icons\abilityIconDashNew.png" />
+    <None Include="bin\Icons\abilityIconDashNew-off.png" />
+    <None Include="bin\Icons\abilityIconDigging.png" />
+    <None Include="bin\Icons\abilityIconDigging-off.png" />
+    <None Include="bin\Icons\uiLoremmasterSelectionCircle.png" />
+    <None Include="bin\Icons\ringDroplet.png" />
+    <None Include="bin\Icons\abilityIconWallJump.png" />
+    <None Include="bin\Icons\abilityIconWallJump-off.png" />
+    <None Include="bin\Icons\ShardGlassCannon.png" />
+    <None Include="bin\Icons\ShardGlassCannon-off.png" />
+    <None Include="bin\Icons\ShardSplinter.png" />
+    <None Include="bin\Icons\ShardSplinter-off.png" />
+    <None Include="bin\Icons\ShardSpiritLightLuck.png" />
+    <None Include="bin\Icons\ShardSpiritLightLuck-off.png" />
+    <None Include="bin\Icons\ShardChainLightning.png" />
+    <None Include="bin\Icons\ShardChainLightning-off.png" />
+    <None Include="bin\Icons\shardFrame1Level.png" />
+    <None Include="bin\Icons\shardFrame1Level0.png" />
+    <None Include="bin\Icons\shardFrame2Level0.png" />
+    <None Include="bin\Icons\shardFrame2Level1.png" />
+    <None Include="bin\Icons\shardFrame2Level2.png" />
+    <None Include="bin\Icons\shardFrame3Level0.png" />
+    <None Include="bin\Icons\shardFrame3Level1.png" />
+    <None Include="bin\Icons\shardFrame3Level2.png" />
+    <None Include="bin\Icons\shardFrame3Level3.png" />
+    <None Include="bin\Icons\shardFrame4Level0.png" />
+    <None Include="bin\Icons\shardFrame4Level1.png" />
+    <None Include="bin\Icons\shardFrame4Level2.png" />
+    <None Include="bin\Icons\shardFrame4Level3.png" />
+    <None Include="bin\Icons\shardFrame4Level4.png" />
+    <None Include="bin\Icons\shardFrame5Level0.png" />
+    <None Include="bin\Icons\shardFrame5Level1.png" />
+    <None Include="bin\Icons\shardFrame5Level2.png" />
+    <None Include="bin\Icons\shardFrame5Level3.png" />
+    <None Include="bin\Icons\shardFrame5Level4.png" />
+    <None Include="bin\Icons\shardFrame5Level5.png" />
+    <None Include="bin\Icons\energyContainerPickupLarge.png" />
+    <None Include="bin\Icons\lifeCellPickup.png" />
+    <None Include="Resources\colorpicker.png" />
+    <None Include="bin\InputImages\colorpicker.png" />
+    <None Include="bin\InputImages\colorpickerbackground.png" />
+    <Content Include="Resources\controller_resized.png" />
+    <Content Include="Resources\joypad\JoypadA.png" />
+    <Content Include="Resources\joypad\JoypadB.png" />
+    <Content Include="Resources\joypad\JoypadLeftShoulder.png" />
+    <Content Include="Resources\joypad\JoypadLeftTrigger.png" />
+    <Content Include="Resources\joypad\JoypadRightShoulder.png" />
+    <Content Include="Resources\joypad\JoypadRightTrigger.png" />
+    <Content Include="Resources\joypad\JoypadX.png" />
+    <Content Include="Resources\joypad\JoypadY.png" />
+    <None Include="Resources\Moon-custom.ttf" />
+    <None Include="Resources\MoonFont.bmp" />
+    <None Include="bin\InputImages\controller.png" />
+    <None Include="app.config" />
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Resources\icon.ico" />
+    <None Include="README.md" />
+    <None Include="Resources\save.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RaceStuff\RaceFixer.resx">
+      <DependentUpon>RaceFixer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Backup saves\BackupsaveUI.resx">
+      <DependentUpon>BackupsaveUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\VisualEditor\ColorWheel.resx">
+      <DependentUpon>ColorWheel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\ControllerUI.resx">
+      <DependentUpon>ControllerUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\HitboxSplit.resx">
+      <DependentUpon>HitboxSplit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Input\InputDesigner.resx">
+      <DependentUpon>InputDesigner.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Input\InputEditor.resx">
+      <DependentUpon>InputEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Input\InputSelector.resx">
+      <DependentUpon>InputSelector.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Input\InputTrainerUI.resx">
+      <DependentUpon>InputTrainerUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Input\KeyInput.resx">
+      <DependentUpon>KeyInput.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Manager.resx">
+      <DependentUpon>Manager.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RaceStuff\RaceEditor.resx">
+      <DependentUpon>RaceEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\RaceTimer.resx">
+      <DependentUpon>RaceTimer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\VisualEditor\SeinVisualEditor.resx">
+      <DependentUpon>SeinVisualEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\VisualEditor\TColorPicker.resx">
+      <DependentUpon>TColorPicker.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Teleporter\TeleportLocation.resx">
+      <DependentUpon>TeleportLocation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Teleporter\TeleportUI.resx">
+      <DependentUpon>TeleportUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\UberInput.resx">
+      <DependentUpon>UberInput.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\UberstateEditor.resx">
+      <DependentUpon>UberstateEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Backup saves\BackupSaveSlot.resx">
+      <DependentUpon>BackupSaveSlot.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\VisualEditor\Vector4Control.resx">
+      <DependentUpon>Vector4Control.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\VisualEditor\WotwEditor.resx">
+      <DependentUpon>WotwEditor.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.6.1 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\source\repos\ManagerAutoUpdater\ManagerAutoUpdater.csproj">
+      <Project>{1f31b6b9-9e9e-454a-88de-0677837ed1c9}</Project>
+      <Name>ManagerAutoUpdater</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Components\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

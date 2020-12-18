@@ -1,0 +1,12 @@
+A: 20
+B: 29, 59
+X: 8, 17, 23, 53
+Y: 26
+LShoulder: 44, 47
+RShoulder: 38, 41
+Select: 62
+Start: 8
+LStick: 9
+RStick: 10
+LTrigger: 77
+RTrigger: 32, 35, 86

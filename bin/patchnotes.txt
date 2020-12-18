@@ -1,0 +1,36 @@
+--Credit to-- 
+DevilSquirrel for creating the Manager
+hitachihex for his TAS tool and help
+BadWolf & Xemsys for helping me.
+
+AlphaBeta v.0.1.5
+- Patch 1.3.1 support.
+- Controller input was fixed, then I broke it for the trainer again.
+- Races now store the worlds uberstate when you start one, so if anything changes with a race that reverts to how the world was before you started a race.
+
+AlphaBeta v.0.1.4
+- Patch 1.3 support
+- Backupsaves manager, allows you to save to a specific backup slot or create a new if if you have less then 10.
+
+AlphaBeta v.0.1.3
+- Uber state recorder, now allows you to record the uberstates that you want associated with a race. Setup the world to the state you want and open the race editor and click on "Save Uberstates". These will then be loaded whenever a race is ran. *WARNING* Currently it does not save the existing worlds uberstate and restores it upon exiting a race or closing the manager. So don't use a file you care about when using the race editor. This will be fixed in 0.1.5, but I didn't want to struggle with any errors it would create with releasing a working version for patch 1.3. *WARNING*
+
+AlphaBeta v.0.1.2
+- ???
+
+AlphaBeta v.0.1.1
+- Stability fixes
+- Updated race editor UI
+- Auto updater
+
+AlphaBeta v.0.1.0 - Race Edition
+- Race Editor, allows you to create reaces and edit their settings
+- Fixed the piped from single shared too using two, one for the manger and one for the dll. Should improve stability and speed greatly
+- Hitbox Split editor that allows you to see the rectangle in game, making it easier to create hitbox splits
+
+AlphaBeta v.0.9
+- Accurate game completion, this is gotten from the same method Moon uses it's just not rounded
+- Framestepping, thank hitachihex for this one. This one might be a bit buggy at the moment but by pressing F5 you start framestepping and pressing F5 again you frame step one frame, F6 stops framestepping.
+- Context menu no longer closes when you click on an item.
+- Create checkpoint, kinda pointless if you're using debug. It does not create an actual checkpoint but a save like the debug save option.
+- Code cleanup to make things easier, didn't fix as much as I wanted.

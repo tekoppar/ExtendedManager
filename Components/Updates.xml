@@ -1,0 +1,348 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<updates>
+    <update version="1.4.0">
+        <files>
+            <file path="Components/LiveSplit.OriWotW.dll" status="changed"/>
+        </files>
+        <changelog>
+            <change> Update loadless timer to pause on black screen when quiting to menu to be more like it used to be </change>
+        </changelog>
+    </update>
+    <update version="1.3.9">
+        <files>
+            <file path="Components/LiveSplit.OriWotW.dll" status="changed"/>
+        </files>
+        <changelog>
+            <change> Update for new patch 2020-05-14 </change>
+        </changelog>
+    </update>
+    <update version="1.3.8">
+        <files>
+            <file path="Components/LiveSplit.OriWotW.dll" status="changed"/>
+        </files>
+        <changelog>
+            <change> Allow Hitbox splits to work from menu to in game </change>
+        </changelog>
+    </update>
+    <update version="1.3.7">
+        <files>
+            <file path="Components/LiveSplit.OriWotW.dll" status="changed"/>
+        </files>
+        <changelog>
+            <change> Added Hitbox splits </change>
+        </changelog>
+    </update>
+    <update version="1.3.6">
+        <files>
+            <file path="Components/LiveSplit.OriWotW.dll" status="changed"/>
+        </files>
+        <changelog>
+            <change> Fixed issues with autosplitter not rehooking the game properly after restarts </change>
+        </changelog>
+    </update>
+    <update version="1.3.5">
+        <files>
+            <file path="Components/LiveSplit.OriWotW.dll" status="changed"/>
+        </files>
+        <changelog>
+            <change> Added ability to show Trial Time with a Text component named as Trial Time </change>
+        </changelog>
+    </update>
+    <update version="1.3.4">
+        <files>
+            <file path="Components/LiveSplit.OriWotW.dll" status="changed"/>
+        </files>
+        <changelog>
+            <change> Added functionality for when editing splits (ie Moving a Split up/down) to automatically update the associated autosplitter settings to make changing splits easier and flow better </change>
+        </changelog>
+    </update>
+    <update version="1.3.3">
+        <files>
+            <file path="Components/LiveSplit.OriWotW.dll" status="changed"/>
+        </files>
+        <changelog>
+            <change> Fix autosplitter if you changed settings mid run it would not longer work </change>
+        </changelog>
+    </update>
+    <update version="1.3.2">
+        <files>
+            <file path="Components/LiveSplit.OriWotW.dll" status="changed"/>
+        </files>
+        <changelog>
+            <change> Minor performance improvements </change>
+            <change> Fix signatures </change>
+        </changelog>
+    </update>
+    <update version="1.3.1">
+        <files>
+            <file path="Components/LiveSplit.OriWotW.dll" status="changed"/>
+        </files>
+        <changelog>
+            <change> Fix Ku Lost split </change>
+        </changelog>
+    </update>
+    <update version="1.3.0">
+        <files>
+            <file path="Components/LiveSplit.OriWotW.dll" status="changed"/>
+        </files>
+        <changelog>
+            <change> Possibly fix timer not pasuing during load from menu when menuing too fast </change>
+        </changelog>
+    </update>
+    <update version="1.2.9">
+        <files>
+            <file path="Components/LiveSplit.OriWotW.dll" status="changed"/>
+        </files>
+        <changelog>
+            <change> Update for new patch </change>
+        </changelog>
+    </update>
+    <update version="1.2.8">
+        <files>
+            <file path="Components/LiveSplit.OriWotW.dll" status="changed"/>
+        </files>
+        <changelog>
+            <change> Code cleanup/improvements </change>
+        </changelog>
+    </update>
+    <update version="1.2.7">
+        <files>
+            <file path="Components/LiveSplit.OriWotW.dll" status="changed"/>
+        </files>
+        <changelog>
+            <change> Added fast travel split in abilities for next patch </change>
+            <change> Fixed settings for seed splits </change>
+        </changelog>
+    </update>
+    <update version="1.2.6">
+        <files>
+            <file path="Components/LiveSplit.OriWotW.dll" status="changed"/>
+        </files>
+        <changelog>
+            <change> Updated Seed splits to be for the individual seeds </change>
+        </changelog>
+    </update>
+    <update version="1.2.5">
+        <files>
+            <file path="Components/LiveSplit.OriWotW.dll" status="changed"/>
+        </files>
+        <changelog>
+            <change> Added logic to account for new upcoming game patch </change>
+        </changelog>
+    </update>
+    <update version="1.2.4">
+        <files>
+            <file path="Components/LiveSplit.OriWotW.dll" status="changed"/>
+        </files>
+        <changelog>
+            <change> Added setting to automatically disable debug and controls when timer is active </change>
+        </changelog>
+    </update>
+    <update version="1.2.3">
+        <files>
+            <file path="Components/LiveSplit.OriWotW.dll" status="changed"/>
+        </files>
+        <changelog>
+            <change> Added splits for seeds </change>
+            <change> Updated names for Damage Upgrade splits </change>
+        </changelog>
+    </update>
+    <update version="1.2.2">
+        <files>
+            <file path="Components/LiveSplit.OriWotW.dll" status="changed"/>
+        </files>
+        <changelog>
+            <change> Fixed Autosplitter not working between game relaunches </change>
+            <change> Added splits on shard upgrades </change>
+        </changelog>
+    </update>
+    <update version="1.2.1">
+        <files>
+            <file path="Components/LiveSplit.OriWotW.dll" status="changed"/>
+        </files>
+        <changelog>
+            <change> Fixed shard splits for Overcharge, TripleJump, Wingclip, Bounty, and Swap </change>
+        </changelog>
+    </update>
+    <update version="1.2.0">
+        <files>
+            <file path="Components/LiveSplit.OriWotW.dll" status="changed"/>
+        </files>
+        <changelog>
+            <change> Fixed FPS lock not working for some people </change>
+        </changelog>
+    </update>
+    <update version="1.1.9">
+        <files>
+            <file path="Components/LiveSplit.OriWotW.dll" status="changed"/>
+        </files>
+        <changelog>
+            <change> Added more Escape splits </change>
+        </changelog>
+    </update>
+    <update version="1.1.8">
+        <files>
+            <file path="Components/LiveSplit.OriWotW.dll" status="changed"/>
+        </files>
+        <changelog>
+            <change> Improved FPS display output </change>
+        </changelog>
+    </update>
+    <update version="1.1.7">
+        <files>
+            <file path="Components/LiveSplit.OriWotW.dll" status="changed"/>
+        </files>
+        <changelog>
+            <change> Improved Load Removal </change>
+        </changelog>
+    </update>
+    <update version="1.1.6">
+        <files>
+            <file path="Components/LiveSplit.OriWotW.dll" status="changed"/>
+        </files>
+        <changelog>
+            <change> Fixed Energy Cell pickups </change>
+        </changelog>
+    </update>
+    <update version="1.1.5">
+        <files>
+            <file path="Components/LiveSplit.OriWotW.dll" status="changed"/>
+        </files>
+        <changelog>
+            <change> Added ability to show FPS in a Text Component with the a label of FPS </change>
+        </changelog>
+    </update>
+    <update version="1.1.4">
+        <files>
+            <file path="Components/LiveSplit.OriWotW.dll" status="changed"/>
+        </files>
+        <changelog>
+            <change> Added Map % Splits </change>
+        </changelog>
+    </update>
+    <update version="1.1.3">
+        <files>
+            <file path="Components/LiveSplit.OriWotW.dll" status="changed"/>
+        </files>
+        <changelog>
+            <change> Added Shreik Start split </change>
+            <change> Added Teleporter splits </change>
+        </changelog>
+    </update>
+    <update version="1.1.2">
+        <files>
+            <file path="Components/LiveSplit.OriWotW.dll" status="changed"/>
+        </files>
+        <changelog>
+            <change> Updated timing of So Soggy split </change>
+        </changelog>
+    </update>
+    <update version="1.1.1">
+        <files>
+            <file path="Components/LiveSplit.OriWotW.dll" status="changed"/>
+        </files>
+        <changelog>
+            <change> Fixed Health Cell and Energy Cell counts </change>
+            <change> Fixed Spirit Trail End splits </change>
+            <change> Added a Boss category to the settings with some new splits and moved the couple from World Events </change>
+        </changelog>
+    </update>
+    <update version="1.1.0">
+        <files>
+            <file path="Components/LiveSplit.OriWotW.dll" status="changed"/>
+        </files>
+        <changelog>
+            <change> Added ability to dynamically read pointers from metadata </change>
+            <change> Added a 60 FPS Lock setting that will lock the game to 60 FPS without the need for any other program </change>
+        </changelog>
+    </update>
+    <update version="1.0.9">
+        <files>
+            <file path="Components/LiveSplit.OriWotW.dll" status="changed"/>
+        </files>
+        <changelog>
+            <change> Added Event Silent Woods Shriek Cutscene (Happens right after entering silent woods) </change>
+            <change> Added exe check for WinStore version (may or may not work) </change>
+        </changelog>
+    </update>
+    <update version="1.0.8">
+        <files>
+            <file path="Components/LiveSplit.OriWotW.dll" status="changed"/>
+        </files>
+        <changelog>
+            <change> Fix special area splits (again) </change>
+        </changelog>
+    </update>
+    <update version="1.0.7">
+        <files>
+            <file path="Components/LiveSplit.OriWotW.dll" status="changed"/>
+        </files>
+        <changelog>
+            <change> Fix special area splits </change>
+        </changelog>
+    </update>
+    <update version="1.0.6">
+        <files>
+            <file path="Components/LiveSplit.OriWotW.dll" status="changed"/>
+        </files>
+        <changelog>
+            <change> Added No Pause option in the settings that will allow your game to not pause when not in focus </change>
+            <change> Added Final Boss room area as a split option in Areas (Willows End Boss Room) </change>
+            <change> Improved Load Removal </change>
+        </changelog>
+    </update>
+    <update version="1.0.5">
+        <files>
+            <file path="Components/LiveSplit.OriWotW.dll" status="changed"/>
+        </files>
+        <changelog>
+            <change> Added End Game split </change>
+            <change> Added Spirit Trial splits </change>
+            <change> Added Wisp splits </change>
+            <change> Added more Event splits </change>
+            <change> Added Creep Heart splits </change>
+        </changelog>
+    </update>
+    <update version="1.0.4">
+        <files>
+            <file path="Components/LiveSplit.OriWotW.dll" status="changed"/>
+        </files>
+        <changelog>
+            <change> Changed Game Start split to be when starting a new file </change>
+            <change> Fixed some logging information </change>
+        </changelog>
+    </update>
+    <update version="1.0.3">
+        <files>
+            <file path="Components/LiveSplit.OriWotW.dll" status="changed"/>
+        </files>
+        <changelog>
+            <change> Added a bunch of logging info to be able to figure out new splits </change>
+            <change> Improved settings UI </change>
+        </changelog>
+    </update>
+    <update version="1.0.2">
+        <files>
+            <file path="Components/LiveSplit.OriWotW.dll" status="changed"/>
+        </files>
+        <changelog>
+            <change> Fix manual splits </change>
+        </changelog>
+    </update>
+    <update version="1.0.1">
+        <files>
+            <file path="Components/LiveSplit.OriWotW.dll" status="changed"/>
+        </files>
+        <changelog>
+            <change> Fix moving splits </change>
+        </changelog>
+    </update>
+    <update version="1.0.0">
+        <files>
+            <file path="Components/LiveSplit.OriWotW.dll" status="changed"/>
+        </files>
+        <changelog>
+            <change> Initial Release </change>
+        </changelog>
+    </update>
+</updates>

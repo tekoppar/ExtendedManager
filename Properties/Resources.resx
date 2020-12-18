@@ -1,0 +1,646 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icon.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Moon_custom" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Moon-custom.ttf;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="abilityIconBash" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconBash.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconBash_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconBash-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconBlaze" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconBlaze.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconBlazeUpgrade" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconBlazeUpgrade.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconBlazeUpgrade_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconBlazeUpgrade-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconBlaze_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconBlaze-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconBow" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconBow.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconBow_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconBow-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconChakramSpell" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconChakramSpell.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconChakramSpell_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconChakramSpell-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconChakramUpgrade" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconChakramUpgrade.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconChakramUpgrade_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconChakramUpgrade-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconChargeJump" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconChargeJump.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconChargeJump_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconChargeJump-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconDamageUpgradeA" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconDamageUpgradeA.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconDamageUpgradeA_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconDamageUpgradeA-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconDamageUpgradeB" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconDamageUpgradeB.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconDamageUpgradeB_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconDamageUpgradeB-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconDoubleJump" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconDoubleJump.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconDoubleJump_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconDoubleJump-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconDrill" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconDrill.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconDrill_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconDrill-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconGlide" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconGlide.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconGlide_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconGlide-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconGoldenSein" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconGoldenSein.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconGoldenSein_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconGoldenSein-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconHammer" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconHammer.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconHammer_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconHammer-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconHomingMissile" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconHomingMissile.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconHomingMissile_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconHomingMissile-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconMeditateSpell" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconMeditateSpell.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconMeditateSpell_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconMeditateSpell-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconShockwave" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconShockwave.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconShockwave_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconShockwave-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconSpiritSentryUpgrade" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconSpiritSentryUpgrade.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconSpiritSentryUpgrade_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconSpiritSentryUpgrade-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconSpiritSpearUpgrade" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconSpiritSpearUpgrade.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconSpiritSpearUpgrade_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconSpiritSpearUpgrade-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconSword" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconSword.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconSwordstaff" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconSwordstaff.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconSwordstaff_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconSwordstaff-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconSword_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconSword-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconTeleport" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconTeleport.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconTeleport_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconTeleport-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconTorch" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconTorch.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconTorch_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconTorch-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityPointIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityPointIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityPointIcon_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityPointIcon-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="controller" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\InputImages\controller.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icon.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="JoypadA" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\joypad\joypada.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="JoypadB" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\joypad\joypadb.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="JoypadLeftShoulder" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\joypad\joypadleftshoulder.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="JoypadLeftTrigger" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\joypad\joypadlefttrigger.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="JoypadRightShoulder" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\joypad\joypadrightshoulder.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="JoypadRightTrigger" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\joypad\joypadrighttrigger.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="JoypadX" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\joypad\joypadx.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="JoypadY" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\joypad\joypady.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="save" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\save.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardAggressor" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardAggressor.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardAggressor_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardAggressor-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardBarrier" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardBarrier.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardBarrier_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardBarrier-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardBloodPact" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardBloodPact.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardBloodPact_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardBloodPact-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardCombatLuck" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardCombatLuck.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardCombatLuck_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardCombatLuck-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardEnergy" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardEnergy.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardEnergyLuck" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardEnergyLuck.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardEnergyLuck_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardEnergyLuck-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardEnergy_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardEnergy-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardFracture" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardFracture.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardFracture_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardFracture-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardFrenzy" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardFrenzy.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardFrenzy_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardFrenzy-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardGlue" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardGlue.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardGlue_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardGlue-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardHollowEnergy" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardHollowEnergy.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardHollowEnergy_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardHollowEnergy-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardLastResort" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardLastResort.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardLastResort_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardLastResort-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardMirrorStrike" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardMirrorStrike.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardMirrorStrike_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardMirrorStrike-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardReckless" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardReckless.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardReckless_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardReckless-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardRecycler" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardRecycler.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardRecycler_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardRecycler-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardSense" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardSense.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardSense_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardSense-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardSpiritMagnet" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardSpiritMagnet.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardSpiritMagnet_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardSpiritMagnet-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardSpiritPower" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardSpiritPower.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardSpiritPower_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardSpiritPower-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardSuppressor" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardSuppressor.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardSuppressor_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardSuppressor-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardSwap" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardSwap.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardSwap_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardSwap-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardTripleJump" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardTripleJump.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardTripleJump_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardTripleJump-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardUltraBash" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardUltraBash.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardUltraBash_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardUltraBash-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardUltraLeash" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardUltraLeash.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardUltraLeash_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardUltraLeash-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardUnknown" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardUnknown.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardUnknown_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardUnknown-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardUntouchable" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardUntouchable.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardUntouchable_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardUntouchable-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardVitality" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardVitality.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardVitalityLuck" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardVitalityLuck.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardVitalityLuck_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardVitalityLuck-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardVitality_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardVitality-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconDashNew" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconDashNew.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconDashNew_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconDashNew-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconDigging" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconDigging.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconDigging_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconDigging-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconFeatherFlap" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconFeatherFlap.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconFeatherFlap_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconFeatherFlap-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconGlowSpell" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconGlowSpell.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconGlowSpell_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconGlowSpell-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconGrenade" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconGrenade.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconGrenade_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconGrenade-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconSpiritLeash" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconSpiritLeash.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconSpiritLeash_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconSpiritLeash-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconSpiritSpearSpell" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconSpiritSpearSpell.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconSpiritSpearSpell_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconSpiritSpearSpell-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconTurretSpell" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconTurretSpell.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconTurretSpell_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconTurretSpell-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconWaterBreath" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconWaterBreath.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconWaterBreath_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconWaterBreath-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconWaterDash" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconWaterDash.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconWaterDash_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconWaterDash-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="uiLoremmasterSelectionCircle" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\uiLoremmasterSelectionCircle.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ringDroplet" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ringDroplet.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconWallJump" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconWallJump.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abilityIconWallJump_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\abilityIconWallJump-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardAntiAir" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardAntiAir.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardAntiAir_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardAntiAir-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardChainLightning" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardChainLightning.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardChainLightning_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardChainLightning-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardCounterstrike" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardCounterstrike.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardCounterstrike_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardCounterstrike-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardFocus" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardFocus.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardFocus_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardFocus-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="shardFrame1Level" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\shardFrame1Level.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="shardFrame1Level0" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\shardFrame1Level0.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="shardFrame2Level0" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\shardFrame2Level0.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="shardFrame2Level1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\shardFrame2Level1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="shardFrame2Level2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\shardFrame2Level2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="shardFrame3Level0" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\shardFrame3Level0.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="shardFrame3Level1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\shardFrame3Level1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="shardFrame3Level2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\shardFrame3Level2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="shardFrame3Level3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\shardFrame3Level3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="shardFrame4Level0" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\shardFrame4Level0.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="shardFrame4Level1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\shardFrame4Level1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="shardFrame4Level2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\shardFrame4Level2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="shardFrame4Level3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\shardFrame4Level3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="shardFrame4Level4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\shardFrame4Level4.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="shardFrame5Level0" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\shardFrame5Level0.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="shardFrame5Level1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\shardFrame5Level1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="shardFrame5Level2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\shardFrame5Level2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="shardFrame5Level3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\shardFrame5Level3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="shardFrame5Level4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\shardFrame5Level4.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="shardFrame5Level5" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\shardFrame5Level5.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardGlassCannon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardGlassCannon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardGlassCannon_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardGlassCannon-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardSpiritLightLuck" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardSpiritLightLuck.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardSpiritLightLuck_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardSpiritLightLuck-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardSplinter" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardSplinter.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShardSplinter_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\ShardSplinter-off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="energyContainerPickupLarge" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\energyContainerPickupLarge.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="lifeCellPickup" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Icons\lifeCellPickup.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="colorpicker" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\InputImages\colorpicker.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="colorpickerbackground" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\InputImages\colorpickerbackground.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+</root>

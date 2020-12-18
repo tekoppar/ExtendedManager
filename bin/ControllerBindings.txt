@@ -1,0 +1,46 @@
+Movement Left: A, None, LeftArrow, None
+Movement Right: D, None, RightArrow, None
+Movement Down: S, None, DownArrow, G
+Movement Up: W, None, U, T
+SaveCopy: None,
+SaveDelete: None,
+Interact: 17,
+Jump: 20,
+Ability1: 23,
+Ability2: 26,
+Ability3: R, Mouse4, C, P
+Glide: None, None, RightShift, None
+Grab: RightShift, None, None, None
+Dash: LeftShift, Mouse2, P, G
+Burrow: None, Mouse2, None, None
+Bash: Mouse1, None, F, None
+Grapple: Mouse1, None, F, None
+DialogueAdvance: None,
+DialogueOption1: None,
+DialogueOption2: None,
+DialogueOption3: None,
+DialogueExit: None,
+OpenMapsShardsInventory: Tab, None, None, None
+OpenInventory: I, None, None, None
+OpenWorldMap: W, None, None, None
+OpenAreaMap: M, None, None, None
+OpenShardsScreen: H, None, None, None
+OpenWeaponWheel: Q, RightBracket, None, None
+OpenPauseScreen: Escape, None, None, None
+OpenLiveSignIn: None,
+MapZoomIn: None,
+MapZoomOut: None,
+MenuSelect: None,
+MenuBack: None,
+MenuClose: None,
+MenuDown: None,
+MenuUp: None,
+MenuLeft: None,
+MenuRight: None,
+MenuPageLeft: None,
+MenuPageRight: None,
+LeaderboardCycleFilter: None,
+MapFilter: None,
+MapDetails: None,
+MapFocusOri: None,
+MapFocusObjective: None,
