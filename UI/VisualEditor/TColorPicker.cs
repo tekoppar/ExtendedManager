@@ -50,11 +50,35 @@ namespace OriWotW.UI {
         static private Color? CopyColor = null;
         public Color? Color { get; set; } = System.Drawing.Color.FromArgb(255, 255, 255, 255);
         private int Alpha = 255;
+        private bool HasBeenInitialized = false;
         private bool ShowColorValue { get; set; } = true;
         private Point ColorPickerSize { get; set; } = new Point(64, 64);
-        public TColorPicker() {
-            InitializeComponent();
 
+        public static TColorPicker ColorPicker(bool initialize = false) {
+            return new TColorPicker(initialize);
+        }
+
+        public static TColorPicker ColorPickrColors(float r = 1.0f, float g = 1.0f, float b = 1.0f, float a = 1.0f) {
+            return new TColorPicker(r, g, b, a);
+        }
+
+        public TColorPicker(bool initialize = false) {
+            if (initialize)
+                Initialize();
+        }
+        private void Initialize() {
+            if (this.HasBeenInitialized == false) {
+                this.HasBeenInitialized = true;
+                InitializeComponent();
+            }
+        }
+        public TColorPicker(float r = 1.0f, float g = 1.0f, float b = 1.0f, float a = 1.0f) {
+            int cA = Math.Min(0, Math.Max(255, (int)(a * 255.0f)));
+            int cR = Math.Min(0, Math.Max(255, (int)(r * 255.0f)));
+            int cG = Math.Min(0, Math.Max(255, (int)(g * 255.0f)));
+            int cB = Math.Min(0, Math.Max(255, (int)(b * 255.0f)));
+
+            this.Color = System.Drawing.Color.FromArgb(cA, cR, cG, cB);
             if (this.ShowColorValue == true) {
                 this.lblColorValues.Visible = true;
             }
@@ -70,6 +94,7 @@ namespace OriWotW.UI {
                 this.Color = TColorPicker.ColorWheel.ReturnColor;
                 this.Alpha = this.Color.Value.A;
                 this.colorPicker.Image = this.DrawPreviewColorImage(this.Color.Value, this.Alpha);
+                colorPicker.SizeMode = PictureBoxSizeMode.StretchImage;
                 this.lblColorValues.Text = this.Color.Value.R.ToString() + ", " + this.Color.Value.G.ToString() + ", " + this.Color.Value.B.ToString() + ", " + this.Color.Value.A.ToString();
 
                 PickedColorEventArgs args = new PickedColorEventArgs();
@@ -85,7 +110,9 @@ namespace OriWotW.UI {
                 this.Color = TColorPicker.CopyColor;
                 this.Alpha = this.Color.Value.A;
                 this.colorPicker.Image = this.DrawPreviewColorImage(this.Color.Value, this.Alpha);
+                colorPicker.SizeMode = PictureBoxSizeMode.StretchImage;
                 this.lblColorValues.Text = this.Color.Value.R.ToString() + ", " + this.Color.Value.G.ToString() + ", " + this.Color.Value.B.ToString() + ", " + this.Color.Value.A.ToString();
+
                 PickedColorEventArgs args = new PickedColorEventArgs();
                 args.Color = this.Color.Value;
                 PickedColor(args);
@@ -93,19 +120,27 @@ namespace OriWotW.UI {
         }
 
         private Image DrawPreviewColorImage(Color color, int alpha) {
-            var finalImage = new Bitmap(64, 64, PixelFormat.Format32bppArgb);
+            int imageSize = 32;
+            var finalImage = new Bitmap(imageSize, imageSize, PixelFormat.Format32bppArgb);
             Graphics g = Graphics.FromImage(finalImage);
-            Pen opaquePen = new Pen(System.Drawing.Color.FromArgb(alpha, color.R, color.G, color.B), 64);
-            Rectangle rect = new Rectangle(0, 0, 64, 64);
+            Pen opaquePen = new Pen(System.Drawing.Color.FromArgb(alpha, color.R, color.G, color.B), imageSize);
+            Rectangle rect = new Rectangle(0, 0, imageSize, imageSize);
             g.DrawRectangle(opaquePen, rect);
             return finalImage;
         }
 
-        public void SetColor(Color color) {
+        public void SetColor(Color color, bool init = false) {
+            if (init == true)
+                Initialize();
+
             this.Color = color;
             this.Alpha = this.Color.Value.A;
-            this.colorPicker.Image = this.DrawPreviewColorImage(color, color.A);
-            this.lblColorValues.Text = this.Color.Value.R.ToString() + ", " + this.Color.Value.G.ToString() + ", " + this.Color.Value.B.ToString() + ", " + this.Color.Value.A.ToString();
+
+            if (this.HasBeenInitialized) {
+                this.colorPicker.Image = this.DrawPreviewColorImage(color, color.A);
+                colorPicker.SizeMode = PictureBoxSizeMode.StretchImage;
+                this.lblColorValues.Text = this.Color.Value.R.ToString() + ", " + this.Color.Value.G.ToString() + ", " + this.Color.Value.B.ToString() + ", " + this.Color.Value.A.ToString();
+            }
             /*PickedColorEventArgs args = new PickedColorEventArgs();
             args.Color = this.Color.Value;
             PickedColor(args);*/
@@ -120,7 +155,7 @@ namespace OriWotW.UI {
 namespace SystemTextJsonSamples {
     internal sealed class JsonConverterTColorPicker : JsonConverter<OriWotW.UI.TColorPicker> {
         public override OriWotW.UI.TColorPicker Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
-            OriWotW.UI.TColorPicker colorPicker = new OriWotW.UI.TColorPicker();
+            OriWotW.UI.TColorPicker colorPicker = OriWotW.UI.TColorPicker.ColorPicker();
             string colorValues;
             using (var jsonDoc = JsonDocument.ParseValue(ref reader)) {
                 colorValues = jsonDoc.RootElement.GetRawText();

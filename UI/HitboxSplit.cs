@@ -12,7 +12,7 @@ using System.Globalization;
 namespace OriWotW.UI {
     public partial class HitboxSplit : Form {
         public Vector2 Position = new Vector2();
-        public Vector2 Scale = new Vector2();
+        public Vector2 HitboxScale = new Vector2();
         public Manager Manager;
         public bool UserChangedValue = false;
 
@@ -20,7 +20,7 @@ namespace OriWotW.UI {
             this.Manager = manager;
             InitializeComponent();
             Vector3 position = Manager.Memory.Position();
-            Scale.Y = Scale.X = 1.0f;
+            HitboxScale.Y = HitboxScale.X = 1.0f;
             Position.Y = position.Y;
             Position.X = position.X;
 
@@ -31,7 +31,7 @@ namespace OriWotW.UI {
             scaleY.Value = 1;
 
             if (this.Visible == true) {
-                Manager.InjectCommunication.AddCall("CALL22PAR" + Position.X.ToString() + ";" + Position.Y.ToString() + "|" + Scale.X.ToString() + ";" + Scale.Y.ToString());
+                Manager.InjectCommunication.AddCall("CALL22PAR" + Position.X.ToString() + ";" + Position.Y.ToString() + "|" + HitboxScale.X.ToString() + ";" + HitboxScale.Y.ToString());
             }
         }
 
@@ -44,29 +44,29 @@ namespace OriWotW.UI {
             startX.Value = (decimal)position.X;
             startY.Value = (decimal)position.Y;
 
-            hitboxSplitCopy.Text = Position.X.ToString() + ", " + Position.Y.ToString() + ", " + Scale.X.ToString() + ", " + Scale.Y.ToString();
-            Manager.InjectCommunication.AddCall("CALL22PAR" + Position.X.ToString() + ";" + Position.Y.ToString() + "|" + Scale.X.ToString() + ";" + Scale.Y.ToString());
+            hitboxSplitCopy.Text = Position.X.ToString() + ", " + Position.Y.ToString() + ", " + HitboxScale.X.ToString() + ", " + HitboxScale.Y.ToString();
+            Manager.InjectCommunication.AddCall("CALL22PAR" + Position.X.ToString() + ";" + Position.Y.ToString() + "|" + HitboxScale.X.ToString() + ";" + HitboxScale.Y.ToString());
         }
 
         private void createHitbox_Click(object sender, EventArgs e) {
-            Manager.InjectCommunication.AddCall("CALL22PAR" + Position.X.ToString() + ";" + Position.Y.ToString() + "|" + Scale.X.ToString() + ";" + Scale.Y.ToString());
+            Manager.InjectCommunication.AddCall("CALL22PAR" + Position.X.ToString() + ";" + Position.Y.ToString() + "|" + HitboxScale.X.ToString() + ";" + HitboxScale.Y.ToString());
         }
 
         private void start_ValueChanged(object sender, EventArgs e) {
             if (UserChangedValue == true) {
                 Position.X = (float)startX.Value;
                 Position.Y = (float)startY.Value;
-                hitboxSplitCopy.Text = Position.X.ToString() + ", " + Position.Y.ToString() + ", " + Scale.X.ToString() + ", " + Scale.Y.ToString();
-                Manager.InjectCommunication.AddCall("CALL22PAR" + Position.X.ToString() + ";" + Position.Y.ToString() + "|" + Scale.X.ToString() + ";" + Scale.Y.ToString());
+                hitboxSplitCopy.Text = Position.X.ToString() + ", " + Position.Y.ToString() + ", " + HitboxScale.X.ToString() + ", " + HitboxScale.Y.ToString();
+                Manager.InjectCommunication.AddCall("CALL22PAR" + Position.X.ToString() + ";" + Position.Y.ToString() + "|" + HitboxScale.X.ToString() + ";" + HitboxScale.Y.ToString());
             }
         }
 
         private void scale_ValueChanged(object sender, EventArgs e) {
             if (UserChangedValue == true) {
-                Scale.X = (float)scaleX.Value;
-                Scale.Y = (float)scaleY.Value;
-                hitboxSplitCopy.Text = Position.X.ToString() + ", " + Position.Y.ToString() + ", " + Scale.X.ToString() + ", " + Scale.Y.ToString();
-                Manager.InjectCommunication.AddCall("CALL22PAR" + Position.X.ToString() + ";" + Position.Y.ToString() + "|" + Scale.X.ToString() + ";" + Scale.Y.ToString());
+                HitboxScale.X = (float)scaleX.Value;
+                HitboxScale.Y = (float)scaleY.Value;
+                hitboxSplitCopy.Text = Position.X.ToString() + ", " + Position.Y.ToString() + ", " + HitboxScale.X.ToString() + ", " + HitboxScale.Y.ToString();
+                Manager.InjectCommunication.AddCall("CALL22PAR" + Position.X.ToString() + ";" + Position.Y.ToString() + "|" + HitboxScale.X.ToString() + ";" + HitboxScale.Y.ToString());
             }
         }
 
@@ -81,7 +81,7 @@ namespace OriWotW.UI {
         }
 
         private void textBox1_MouseClick(object sender, MouseEventArgs e) {
-            Clipboard.SetText(Position.X.ToString(CultureInfo.CreateSpecificCulture("en-US")) + ", " + Position.Y.ToString(CultureInfo.CreateSpecificCulture("en-US")) + ", " + Scale.X.ToString(CultureInfo.CreateSpecificCulture("en-US")) + ", " + Scale.Y.ToString(CultureInfo.CreateSpecificCulture("en-US")));
+            Clipboard.SetText(Position.X.ToString(CultureInfo.CreateSpecificCulture("en-US")) + ", " + Position.Y.ToString(CultureInfo.CreateSpecificCulture("en-US")) + ", " + HitboxScale.X.ToString(CultureInfo.CreateSpecificCulture("en-US")) + ", " + HitboxScale.Y.ToString(CultureInfo.CreateSpecificCulture("en-US")));
         }
     }
 }

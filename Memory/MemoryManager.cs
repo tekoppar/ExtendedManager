@@ -254,14 +254,14 @@ namespace OriWotW {
         public Vector3 Position() {
             //Characters.Sein.PlatformBehaviour.PlatformMovement.m_prevPosition
             SeinCharacterPtr sein = GetSeinPtr();
-            
+
             switch (Version) {
                 case PointerVersion.P1: return MemoryReader.Read<Vector3>(Program, sein.PlatformBehaviour, 0x18, 0xD0);
                 case PointerVersion.P2: return MemoryReader.Read<Vector3>(Program, sein.PlatformBehaviour, 0x18, 0xD0);
                 case PointerVersion.P3: return MemoryReader.Read<Vector3>(Program, sein.PlatformBehaviour, 0x18, 0xE8);
                 case PointerVersion.P4: return MemoryReader.Read<Vector3>(Program, sein.PlatformBehaviour, 0x30, 0xE8);
             }
-            return new Vector3(0,0,0);
+            return new Vector3(0, 0, 0);
         }
         public void DisableInfiniteEnergy() {
             MemoryReader.Write<bool>(Program, GameAssembly.BaseAddress, false, 0x4455DB0, 0x0);
@@ -319,7 +319,7 @@ namespace OriWotW {
             switch (Version) {
                 case PointerVersion.P1:
                 case PointerVersion.P2: return MemoryReader.Read<ControlScheme>(Program, GameAssembly.BaseAddress, 0x4475D30, 0xb8, 0x0, 0x94);
-                case PointerVersion.P3: 
+                case PointerVersion.P3:
                 case PointerVersion.P4: return MemoryReader.Read<ControlScheme>(Program, GameAssembly.BaseAddress, 0x0478D378, 0xb8, 0x00, 0xD0);
             }
             return ControlScheme.KeyboardAndMouse;
@@ -731,7 +731,7 @@ namespace OriWotW {
             }
             return currentShards;
         }
-        public SeinEnergy ReadEnergy( ) {
+        public SeinEnergy ReadEnergy() {
             SeinCharacterPtr sein = GetSeinPtr();
             return MemoryReader.Read<SeinEnergy>(Program, sein.Energy);
         }
@@ -777,8 +777,8 @@ namespace OriWotW {
             string name;
             IntPtr ptrC1;
             IntPtr ptrC2;
-            for (int i = 0; i< count; i+=3) {
-                ptrC1 = Program.Read<IntPtr>(ptr + 0x20 + ((i+1) * 0x8));
+            for (int i = 0; i < count; i += 3) {
+                ptrC1 = Program.Read<IntPtr>(ptr + 0x20 + ((i + 1) * 0x8));
                 name = PlayerInput.ReturnKey(ptrC1, playerInputPtr);
                 test = Program.Read<CompoundButtonInputPtr>(ptrC1);
 
@@ -844,7 +844,7 @@ namespace OriWotW {
                 if (playerInput.SeinInputs.Count == 0) {
                     IntPtr buttonPtr = Program.Read<IntPtr>(ptr + 0x20 + ((i + 1) * 0x8), 0x0);
                     buttonInputs.Add(buttonPtr);
-                    buttonInputsIndex.Add(i+1);
+                    buttonInputsIndex.Add(i + 1);
                 }
             }
 
@@ -922,8 +922,7 @@ namespace OriWotW {
                                 compoundButtonInput.Buttons.Add(PlayerInput.ControllerCodeMap[keyCode]);
                             } else if (PlayerInput.UnityKeyCodeMap.ContainsKey(keyCode) == true) {
                                 compoundButtonInput.Buttons.Add(PlayerInput.UnityKeyCodeMap[keyCode]);
-                            }
-                            else {
+                            } else {
                                 compoundButtonInput.Buttons.Add(keyCode.ToString());
                             }
                         }

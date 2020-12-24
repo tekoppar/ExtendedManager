@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Reflection;
+using System.IO;
 
 public static class MathTE {
     static public bool IsEqualTo(this double a, double b, double margin) {
@@ -24,6 +25,8 @@ public static class MathTE {
 }
 
 public static class TE {
+    public static bool IsDisposingNow = false;
+
     private static Dictionary<string, int> ParentIndexes = new Dictionary<string, int>();
     public struct ObjectValue {
         public string Name { get; set; }
@@ -111,6 +114,31 @@ public static class TE {
         }
 
         return null;
+    }
+
+    public static bool IsPathRelative(string a, string relative) {
+        string rootFolder = "";
+        if (Path.IsPathRooted(relative))
+            rootFolder = Path.GetPathRoot(relative);
+
+        return rootFolder != "" && a.Contains(rootFolder);
+    }
+
+    public static string GetRelativePath(string a, string relative) {
+        string rootFolder = "";
+        if (Path.IsPathRooted(relative))
+            rootFolder = Path.GetPathRoot(relative);
+
+        if (rootFolder != "") {
+            rootFolder = a.Replace(relative, "");
+        }
+        return rootFolder;
+    }
+
+    public static string Reverse(string s) {
+        char[] charArray = s.ToCharArray();
+        Array.Reverse(charArray);
+        return new string(charArray);
     }
 }
 

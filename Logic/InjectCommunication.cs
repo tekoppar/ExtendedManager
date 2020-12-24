@@ -11,6 +11,8 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using OriWotW.RaceStuff;
 using OriWotW.UI;
+using System.Security.Principal;
+using System.Security.AccessControl;
 
 namespace OriWotW.Logic {
     public class InjectCommunication {
@@ -19,6 +21,8 @@ namespace OriWotW.Logic {
         public StreamReader StreamReader;
         public StreamWriter StreamWriter;
         private Manager Manager;
+        public IAsyncResult DLLResult;
+        public IAsyncResult ManagerResult;
         public List<string> Messages = new List<string>();
         private bool ConnectionIsEstablished = false;
         private bool isWriting = false;
@@ -26,6 +30,7 @@ namespace OriWotW.Logic {
         public InjectCommunication(Manager manager) {
             this.Manager = manager;
 
+            this.Manager.managerStatus.Text = "Starting Pipes";
             Task serverTask = RunServerAsync("wotw-manager-pipe");
             Task serverTask1 = ReadServerAsync("injectdll-manager-pipe");
             this.Manager.canStart = true;
@@ -35,50 +40,69 @@ namespace OriWotW.Logic {
             //this.StreamReader = new StreamReader(this.NamedPipeServer);
         }
 
-        private async Task ReadServerAsync(string pipeName) {
-            this.NamedPipeServerDLL = new NamedPipeServerStream(pipeName, PipeDirection.In, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous);
-            await Task.Factory.FromAsync(
-                (cb, state) => this.NamedPipeServerDLL.BeginWaitForConnection(cb, state),
-                ar => this.NamedPipeServerDLL.EndWaitForConnection(ar),
-                null);
+        private PipeSecurity CreateSystemIOPipeSecurity() {
+            PipeSecurity pipeSecurity = new PipeSecurity();
 
+            var id = new SecurityIdentifier(WellKnownSidType.AuthenticatedUserSid, null);
+
+            // Allow Everyone read and write access to the pipe. 
+            pipeSecurity.SetAccessRule(new PipeAccessRule(id, PipeAccessRights.ReadWrite, AccessControlType.Allow));
+
+            return pipeSecurity;
+        }
+
+        public void StopCommunication() {
+            if (StreamReader != null)
+                StreamReader.Close();
+
+            if (StreamWriter != null)
+                StreamWriter.Close();
+
+            ConnectionIsEstablished = false;
+
+            if (NamedPipeServerDLL != null) {
+                NamedPipeServerDLL.Close();
+            }
+
+            if (NamedPipeServer != null) {
+                NamedPipeServer.Close();
+            }
+        }
+
+        private async Task ReadServerAsync(string pipeName) {
+            PipeSecurity pipeSecurity = CreateSystemIOPipeSecurity();
+            this.NamedPipeServerDLL = new NamedPipeServerStream(pipeName, PipeDirection.In, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous, 2048, 2048, pipeSecurity);
+
+            try {
+                await Task.Factory.FromAsync(
+                    (cb, state) => this.NamedPipeServerDLL.BeginWaitForConnection(cb, state),
+                    ar => this.NamedPipeServerDLL.EndWaitForConnection(ar),
+                    null);
+            } catch (Exception e) { this.Manager.managerStatus.Text = e.Message; return; }
             this.StreamReader = new StreamReader(this.NamedPipeServerDLL);
             this.ConnectionIsEstablished = true;
+            this.Manager.managerStatus.Text = "Piped DLL server connected";
+
             this.Read();
         }
 
         private async Task RunServerAsync(string pipeName) {
-            this.NamedPipeServer = new NamedPipeServerStream(pipeName, PipeDirection.Out, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous);
-            await Task.Factory.FromAsync(
-                (cb, state) => this.NamedPipeServer.BeginWaitForConnection(cb, state),
-                ar => this.NamedPipeServer.EndWaitForConnection(ar),
-                null);
+            PipeSecurity pipeSecurity = CreateSystemIOPipeSecurity();
+            this.NamedPipeServer = new NamedPipeServerStream(pipeName, PipeDirection.Out, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous, 2048, 2048, pipeSecurity);
 
-            //MessageBox.Show("DLL has connected", "Remove", MessageBoxButtons.OK);
+            try {
+                await Task.Factory.FromAsync(
+                    (cb, state) => this.NamedPipeServer.BeginWaitForConnection(cb, state),
+                    ar => this.NamedPipeServer.EndWaitForConnection(ar),
+                    null);
+            } catch (Exception e) { this.Manager.managerStatus.Text = e.Message; return; }
 
             this.StreamWriter = new StreamWriter(this.NamedPipeServer);
             this.StreamWriter.AutoFlush = true;
-            //this.StreamReader = new StreamReader(this.NamedPipeServer
+
+            this.Manager.managerStatus.Text = "Piped Manager server connected";
 
             this.Send();
-            /*do {
-                this.Read();
-                string line = await this.StreamReader.ReadLineAsync();
-                this.IsReadingWriting = false;
-                //MessageBox.Show(line, "Remove", MessageBoxButtons.OK);
-                if (line == "BYE" || line == null) {
-                    break;
-                }
-
-                string[] messages = line.Split(new string[] { "||" }, StringSplitOptions.RemoveEmptyEntries);
-                foreach (string s in messages) {
-                    if (s.Contains("GAMECOMPLETION:") == true) {
-                        this.Manager.GameCompletion = float.Parse(line.Replace("GAMECOMPLETION:", ""), CultureInfo.InvariantCulture.NumberFormat);
-                    }
-                }
-
-                //await this.StreamWriter.WriteAsync(line + (char)0);
-            } while (true);*/
         }
 
         private async void Read() {
@@ -116,12 +140,20 @@ namespace OriWotW.Logic {
                             if (s.Contains("MANAGERINITIALIZED") == true) {
                                 this.Manager.ManagerInitialized();
                             }
+                            if (s.Contains("GETSCENEHIERARCHY") == true) {
+                                string data = s.Replace("GETSCENEHIERARCHY", "");
+                                this.Manager.transformEditor.SetSceneHierarchy(data);
+                            }
+                            if (s.Contains("SELECTEDGAMEOBJECT") == true) {
+                                string data = s.Replace("SELECTEDGAMEOBJECT", "");
+                                this.Manager.transformEditor.SetSelectedGameObject(data);
+                            }
                             if (s.Contains("SAVEINFO") == true) {
                                 string data = s.Replace("SAVEINFO", "");
                                 var backupsaves = data.Split(';');
                                 this.Manager.backupsaveUI.Backupsaves.Clear();
 
-                                for (int i = 0; i < backupsaves.Length; i+=10) {
+                                for (int i = 0; i < backupsaves.Length; i += 10) {
                                     if (backupsaves[i] != "") {
                                         Backupsave backupsave = new Backupsave();
                                         backupsave.AreaName = backupsaves[i];
@@ -168,7 +200,7 @@ namespace OriWotW.Logic {
                         }
                     }
                 }
-            } while (true);
+            } while (ConnectionIsEstablished);
         }
 
         public async void Send() {
@@ -197,7 +229,7 @@ namespace OriWotW.Logic {
         }
 
         public void AddCall(string message = "CALL1") {
-             if (this.Messages.Count < 10) {
+            if (this.Messages.Count < 10) {
                 if (message == "CALL0") {
                     if (this.StreamWriter != null) {
                         this.StreamWriter.Flush();

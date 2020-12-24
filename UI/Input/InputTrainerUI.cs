@@ -27,7 +27,6 @@ namespace OriWotW.UI {
         }
 
         private void GenerateInputs() {
-            int index = 0;
             int totalTime = 0;
 
             for (int i = 0; i < this.NewInputs.Count; i++) {

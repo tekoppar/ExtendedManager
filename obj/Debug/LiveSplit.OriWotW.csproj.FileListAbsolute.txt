@@ -1,8 +1,0 @@
-C:\Users\Tekoppar\Desktop\LiveSplit.OriWotW-master\obj\Debug\LiveSplit.OriWotW.csprojAssemblyReference.cache
-C:\Users\Tekoppar\Desktop\LiveSplit.OriWotW-master\obj\Debug\LiveSplit.OriWotW.Properties.Resources.resources
-C:\Users\Tekoppar\Desktop\LiveSplit.OriWotW-master\obj\Debug\LiveSplit.OriWotW.LogViewer.resources
-C:\Users\Tekoppar\Desktop\LiveSplit.OriWotW-master\obj\Debug\LiveSplit.OriWotW.Manager.resources
-C:\Users\Tekoppar\Desktop\LiveSplit.OriWotW-master\obj\Debug\LiveSplit.OriWotW.UserSplitSettings.resources
-C:\Users\Tekoppar\Desktop\LiveSplit.OriWotW-master\obj\Debug\LiveSplit.OriWotW.UserSettings.resources
-C:\Users\Tekoppar\Desktop\LiveSplit.OriWotW-master\obj\Debug\LiveSplit.OriWotW.csproj.GenerateResource.cache
-C:\Users\Tekoppar\Desktop\LiveSplit.OriWotW-master\obj\Debug\LiveSplit.OriWotW.csproj.CoreCompileInputs.cache

@@ -12,10 +12,13 @@ namespace OriWotW {
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing) {
-            this.InjectCommunication.AddCall("CALL0");
-            this.IsDisposingNow = true;
-            this.timerLoop = null;
-            this.DLLCommunication = null;
+            TE.IsDisposingNow = true;
+            if (this.InjectCommunication != null) {
+                this.InjectCommunication.AddCall("CALL0");
+                this.InjectCommunication.StopCommunication();
+            }
+            this.timerLoop.Join();
+            this.DLLCommunication.Join();
 
             if (disposing && (components != null)) {
                 //this.DllInjector.Unload("oriwotw", "C:\\Users\\Tekoppar\\Desktop\\LiveSplit.OriWotW-master\\bin\\injectdll.dll");
@@ -59,10 +62,13 @@ namespace OriWotW {
             this.flowStateList = new System.Windows.Forms.FlowLayoutPanel();
             this.flowInputIcons = new System.Windows.Forms.FlowLayoutPanel();
             this.lblInputInts = new System.Windows.Forms.Label();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.managerStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.flowLayoutPanel1.SuspendLayout();
             this.panelTotalFPS.SuspendLayout();
             this.panelHPEN.SuspendLayout();
             this.panelOreKeys.SuspendLayout();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblNote
@@ -71,7 +77,7 @@ namespace OriWotW {
             this.lblNote.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblNote.Location = new System.Drawing.Point(0, 0);
             this.lblNote.Name = "lblNote";
-            this.lblNote.Size = new System.Drawing.Size(459, 297);
+            this.lblNote.Size = new System.Drawing.Size(459, 321);
             this.lblNote.TabIndex = 15;
             this.lblNote.Text = "Not available";
             this.lblNote.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -201,20 +207,20 @@ namespace OriWotW {
             this.inputsDown.AutoSize = true;
             this.inputsDown.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.inputsDown.Location = new System.Drawing.Point(3, 244);
+            this.inputsDown.MinimumSize = new System.Drawing.Size(50, 0);
             this.inputsDown.Name = "inputsDown";
-            this.inputsDown.Size = new System.Drawing.Size(51, 20);
+            this.inputsDown.Size = new System.Drawing.Size(50, 20);
             this.inputsDown.TabIndex = 30;
-            this.inputsDown.Text = "label1";
             // 
             // possibleCombos
             // 
             this.possibleCombos.AutoSize = true;
             this.possibleCombos.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.possibleCombos.Location = new System.Drawing.Point(3, 277);
+            this.possibleCombos.MinimumSize = new System.Drawing.Size(50, 0);
             this.possibleCombos.Name = "possibleCombos";
-            this.possibleCombos.Size = new System.Drawing.Size(46, 17);
+            this.possibleCombos.Size = new System.Drawing.Size(50, 17);
             this.possibleCombos.TabIndex = 31;
-            this.possibleCombos.Text = "label1";
             // 
             // flowLayoutPanel1
             // 
@@ -340,10 +346,28 @@ namespace OriWotW {
             // lblInputInts
             // 
             this.lblInputInts.Location = new System.Drawing.Point(3, 264);
+            this.lblInputInts.MinimumSize = new System.Drawing.Size(50, 0);
             this.lblInputInts.Name = "lblInputInts";
             this.lblInputInts.Size = new System.Drawing.Size(150, 13);
             this.lblInputInts.TabIndex = 40;
-            this.lblInputInts.Text = "label1";
+            // 
+            // statusStrip1
+            // 
+            this.statusStrip1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.managerStatus});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 299);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
+            this.statusStrip1.Size = new System.Drawing.Size(459, 22);
+            this.statusStrip1.SizingGrip = false;
+            this.statusStrip1.TabIndex = 33;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // managerStatus
+            // 
+            this.managerStatus.Name = "managerStatus";
+            this.managerStatus.Size = new System.Drawing.Size(0, 17);
             // 
             // Manager
             // 
@@ -352,7 +376,8 @@ namespace OriWotW {
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BackColor = System.Drawing.Color.Black;
-            this.ClientSize = new System.Drawing.Size(459, 297);
+            this.ClientSize = new System.Drawing.Size(459, 321);
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.lblNote);
             this.ForeColor = System.Drawing.Color.White;
@@ -369,6 +394,8 @@ namespace OriWotW {
             this.panelTotalFPS.ResumeLayout(false);
             this.panelHPEN.ResumeLayout(false);
             this.panelOreKeys.ResumeLayout(false);
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -403,5 +430,7 @@ namespace OriWotW {
         private System.Windows.Forms.FlowLayoutPanel flowStateList;
         public System.Windows.Forms.Label lblInputInts;
         private System.Windows.Forms.FlowLayoutPanel flowInputIcons;
+        private StatusStrip statusStrip1;
+        public ToolStripStatusLabel managerStatus;
     }
 }

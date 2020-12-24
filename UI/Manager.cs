@@ -39,7 +39,6 @@ namespace OriWotW {
         private static int AverageFPSLength = 25;
         public MemoryManager Memory { get; set; }
         private TemAutoUpdater.ManagerAutoUpdater ManagerAutoUpdater;
-        private bool IsDisposingNow = false;
         private Thread timerLoop;
         private Thread DLLCommunication;
         private bool useLivesplitColors = true;
@@ -85,7 +84,7 @@ namespace OriWotW {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Manager managerWindow = new Manager();
-            TemAutoUpdater.ManagerAutoUpdater ManagerAutoUpdater = new TemAutoUpdater.ManagerAutoUpdater(true);
+           TemAutoUpdater.ManagerAutoUpdater ManagerAutoUpdater = new TemAutoUpdater.ManagerAutoUpdater(true);
             if (ManagerAutoUpdater.IsDisposed == false)
                 Application.Run(ManagerAutoUpdater);
 
@@ -96,8 +95,9 @@ namespace OriWotW {
             this.TopLevel = true;
             InitializeComponent();
             comboManager.SetForm(this);
+            managerStatus.Text = "Initializing the manager";
 
-            this.SeinStateUI = new SeinStateUI(this.flowStateList, new List<Tuple<string, string>>() { new Tuple<string, string>("Dash", "Dash"),
+           this.SeinStateUI = new SeinStateUI(this.flowStateList, new List<Tuple<string, string>>() { new Tuple<string, string>("Dash", "Dash"),
             new Tuple<string, string>("Djump", "Jump"),
             new Tuple<string, string>("Walljump", "Walljump"),
             new Tuple<string, string>("IsOnWall", "Is On Wall"),
@@ -138,6 +138,7 @@ namespace OriWotW {
             RaceEditor = new RaceEditor(this);
             HitboxSplit = new HitboxSplit(this);
             inputTrainer = new InputTrainer(this);
+            managerStatus.Text = "Manager has been initialized";
         }
 
         public void StartUpdateLoop() {
@@ -152,21 +153,21 @@ namespace OriWotW {
         private void UpdateLoop() {
             bool lastHooked = false;
 
-            while (IsDisposingNow == false || timerLoop != null) {
+            while (TE.IsDisposingNow == false && timerLoop != null) {
                 try {
                     bool hooked = Memory.HookProcess();
-                    if (hooked) {
+                    if (hooked && TE.IsDisposingNow == false) {
                         UpdateValues();
                     }
                     if (lastHooked != hooked) {
                         lastHooked = hooked;
-                        this.Invoke((Action)delegate () { lblNote.Visible = !hooked; });
+                        this.BeginInvoke((Action)delegate () { lblNote.Visible = !hooked; });
                     }
                 } catch { }
                 if (Thread.CurrentThread.IsAlive == false) { return; }
-                if (this.IsDisposingNow == true) { return; }
-                if (timerLoop == null || this.IsDisposingNow == true || timerLoop.IsAlive == false) { return; }
-                if (this.IsDisposingNow == true || this.Disposing == true) { timerLoop.Abort(); return; }
+                if (TE.IsDisposingNow == true) { return; }
+                if (timerLoop == null || TE.IsDisposingNow == true || timerLoop.IsAlive == false) { return; }
+                if (TE.IsDisposingNow == true || this.Disposing == true) { timerLoop.Abort(); return; }
                 LoopTimer++;
                 InputLockTimer++;
                 Thread.Sleep(7);
@@ -181,27 +182,32 @@ namespace OriWotW {
         }
 
         private void DLLCommunicationLoop() {
-            while (IsDisposingNow == false || this.DLLCommunication != null) {
+            while (TE.IsDisposingNow == false && this.DLLCommunication != null && Thread.CurrentThread.IsAlive) {
                 try {
-                    if (this.InjectCommunication != null && this.InjectCommunication.StreamWriter != null) {
-                        if (this.DLLCommunication == null) { Thread.CurrentThread.Abort(); return; }
-                        if (this.DLLCommunication.IsAlive == false) { Thread.CurrentThread.Abort(); return; }
-                        if (this.IsDisposingNow == true) { Thread.CurrentThread.Abort(); return; }
+                    if (TE.IsDisposingNow == false && this.InjectCommunication != null && this.InjectCommunication.StreamWriter != null) {
                         UpdateDLLValues();
                     }
                 } catch { }
                 if (Thread.CurrentThread.IsAlive == false) { return; }
-                if (this.IsDisposingNow == true) { return; }
+                if (TE.IsDisposingNow == true) { return; }
                 Thread.Sleep(16);
             }
         }
 
         public void UpdateDLLValues() {
             if (Thread.CurrentThread.IsAlive == false) { return; }
-            if (this.DLLCommunication == null) { Thread.CurrentThread.Abort(); return; }
-            if (this.DLLCommunication.IsAlive == false) { Thread.CurrentThread.Abort(); return; }
-            if (this.IsDisposingNow == true) { Thread.CurrentThread.Abort(); return; }
-            if (this.InvokeRequired && this.IsDisposingNow == false) { this.Invoke((Action)UpdateDLLValues); return; }
+            if (DLLCommunication == null) { Thread.CurrentThread.Abort(); return; }
+            if (DLLCommunication.IsAlive == false) { Thread.CurrentThread.Abort(); return; }
+            if (TE.IsDisposingNow == true) { Thread.CurrentThread.Abort(); return; }
+            if (TE.IsDisposingNow == false && InvokeRequired) {
+                if (TE.IsDisposingNow == true) {
+                    Thread.CurrentThread.Abort();
+                    return;
+                } else {
+                    this.BeginInvoke((Action)UpdateDLLValues);
+                    return;
+                }
+            }
 
             this.InjectCommunication.Send();
         }
@@ -388,19 +394,29 @@ namespace OriWotW {
         }
 
         public void ManagerInitialized() {
-            visualEditor = new SeinVisualEditor(this);
+            visualEditor = new SeinVisualEditor(this, false);
+            this.managerStatus.Text = "DLL has initialized";
+            this.statusStrip1.Visible = false;
         }
 
         public void UpdateValues() {
             if (Thread.CurrentThread.IsAlive == false) { return; }
             if (this.timerLoop == null) { Thread.CurrentThread.Abort(); return; }
             if (this.timerLoop.IsAlive == false) { Thread.CurrentThread.Abort(); return; }
-            if (this.IsDisposingNow == true) { Thread.CurrentThread.Abort(); return; }
-            if (this.IsDisposingNow == true) { Thread.CurrentThread.Abort(); return; }
+            if (TE.IsDisposingNow == true) { Thread.CurrentThread.Abort(); return; }
+            if (TE.IsDisposingNow == true) { Thread.CurrentThread.Abort(); return; }
             if (this.Disposing == true) { Thread.CurrentThread.Abort(); return; }
-            if (this.IsDisposingNow == true) { Thread.CurrentThread.Abort(); return; }
+            if (TE.IsDisposingNow == true) { Thread.CurrentThread.Abort(); return; }
             if (this.Disposing == true) { Thread.CurrentThread.Abort(); return; }
-            if (this.InvokeRequired && this.IsDisposingNow == false) { this.Invoke((Action)UpdateValues); return; }
+            if (TE.IsDisposingNow == false && InvokeRequired) {
+                if (TE.IsDisposingNow == true) {
+                    Thread.CurrentThread.Abort();
+                    return;
+                } else {
+                    this.BeginInvoke((Action)UpdateValues);
+                    return;
+                }
+            }
 
             this.CheckGameInputs();
 
@@ -417,11 +433,17 @@ namespace OriWotW {
             else
                 IsUsingController = false;
 
-            if (this.canStart == true && this.DllInjector == null && gameState != GameState.Logos && gameState != GameState.StartScreen && gameState != GameState.TitleScreen && isLoading == false) {
+            if (this.canStart == true && this.DllInjector == null && gameState != GameState.Logos && gameState != GameState.StartScreen && isLoading == false) { //&& gameState != GameState.TitleScreen
                 this.DllInjector = DllInjector.GetInstance;
                 Memory.PatchNoPause(true);
                 DllInjectionResult result = this.DllInjector.Inject("oriwotw", AppDomain.CurrentDomain.BaseDirectory + "\\injectdll.dll");
-                this.InjectCommunication.AddCall("CALL19PAR" + AppDomain.CurrentDomain.BaseDirectory);
+
+                if (result != DllInjectionResult.Success)
+                    managerStatus.Text = "Injection failed, reason: " + result.ToString();
+                else
+                    managerStatus.Text = "Injection was successful";
+
+               this.InjectCommunication.AddCall("CALL19PAR" + AppDomain.CurrentDomain.BaseDirectory);
 
                 Memory.ReadPlayerInputs(ref SeinInput);
                 List<CompoundButtonInput> allBinds = Memory.GenerateBindingsMap(); //this.Bindings.AllKeyBindings <- replace
@@ -485,7 +507,7 @@ namespace OriWotW {
             lblSpeedLocal.Text = "SpeedLocal: " + seinCharacter.SeinPlatformBehaviour.SeinPlatformMovement.m_localSpeed.X.ToString("G20", CultureInfo.CreateSpecificCulture("en-US")) + ", " + seinCharacter.SeinPlatformBehaviour.SeinPlatformMovement.m_localSpeed.Y.ToString("G20", CultureInfo.CreateSpecificCulture("en-US"));
             lblAdditiveLocalSpeed.Text = "AdditiveLocalSpeed: " + seinCharacter.SeinPlatformBehaviour.SeinPlatformMovement.AdditiveLocalSpeed.X.ToString("G20", CultureInfo.CreateSpecificCulture("en-US")) + ", " + seinCharacter.SeinPlatformBehaviour.SeinPlatformMovement.AdditiveLocalSpeed.Y.ToString("G20", CultureInfo.CreateSpecificCulture("en-US"));
 
-            string lblInputS = "";
+            //string lblInputS = "";
 
             if (this.InputLockTimer > 1000) {
                 //Memory.LockPlayer();
@@ -538,22 +560,6 @@ namespace OriWotW {
             ToolStripMenuItem menuSaveConfiguration = new ToolStripMenuItem("Save Configuration");
             ToolStripMenuItem menuItem1 = new ToolStripMenuItem("Reload Configuration");
             ToolStripMenuItem menuVisibility = new ToolStripMenuItem("Visibility");
-            ToolStripMenuItem menuVisibilityHealth = new ToolStripMenuItem("Visibility Health");
-            ToolStripMenuItem menuVisibilityEnergy = new ToolStripMenuItem("Visibility Energy");
-            ToolStripMenuItem menuVisibilityArea = new ToolStripMenuItem("Visibility Area");
-            ToolStripMenuItem menuVisibilityScene = new ToolStripMenuItem("Visibility Scene");
-            ToolStripMenuItem menuVisibilityOre = new ToolStripMenuItem("Visibility Ore");
-            ToolStripMenuItem menuVisibilityKeys = new ToolStripMenuItem("Visibility Keys");
-            ToolStripMenuItem menuVisibilitySave = new ToolStripMenuItem("Visibility Save");
-            ToolStripMenuItem menuVisibilityTotal = new ToolStripMenuItem("Visibility Total");
-            ToolStripMenuItem menuVisibilityFPS = new ToolStripMenuItem("Visibility FPS");
-            ToolStripMenuItem menuVisibilityDebug = new ToolStripMenuItem("Visibility Debug");
-            ToolStripMenuItem menuVisibilityPosition = new ToolStripMenuItem("Visibility Position");
-            ToolStripMenuItem menuVisibilitySpeed = new ToolStripMenuItem("Visibility Speed");
-            ToolStripMenuItem menuVisibilitySpeedLocal = new ToolStripMenuItem("Visibility SpeedLocal");
-            ToolStripMenuItem menuVisibilityAdditiveLocalSpeed = new ToolStripMenuItem("Visibility AdditiveLocalSpeed");
-            ToolStripMenuItem menuVisibilityAirNoDeceleration = new ToolStripMenuItem("Visibility AirNoDeceleration");
-            ToolStripMenuItem menuVisibilitySpeedFactor = new ToolStripMenuItem("Visibility SpeedFactor");
             ToolStripMenuItem menuTeleport = new ToolStripMenuItem("Open Teleport Menu");
             ToolStripMenuItem menuBackupSave = new ToolStripMenuItem("Backup Save");
             ToolStripMenuItem menuNewValidator = new ToolStripMenuItem("New Validator");
@@ -564,6 +570,9 @@ namespace OriWotW {
             ToolStripMenuItem menuCreateCheckpoint = new ToolStripMenuItem("Create Checkpoint");
             ToolStripMenuItem menuSeinVisualEditor = new ToolStripMenuItem("Sein Visual Editor");
             ToolStripMenuItem menuTransformEditor = new ToolStripMenuItem("Transform Editor");
+
+            List<string> visibilityMenuItemsNames = new List<string> { "Visibility Health", "Visibility Energy", "Visibility Area", "Visibility Scene", "Visibility Ore", "Visibility Keys", "Visibility Save",
+            "Visibility Total", "Visibility FPS", "Visibility Debug", "Visibility Position", "Visibility Speed", "Visibility SpeedLocal", "Visibility AdditiveLocalSpeed", "Visibility AirNoDeceleration", "Visibility SpeedFactor"};
 
 #if IL2CPP
             List<string> debugMenuItemsNames = new List<string> { "Complete Quests", "Create Object", "Stop Recorder",
@@ -634,21 +643,20 @@ namespace OriWotW {
             menuCopySpeed.ToolTipText = "Copies the position values to the clipboard, bound to F2.";
             menuCopyBoth.ToolTipText = "Copies the position values to the clipboard, bound to F3.";
 
-            menuVisibilityItems.AddRange(new List<ToolStripMenuItem>{ menuVisibilityHealth, menuVisibilityEnergy, menuVisibilityArea, menuVisibilityScene, menuVisibilityOre, menuVisibilityKeys, menuVisibilitySave,
-            menuVisibilityTotal, menuVisibilityFPS, menuVisibilityDebug, menuVisibilityPosition, menuVisibilitySpeed, menuVisibilitySpeedLocal, menuVisibilityAdditiveLocalSpeed, menuVisibilityAirNoDeceleration,
-            menuVisibilitySpeedFactor});
-
             menuDebugActions.DropDownItems.AddRange(new List<ToolStripMenuItem> { menuCreateCheckpoint }.ToArray());
 
 #if IL2CPP
             menuDebugActions.DropDownItems.AddRange(debugMenuItems.ToArray());
 #endif
 
-            foreach (ToolStripMenuItem item in menuVisibilityItems) {
+            foreach (string name in visibilityMenuItemsNames) {
+                ToolStripMenuItem item = new ToolStripMenuItem(name);
                 item.CheckOnClick = true;
                 item.Checked = true;
                 item.Click += menuItem_Click;
-                item.Name = item.Text;
+                item.Text = name;
+                item.Name = name;
+                menuVisibilityItems.Add(item);
             }
 
             menuVisibility.DropDownItems.AddRange(menuVisibilityItems.ToArray());
@@ -869,7 +877,6 @@ namespace OriWotW {
         }
 
         void menuItem_Click(object sender, EventArgs e) {
-            //ToolStripItem menuItem = (ToolStripItem)sender;
             ToolStripMenuItem menuItem = sender as ToolStripMenuItem;
 
             if (menuItem != null) {
@@ -936,8 +943,10 @@ namespace OriWotW {
                         if (visualEditor == null || visualEditor.IsDisposed == true)
                             visualEditor = new SeinVisualEditor(this);
 
-                        if (visualEditor.Visible == false)
+                        if (visualEditor.Visible == false) {
                             visualEditor.Show(this);
+                            visualEditor.LoadVisualSettings();
+                        }
 
                         rawInput.AddMessageFilter();
                         break;
@@ -1207,36 +1216,7 @@ namespace OriWotW {
         }
 
         protected override void WndProc(ref Message m) {
-            /*if (m.Msg == Hotkeys.Constants.WM_HOTKEY_MSG_ID)
-                Text = "Ori WotW Bajs";*/
-
-            /*if (m.Msg == 0x0100) {
-                //Text = ((int)m.WParam).ToString();
-                string keyString = GWMKeyToChar.KeyToChar((int)m.WParam);
-                if (keyString != "NULL" && keysDown.FindIndex(x => x == keyString) == -1) {
-                    keysDown.Add(keyString);
-                    keysDownFrame.Add(currentFrame);
-                }
-                keyString = "";
-                for (var i = 0; i < keysDown.Count; i++) {
-                    keyString += keysDown[i] + " F:" + keysDownFrame[i].ToString();
-                }
-                inputsDown.Text = keyString;
-            }
-            if (m.Msg == 0x0101) {
-                string keyString = GWMKeyToChar.KeyToChar((int)m.WParam);
-                int keyIndex = keysDown.FindIndex(x => x == keyString);
-                if (keyIndex != -1) {
-                    keysDown.RemoveAt(keyIndex);
-                    keysDownFrame.RemoveAt(keyIndex);
-                }
-                keyString = "";
-                for (var i = 0; i < keysDown.Count; i++) {
-                    keyString += keysDown[i] + " F:" + keysDownFrame[i].ToString();
-                }
-                inputsDown.Text = keyString;
-            }*/
             base.WndProc(ref m);
         }
     }
-}
+};

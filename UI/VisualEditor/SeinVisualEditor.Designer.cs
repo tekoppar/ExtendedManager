@@ -1,4 +1,5 @@
 ﻿
+using System.Windows.Forms;
 namespace OriWotW.UI {
     partial class SeinVisualEditor {
         /// <summary>
@@ -17,6 +18,18 @@ namespace OriWotW.UI {
             base.Dispose(disposing);
         }
 
+        void Form_FormClosing(object sender, FormClosingEventArgs e) {
+            if (e.CloseReason == CloseReason.UserClosing) {
+                e.Cancel = true;
+                this.Hide();
+            }
+            // Prompt user to save his data
+
+            if (e.CloseReason == CloseReason.WindowsShutDown)
+                e.Cancel = false;
+            // Autosave and clear up ressources
+        }
+
         #region Windows Form Designer generated code
 
         /// <summary>
@@ -24,6 +37,7 @@ namespace OriWotW.UI {
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            this.components = new System.ComponentModel.Container();
             this.textureImage = new System.Windows.Forms.PictureBox();
             this.btnTextureLoader = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
@@ -31,8 +45,12 @@ namespace OriWotW.UI {
             this.chkAutoApply = new System.Windows.Forms.CheckBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.visualSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.resetActiveSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.newSettingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.loadVisualSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.defaultGameSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeActiveSettingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.resetActiveSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tbxSettingName = new System.Windows.Forms.TextBox();
             this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
             this.label1 = new System.Windows.Forms.Label();
@@ -45,6 +63,11 @@ namespace OriWotW.UI {
             this.OriVisualSettingsColorPickers = new System.Windows.Forms.FlowLayoutPanel();
             this.label25 = new System.Windows.Forms.Label();
             this.GoldenSeinVisualSettingsColorPickers = new System.Windows.Forms.FlowLayoutPanel();
+            this.oriHatTexture = new System.Windows.Forms.PictureBox();
+            this.btnOriHatTextureLoader = new System.Windows.Forms.Button();
+            this.btnRemoveOriHatTexture = new System.Windows.Forms.Button();
+            this.label50 = new System.Windows.Forms.Label();
+            this.HatVisualSettingsColorPickers = new System.Windows.Forms.FlowLayoutPanel();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
             this.label23 = new System.Windows.Forms.Label();
@@ -77,6 +100,8 @@ namespace OriWotW.UI {
             this.BowVisualSettingsColorPickers = new System.Windows.Forms.FlowLayoutPanel();
             this.label13 = new System.Windows.Forms.Label();
             this.ArrowVisualSettingsColorPickers = new System.Windows.Forms.FlowLayoutPanel();
+            this.label39 = new System.Windows.Forms.Label();
+            this.ArrowHitVisualSettingsColorPickers = new System.Windows.Forms.FlowLayoutPanel();
             this.tabPage13 = new System.Windows.Forms.TabPage();
             this.flowLayoutPanel84 = new System.Windows.Forms.FlowLayoutPanel();
             this.label10 = new System.Windows.Forms.Label();
@@ -139,18 +164,22 @@ namespace OriWotW.UI {
             this.HammerAttackGroundUpSwipeColorPickers = new System.Windows.Forms.FlowLayoutPanel();
             this.label45 = new System.Windows.Forms.Label();
             this.HammerAttackStompColorPickers = new System.Windows.Forms.FlowLayoutPanel();
+            this.label49 = new System.Windows.Forms.Label();
+            this.HammerShockwaveColorPickers = new System.Windows.Forms.FlowLayoutPanel();
             this.label46 = new System.Windows.Forms.Label();
             this.HammerBlockColorPickers = new System.Windows.Forms.FlowLayoutPanel();
             this.label47 = new System.Windows.Forms.Label();
             this.HammerHitColorPickers = new System.Windows.Forms.FlowLayoutPanel();
             this.label48 = new System.Windows.Forms.Label();
             this.HammerStompPreparationColorPickers = new System.Windows.Forms.FlowLayoutPanel();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.textureImage)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.flowLayoutPanel3.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.flowLayoutPanel4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.oriHatTexture)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.flowLayoutPanel5.SuspendLayout();
             this.tabPage11.SuspendLayout();
@@ -228,8 +257,7 @@ namespace OriWotW.UI {
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.visualSettingsToolStripMenuItem,
-            this.resetActiveSettingsToolStripMenuItem,
-            this.removeActiveSettingToolStripMenuItem});
+            this.editToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(687, 24);
@@ -238,23 +266,60 @@ namespace OriWotW.UI {
             // 
             // visualSettingsToolStripMenuItem
             // 
+            this.visualSettingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.newSettingToolStripMenuItem,
+            this.loadVisualSettingsToolStripMenuItem});
             this.visualSettingsToolStripMenuItem.Name = "visualSettingsToolStripMenuItem";
-            this.visualSettingsToolStripMenuItem.Size = new System.Drawing.Size(95, 20);
-            this.visualSettingsToolStripMenuItem.Text = "Visual Settings";
+            this.visualSettingsToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.visualSettingsToolStripMenuItem.Text = "File";
             // 
-            // resetActiveSettingsToolStripMenuItem
+            // newSettingToolStripMenuItem
             // 
-            this.resetActiveSettingsToolStripMenuItem.Name = "resetActiveSettingsToolStripMenuItem";
-            this.resetActiveSettingsToolStripMenuItem.Size = new System.Drawing.Size(128, 20);
-            this.resetActiveSettingsToolStripMenuItem.Text = "Reset Active Settings";
-            this.resetActiveSettingsToolStripMenuItem.Click += new System.EventHandler(this.resetActiveSettingsToolStripMenuItem_Click);
+            this.newSettingToolStripMenuItem.Name = "newSettingToolStripMenuItem";
+            this.newSettingToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.newSettingToolStripMenuItem.Text = "New Setting";
+            this.newSettingToolStripMenuItem.Click += new System.EventHandler(this.newSettingToolStripMenuItem_Click);
+            // 
+            // loadVisualSettingsToolStripMenuItem
+            // 
+            this.loadVisualSettingsToolStripMenuItem.Name = "loadVisualSettingsToolStripMenuItem";
+            this.loadVisualSettingsToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.loadVisualSettingsToolStripMenuItem.Text = "Load Visual Settings";
+            // 
+            // editToolStripMenuItem
+            // 
+            this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.defaultGameSettingsToolStripMenuItem,
+            this.removeActiveSettingToolStripMenuItem,
+            this.resetActiveSettingsToolStripMenuItem});
+            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
+            this.editToolStripMenuItem.Text = "Edit";
+            // 
+            // defaultGameSettingsToolStripMenuItem
+            // 
+            this.defaultGameSettingsToolStripMenuItem.Name = "defaultGameSettingsToolStripMenuItem";
+            this.defaultGameSettingsToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.defaultGameSettingsToolStripMenuItem.Text = "Default Game Settings";
+            this.defaultGameSettingsToolStripMenuItem.ToolTipText = "Sets the visual settings to the default game ones, does not change the values in " +
+    "the editor.";
+            this.defaultGameSettingsToolStripMenuItem.Click += new System.EventHandler(this.defaultGameSettingsToolStripMenuItem_Click);
             // 
             // removeActiveSettingToolStripMenuItem
             // 
             this.removeActiveSettingToolStripMenuItem.Name = "removeActiveSettingToolStripMenuItem";
-            this.removeActiveSettingToolStripMenuItem.Size = new System.Drawing.Size(138, 20);
+            this.removeActiveSettingToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
             this.removeActiveSettingToolStripMenuItem.Text = "Remove Active Setting";
+            this.removeActiveSettingToolStripMenuItem.ToolTipText = "Remoes the current active setting.";
             this.removeActiveSettingToolStripMenuItem.Click += new System.EventHandler(this.removeActiveSettingToolStripMenuItem_Click);
+            // 
+            // resetActiveSettingsToolStripMenuItem
+            // 
+            this.resetActiveSettingsToolStripMenuItem.Name = "resetActiveSettingsToolStripMenuItem";
+            this.resetActiveSettingsToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.resetActiveSettingsToolStripMenuItem.Text = "Reset Active Settings";
+            this.resetActiveSettingsToolStripMenuItem.ToolTipText = "Resets the current active settings to default values.";
+            this.resetActiveSettingsToolStripMenuItem.Click += new System.EventHandler(this.resetActiveSettingsToolStripMenuItem_Click);
             // 
             // tbxSettingName
             // 
@@ -347,6 +412,11 @@ namespace OriWotW.UI {
             this.flowLayoutPanel4.Controls.Add(this.OriVisualSettingsColorPickers);
             this.flowLayoutPanel4.Controls.Add(this.label25);
             this.flowLayoutPanel4.Controls.Add(this.GoldenSeinVisualSettingsColorPickers);
+            this.flowLayoutPanel4.Controls.Add(this.oriHatTexture);
+            this.flowLayoutPanel4.Controls.Add(this.btnOriHatTextureLoader);
+            this.flowLayoutPanel4.Controls.Add(this.btnRemoveOriHatTexture);
+            this.flowLayoutPanel4.Controls.Add(this.label50);
+            this.flowLayoutPanel4.Controls.Add(this.HatVisualSettingsColorPickers);
             this.flowLayoutPanel4.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel4.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.flowLayoutPanel4.Location = new System.Drawing.Point(6, 6);
@@ -404,6 +474,61 @@ namespace OriWotW.UI {
             this.GoldenSeinVisualSettingsColorPickers.Name = "GoldenSeinVisualSettingsColorPickers";
             this.GoldenSeinVisualSettingsColorPickers.Size = new System.Drawing.Size(50, 50);
             this.GoldenSeinVisualSettingsColorPickers.TabIndex = 0;
+            // 
+            // oriHatTexture
+            // 
+            this.oriHatTexture.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.oriHatTexture.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.oriHatTexture.Location = new System.Drawing.Point(6, 763);
+            this.oriHatTexture.Name = "oriHatTexture";
+            this.oriHatTexture.Size = new System.Drawing.Size(256, 256);
+            this.oriHatTexture.TabIndex = 33;
+            this.oriHatTexture.TabStop = false;
+            // 
+            // btnOriHatTextureLoader
+            // 
+            this.btnOriHatTextureLoader.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.btnOriHatTextureLoader.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.btnOriHatTextureLoader.Location = new System.Drawing.Point(6, 1025);
+            this.btnOriHatTextureLoader.Name = "btnOriHatTextureLoader";
+            this.btnOriHatTextureLoader.Size = new System.Drawing.Size(97, 23);
+            this.btnOriHatTextureLoader.TabIndex = 34;
+            this.btnOriHatTextureLoader.Text = "Load Texture";
+            this.btnOriHatTextureLoader.UseVisualStyleBackColor = true;
+            this.btnOriHatTextureLoader.Click += new System.EventHandler(this.btnTextureLoader_Click);
+            // 
+            // btnRemoveOriHatTexture
+            // 
+            this.btnRemoveOriHatTexture.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.btnRemoveOriHatTexture.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.btnRemoveOriHatTexture.Location = new System.Drawing.Point(6, 1054);
+            this.btnRemoveOriHatTexture.Margin = new System.Windows.Forms.Padding(3, 3, 3, 15);
+            this.btnRemoveOriHatTexture.Name = "btnRemoveOriHatTexture";
+            this.btnRemoveOriHatTexture.Size = new System.Drawing.Size(97, 23);
+            this.btnRemoveOriHatTexture.TabIndex = 35;
+            this.btnRemoveOriHatTexture.Text = "Remove Texture";
+            this.btnRemoveOriHatTexture.UseVisualStyleBackColor = true;
+            this.btnRemoveOriHatTexture.Click += new System.EventHandler(this.btnRemoveOriHatTexture_Click);
+            // 
+            // label50
+            // 
+            this.label50.AutoSize = true;
+            this.label50.Location = new System.Drawing.Point(6, 1092);
+            this.label50.Name = "label50";
+            this.label50.Size = new System.Drawing.Size(60, 13);
+            this.label50.TabIndex = 32;
+            this.label50.Text = "Hat Visuals";
+            // 
+            // HatVisualSettingsColorPickers
+            // 
+            this.HatVisualSettingsColorPickers.AutoSize = true;
+            this.HatVisualSettingsColorPickers.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.HatVisualSettingsColorPickers.Location = new System.Drawing.Point(6, 1108);
+            this.HatVisualSettingsColorPickers.Margin = new System.Windows.Forms.Padding(3, 3, 3, 15);
+            this.HatVisualSettingsColorPickers.MinimumSize = new System.Drawing.Size(50, 50);
+            this.HatVisualSettingsColorPickers.Name = "HatVisualSettingsColorPickers";
+            this.HatVisualSettingsColorPickers.Size = new System.Drawing.Size(50, 50);
+            this.HatVisualSettingsColorPickers.TabIndex = 31;
             // 
             // tabPage2
             // 
@@ -725,16 +850,20 @@ namespace OriWotW.UI {
             this.flowLayoutPanel44.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.flowLayoutPanel44.AutoScroll = true;
             this.flowLayoutPanel44.Controls.Add(this.label12);
             this.flowLayoutPanel44.Controls.Add(this.BowVisualSettingsColorPickers);
             this.flowLayoutPanel44.Controls.Add(this.label13);
             this.flowLayoutPanel44.Controls.Add(this.ArrowVisualSettingsColorPickers);
+            this.flowLayoutPanel44.Controls.Add(this.label39);
+            this.flowLayoutPanel44.Controls.Add(this.ArrowHitVisualSettingsColorPickers);
             this.flowLayoutPanel44.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel44.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.flowLayoutPanel44.Location = new System.Drawing.Point(6, 6);
             this.flowLayoutPanel44.Name = "flowLayoutPanel44";
             this.flowLayoutPanel44.Size = new System.Drawing.Size(643, 703);
             this.flowLayoutPanel44.TabIndex = 0;
+            this.flowLayoutPanel44.WrapContents = false;
             // 
             // label12
             // 
@@ -775,6 +904,26 @@ namespace OriWotW.UI {
             this.ArrowVisualSettingsColorPickers.Name = "ArrowVisualSettingsColorPickers";
             this.ArrowVisualSettingsColorPickers.Size = new System.Drawing.Size(50, 50);
             this.ArrowVisualSettingsColorPickers.TabIndex = 1;
+            // 
+            // label39
+            // 
+            this.label39.AutoSize = true;
+            this.label39.Location = new System.Drawing.Point(3, 162);
+            this.label39.Name = "label39";
+            this.label39.Size = new System.Drawing.Size(50, 13);
+            this.label39.TabIndex = 24;
+            this.label39.Text = "Arrow Hit";
+            // 
+            // ArrowHitVisualSettingsColorPickers
+            // 
+            this.ArrowHitVisualSettingsColorPickers.AutoSize = true;
+            this.ArrowHitVisualSettingsColorPickers.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ArrowHitVisualSettingsColorPickers.Location = new System.Drawing.Point(3, 178);
+            this.ArrowHitVisualSettingsColorPickers.Margin = new System.Windows.Forms.Padding(3, 3, 3, 15);
+            this.ArrowHitVisualSettingsColorPickers.MinimumSize = new System.Drawing.Size(50, 50);
+            this.ArrowHitVisualSettingsColorPickers.Name = "ArrowHitVisualSettingsColorPickers";
+            this.ArrowHitVisualSettingsColorPickers.Size = new System.Drawing.Size(50, 50);
+            this.ArrowHitVisualSettingsColorPickers.TabIndex = 23;
             // 
             // tabPage13
             // 
@@ -1295,6 +1444,8 @@ namespace OriWotW.UI {
             this.flowLayoutPanel1.Controls.Add(this.HammerAttackGroundUpSwipeColorPickers);
             this.flowLayoutPanel1.Controls.Add(this.label45);
             this.flowLayoutPanel1.Controls.Add(this.HammerAttackStompColorPickers);
+            this.flowLayoutPanel1.Controls.Add(this.label49);
+            this.flowLayoutPanel1.Controls.Add(this.HammerShockwaveColorPickers);
             this.flowLayoutPanel1.Controls.Add(this.label46);
             this.flowLayoutPanel1.Controls.Add(this.HammerBlockColorPickers);
             this.flowLayoutPanel1.Controls.Add(this.label47);
@@ -1528,11 +1679,33 @@ namespace OriWotW.UI {
             this.HammerAttackStompColorPickers.Size = new System.Drawing.Size(50, 50);
             this.HammerAttackStompColorPickers.TabIndex = 23;
             // 
+            // label49
+            // 
+            this.label49.AutoSize = true;
+            this.label49.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.label49.Location = new System.Drawing.Point(3, 810);
+            this.label49.Name = "label49";
+            this.label49.Size = new System.Drawing.Size(64, 13);
+            this.label49.TabIndex = 32;
+            this.label49.Text = "Shockwave";
+            // 
+            // HammerShockwaveColorPickers
+            // 
+            this.HammerShockwaveColorPickers.AutoSize = true;
+            this.HammerShockwaveColorPickers.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.HammerShockwaveColorPickers.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.HammerShockwaveColorPickers.Location = new System.Drawing.Point(3, 826);
+            this.HammerShockwaveColorPickers.Margin = new System.Windows.Forms.Padding(3, 3, 3, 15);
+            this.HammerShockwaveColorPickers.MinimumSize = new System.Drawing.Size(50, 50);
+            this.HammerShockwaveColorPickers.Name = "HammerShockwaveColorPickers";
+            this.HammerShockwaveColorPickers.Size = new System.Drawing.Size(50, 50);
+            this.HammerShockwaveColorPickers.TabIndex = 31;
+            // 
             // label46
             // 
             this.label46.AutoSize = true;
             this.label46.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.label46.Location = new System.Drawing.Point(3, 810);
+            this.label46.Location = new System.Drawing.Point(3, 891);
             this.label46.Name = "label46";
             this.label46.Size = new System.Drawing.Size(34, 13);
             this.label46.TabIndex = 26;
@@ -1543,7 +1716,7 @@ namespace OriWotW.UI {
             this.HammerBlockColorPickers.AutoSize = true;
             this.HammerBlockColorPickers.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.HammerBlockColorPickers.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.HammerBlockColorPickers.Location = new System.Drawing.Point(3, 826);
+            this.HammerBlockColorPickers.Location = new System.Drawing.Point(3, 907);
             this.HammerBlockColorPickers.Margin = new System.Windows.Forms.Padding(3, 3, 3, 15);
             this.HammerBlockColorPickers.MinimumSize = new System.Drawing.Size(50, 50);
             this.HammerBlockColorPickers.Name = "HammerBlockColorPickers";
@@ -1554,7 +1727,7 @@ namespace OriWotW.UI {
             // 
             this.label47.AutoSize = true;
             this.label47.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.label47.Location = new System.Drawing.Point(3, 891);
+            this.label47.Location = new System.Drawing.Point(3, 972);
             this.label47.Name = "label47";
             this.label47.Size = new System.Drawing.Size(20, 13);
             this.label47.TabIndex = 28;
@@ -1565,7 +1738,7 @@ namespace OriWotW.UI {
             this.HammerHitColorPickers.AutoSize = true;
             this.HammerHitColorPickers.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.HammerHitColorPickers.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.HammerHitColorPickers.Location = new System.Drawing.Point(3, 907);
+            this.HammerHitColorPickers.Location = new System.Drawing.Point(3, 988);
             this.HammerHitColorPickers.Margin = new System.Windows.Forms.Padding(3, 3, 3, 15);
             this.HammerHitColorPickers.MinimumSize = new System.Drawing.Size(50, 50);
             this.HammerHitColorPickers.Name = "HammerHitColorPickers";
@@ -1576,7 +1749,7 @@ namespace OriWotW.UI {
             // 
             this.label48.AutoSize = true;
             this.label48.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.label48.Location = new System.Drawing.Point(3, 972);
+            this.label48.Location = new System.Drawing.Point(3, 1053);
             this.label48.Name = "label48";
             this.label48.Size = new System.Drawing.Size(94, 13);
             this.label48.TabIndex = 30;
@@ -1587,7 +1760,7 @@ namespace OriWotW.UI {
             this.HammerStompPreparationColorPickers.AutoSize = true;
             this.HammerStompPreparationColorPickers.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.HammerStompPreparationColorPickers.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.HammerStompPreparationColorPickers.Location = new System.Drawing.Point(3, 988);
+            this.HammerStompPreparationColorPickers.Location = new System.Drawing.Point(3, 1069);
             this.HammerStompPreparationColorPickers.Margin = new System.Windows.Forms.Padding(3, 3, 3, 15);
             this.HammerStompPreparationColorPickers.MinimumSize = new System.Drawing.Size(50, 50);
             this.HammerStompPreparationColorPickers.Name = "HammerStompPreparationColorPickers";
@@ -1608,6 +1781,7 @@ namespace OriWotW.UI {
             this.Name = "SeinVisualEditor";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "SeinVisualEditor";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.textureImage)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
@@ -1617,6 +1791,7 @@ namespace OriWotW.UI {
             this.tabPage1.ResumeLayout(false);
             this.flowLayoutPanel4.ResumeLayout(false);
             this.flowLayoutPanel4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.oriHatTexture)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.flowLayoutPanel5.ResumeLayout(false);
             this.flowLayoutPanel5.PerformLayout();
@@ -1650,7 +1825,6 @@ namespace OriWotW.UI {
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel3;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnSaveSetting;
-        private System.Windows.Forms.ToolStripMenuItem resetActiveSettingsToolStripMenuItem;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel4;
         private System.Windows.Forms.TabPage tabPage2;
@@ -1670,7 +1844,6 @@ namespace OriWotW.UI {
         private System.Windows.Forms.FlowLayoutPanel TorchVisualSettingsColorPickers;
         private System.Windows.Forms.TabPage tabPage11;
         private System.Windows.Forms.FlowLayoutPanel GlideVisualSettingsColorPickers;
-        private System.Windows.Forms.ToolStripMenuItem removeActiveSettingToolStripMenuItem;
         private System.Windows.Forms.TabPage tabPage12;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel44;
         private System.Windows.Forms.FlowLayoutPanel BowVisualSettingsColorPickers;
@@ -1760,5 +1933,21 @@ namespace OriWotW.UI {
         private System.Windows.Forms.FlowLayoutPanel HammerHitColorPickers;
         private System.Windows.Forms.Label label48;
         private System.Windows.Forms.FlowLayoutPanel HammerStompPreparationColorPickers;
+        private System.Windows.Forms.Label label39;
+        private System.Windows.Forms.FlowLayoutPanel ArrowHitVisualSettingsColorPickers;
+        private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.Label label49;
+        private System.Windows.Forms.FlowLayoutPanel HammerShockwaveColorPickers;
+        private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem defaultGameSettingsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem removeActiveSettingToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem resetActiveSettingsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem loadVisualSettingsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem newSettingToolStripMenuItem;
+        private System.Windows.Forms.Label label50;
+        private System.Windows.Forms.FlowLayoutPanel HatVisualSettingsColorPickers;
+        private System.Windows.Forms.PictureBox oriHatTexture;
+        private System.Windows.Forms.Button btnOriHatTextureLoader;
+        private System.Windows.Forms.Button btnRemoveOriHatTexture;
     }
 }

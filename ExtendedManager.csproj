@@ -89,6 +89,12 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.Bcl.AsyncInterfaces.1.1.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
@@ -275,6 +281,7 @@
     <Compile Include="UI\Backup saves\BackupsaveUI.Designer.cs">
       <DependentUpon>BackupsaveUI.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\Editor\SceneHierarchy.cs" />
     <Compile Include="UI\VisualEditor\ColorWheel.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -399,10 +406,10 @@
     <Compile Include="UI\VisualEditor\Vector4Control.Designer.cs">
       <DependentUpon>Vector4Control.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\VisualEditor\WotwEditor.cs">
+    <Compile Include="UI\Editor\WotwEditor.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\VisualEditor\WotwEditor.Designer.cs">
+    <Compile Include="UI\Editor\WotwEditor.Designer.cs">
       <DependentUpon>WotwEditor.cs</DependentUpon>
     </Compile>
   </ItemGroup>
@@ -573,6 +580,7 @@
     <None Include="bin\Icons\shardFrame5Level5.png" />
     <None Include="bin\Icons\energyContainerPickupLarge.png" />
     <None Include="bin\Icons\lifeCellPickup.png" />
+    <None Include="Properties\app.manifest" />
     <None Include="Resources\colorpicker.png" />
     <None Include="bin\InputImages\colorpicker.png" />
     <None Include="bin\InputImages\colorpickerbackground.png" />
@@ -667,7 +675,7 @@
     <EmbeddedResource Include="UI\VisualEditor\Vector4Control.resx">
       <DependentUpon>Vector4Control.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\VisualEditor\WotwEditor.resx">
+    <EmbeddedResource Include="UI\Editor\WotwEditor.resx">
       <DependentUpon>WotwEditor.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>

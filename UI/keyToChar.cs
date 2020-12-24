@@ -1232,7 +1232,6 @@ namespace WMKeyToChar {
                 List<WOTWKeyBinding> previousBind = null;
                 int currentTiming = 0;
                 int previousTiming = 0;
-                int iL = 0;
                 long currentMS = 0;
                 long previousMS = 0;
                 WOTWKeyBinding previousKey = null;

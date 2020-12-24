@@ -16,14 +16,16 @@ using System.Reflection;
 
 namespace OriWotW.UI {
     public partial class SeinVisualEditor : Form {
-        private SeinVisualSettings VisualSettings = new SeinVisualSettings();
-        private SeinVisualSetting SeinVisualSettings = new SeinVisualSetting();
+        private SeinVisualSettings VisualSettings;
+        private SeinVisualSetting SeinVisualSettings;
+        private VisualEditorSettings VisualEditorSettings;
         private Manager Manager;
+        private bool IsSettingsLoaded = false;
         private ColorWheel ColorWheel = new ColorWheel();
         private Dictionary<string, int> ExistingVisualSettings = new Dictionary<string, int>();
         private Dictionary<string, FlowLayoutPanel> PickerLayouts = new Dictionary<string, FlowLayoutPanel>();
 
-        public SeinVisualEditor(Manager manager) {
+        public SeinVisualEditor(Manager manager, bool LoadSettings = true) {
             Application.EnableVisualStyles();
             InitializeComponent();
 
@@ -36,7 +38,9 @@ namespace OriWotW.UI {
                 allControls.RemoveAt(0);
                 if (control.GetType() == typeof(FlowLayoutPanel)) {
                     FlowLayoutPanel panel = control as FlowLayoutPanel;
-                    PickerLayouts.Add(panel.Name.Replace("ColorPickers", ""), panel);
+
+                    if (panel.Name.Contains("ColorPickers"))
+                        PickerLayouts.Add(panel.Name.Replace("ColorPickers", ""), panel);
 
                     foreach (Control control1 in control.Controls)
                         allControls.Add(control1);
@@ -46,75 +50,109 @@ namespace OriWotW.UI {
             }
 
             this.Manager = manager;
-            this.LoadVisualSettings();
+            this.LoadVisualSettings(LoadSettings);
         }
 
-        private void LoadVisualSettings() {
+        public void LoadVisualSettings(bool LoadSettings = true) {
+            if (System.IO.File.Exists(AppDomain.CurrentDomain.BaseDirectory + "\\VisualEditorSettings.settings") == true) {
+                string jsonString = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "\\VisualEditorSettings.settings");
+                VisualEditorSettings = JsonSerializer.Deserialize<VisualEditorSettings>(jsonString);
+            }
             if (System.IO.File.Exists(AppDomain.CurrentDomain.BaseDirectory + "\\visuals.settings") == true) {
-                string jsonString = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "\\visuals.settings");
-                this.VisualSettings = JsonSerializer.Deserialize<SeinVisualSettings>(jsonString);
-                this.SeinVisualSettings = this.VisualSettings.ActiveVisualSetting;
+                if (IsSettingsLoaded == false && (LoadSettings == true || VisualEditorSettings.AutoApplyOnStartup == true)) {
+                    string jsonString = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "\\visuals.settings");
+                    this.VisualSettings = JsonSerializer.Deserialize<SeinVisualSettings>(jsonString);
+                    this.SeinVisualSettings = this.VisualSettings.ActiveVisualSetting;
 
-                if (this.SeinVisualSettings == null) {
-                    this.SeinVisualSettings = new SeinVisualSetting();
+                    if (this.SeinVisualSettings == null) {
+                        this.SeinVisualSettings = new SeinVisualSetting();
+                    }
+
+                    foreach (SeinVisualSetting setting in this.VisualSettings.VisualSettings) {
+                        ToolStripMenuItem item = new ToolStripMenuItem();
+                        item.Name = setting.SettingName;
+                        item.Text = setting.SettingName;
+                        item.Click += Item_Click;
+                        loadVisualSettingsToolStripMenuItem.DropDownItems.Add(item);
+                        ExistingVisualSettings.Add(item.Name, ExistingVisualSettings.Count());
+                    }
+
+                    LoadColorPickers();
+                    this.ApplyVisualSettings();
+                    if (VisualEditorSettings.AutoApplyOnStartup == true) {
+                        this.SaveVisualSettings();
+                        this.Manager.InjectCommunication.AddCall("CALL32PAR" + AppDomain.CurrentDomain.BaseDirectory + "\\visuals.settings");
+                    }
+                    IsSettingsLoaded = true;
                 }
-
-                foreach (SeinVisualSetting setting in this.VisualSettings.VisualSettings) {
-                    ToolStripMenuItem item = new ToolStripMenuItem();
-                    item.Name = setting.SettingName;
-                    item.Text = setting.SettingName;
-                    item.Click += Item_Click;
-                    visualSettingsToolStripMenuItem.DropDownItems.Add(item);
-                    ExistingVisualSettings.Add(item.Name, ExistingVisualSettings.Count());
-                }
-
-                LoadColorPickers();
-                this.ApplyVisualSettings();
-                if (SeinVisualSettings.AutoApplyOnStartup == true)
-                    this.Manager.InjectCommunication.AddCall("CALL32PAR" + AppDomain.CurrentDomain.BaseDirectory + "\\visuals.settings");
             } else {
                 LoadColorPickers();
+
                 this.ApplyVisualSettings();
             }
         }
 
         private void ResetSettingsDropdownList() {
             ExistingVisualSettings.Clear();
-            this.visualSettingsToolStripMenuItem.DropDownItems.Clear();
+            this.loadVisualSettingsToolStripMenuItem.DropDownItems.Clear();
             foreach (SeinVisualSetting setting in this.VisualSettings.VisualSettings) {
                 ToolStripMenuItem item = new ToolStripMenuItem();
                 item.Name = setting.SettingName;
                 item.Text = setting.SettingName;
                 item.Click += Item_Click;
-                visualSettingsToolStripMenuItem.DropDownItems.Add(item);
+                loadVisualSettingsToolStripMenuItem.DropDownItems.Add(item);
                 ExistingVisualSettings.Add(item.Name, ExistingVisualSettings.Count());
             }
         }
 
         private void ApplyVisualSettings() {
             if (this.SeinVisualSettings != null) {
-                if (Path.IsPathRooted(this.SeinVisualSettings.OriVisualSettings.TexturePath) == true && File.Exists(this.SeinVisualSettings.OriVisualSettings.TexturePath) == true) {
-                    this.textureImage.Image = Image.FromFile(this.SeinVisualSettings.OriVisualSettings.TexturePath);
-                    this.textureImage.SizeMode = PictureBoxSizeMode.StretchImage;
-                } else {
-                    if (Path.IsPathRooted(AppDomain.CurrentDomain.BaseDirectory + this.SeinVisualSettings.OriVisualSettings.TexturePath) == true && File.Exists(AppDomain.CurrentDomain.BaseDirectory + this.SeinVisualSettings.OriVisualSettings.TexturePath) == true) {
-                        this.textureImage.Image = Image.FromFile(AppDomain.CurrentDomain.BaseDirectory + this.SeinVisualSettings.OriVisualSettings.TexturePath);
-                        this.textureImage.SizeMode = PictureBoxSizeMode.StretchImage;
-                    } else {
-                        this.textureImage.Image = null;
-                    }
-                }
+                ApplyTexture("textureImage");
+                ApplyTexture("oriHatTexture");
 
                 this.chkbHideGlow.Checked = this.SeinVisualSettings.OriVisualSettings.HideGlow;
-                this.chkAutoApply.Checked = this.SeinVisualSettings.AutoApplyOnStartup;
+                this.chkAutoApply.Checked = this.VisualEditorSettings.AutoApplyOnStartup;
                 this.tbxSettingName.Text = this.SeinVisualSettings.SettingName;
             }
         }
 
+        private void ApplyTexture(string controlName) {
+            switch (controlName) {
+                case "textureImage":
+                    if (Path.IsPathRooted(this.SeinVisualSettings.OriVisualSettings.TexturePath) == true && File.Exists(this.SeinVisualSettings.OriVisualSettings.TexturePath) == true) {
+                        this.textureImage.Image = Image.FromFile(this.SeinVisualSettings.OriVisualSettings.TexturePath);
+                        this.textureImage.SizeMode = PictureBoxSizeMode.StretchImage;
+                    } else {
+                        if (Path.IsPathRooted(AppDomain.CurrentDomain.BaseDirectory + this.SeinVisualSettings.OriVisualSettings.TexturePath) == true && File.Exists(AppDomain.CurrentDomain.BaseDirectory + this.SeinVisualSettings.OriVisualSettings.TexturePath) == true) {
+                            this.textureImage.Image = Image.FromFile(AppDomain.CurrentDomain.BaseDirectory + this.SeinVisualSettings.OriVisualSettings.TexturePath);
+                            this.textureImage.SizeMode = PictureBoxSizeMode.StretchImage;
+                        } else {
+                            this.textureImage.Image = null;
+                        }
+                    }
+                    break;
+
+                case "oriHatTexture":
+                    if (Path.IsPathRooted(this.SeinVisualSettings.OriVisualSettings.HatVisualSettings.TexturePath) == true && File.Exists(this.SeinVisualSettings.OriVisualSettings.HatVisualSettings.TexturePath) == true) {
+                        this.oriHatTexture.Image = Image.FromFile(this.SeinVisualSettings.OriVisualSettings.HatVisualSettings.TexturePath);
+                        this.oriHatTexture.SizeMode = PictureBoxSizeMode.StretchImage;
+                    } else {
+                        if (Path.IsPathRooted(AppDomain.CurrentDomain.BaseDirectory + this.SeinVisualSettings.OriVisualSettings.HatVisualSettings.TexturePath) == true && File.Exists(AppDomain.CurrentDomain.BaseDirectory + this.SeinVisualSettings.OriVisualSettings.HatVisualSettings.TexturePath) == true) {
+                            this.oriHatTexture.Image = Image.FromFile(AppDomain.CurrentDomain.BaseDirectory + this.SeinVisualSettings.OriVisualSettings.HatVisualSettings.TexturePath);
+                            this.oriHatTexture.SizeMode = PictureBoxSizeMode.StretchImage;
+                        } else {
+                            this.oriHatTexture.Image = null;
+                        }
+                    }
+                    break;
+        }
+    }
+
         private void ResetVisualSettings() {
             this.textureImage.Image = null;
             this.chkbHideGlow.Checked = this.SeinVisualSettings.OriVisualSettings.HideGlow;
-            this.chkAutoApply.Checked = this.SeinVisualSettings.AutoApplyOnStartup;
+            this.chkAutoApply.Checked = this.VisualEditorSettings.AutoApplyOnStartup;
+            this.oriHatTexture.Image = null;
 
             this.ApplyVisualSettings();
         }
@@ -124,12 +162,43 @@ namespace OriWotW.UI {
             SeinVisualSetting setting = this.VisualSettings.GetSettingByName(item.Name);
 
             if (setting != null) {
-                this.SeinVisualSettings = setting;
-                this.VisualSettings.ActiveVisualSetting = setting;
-                this.SaveVisualSettings();
-                if (SeinVisualSettings.AutoApplyOnStartup == true)
-                    this.Manager.InjectCommunication.AddCall("CALL32PAR" + AppDomain.CurrentDomain.BaseDirectory + "\\visuals.settings");
+                ResetSettings(SeinVisualSettings, setting);
+                ApplyVisualSettings();
             }
+        }
+
+        private void ResetSettings(SeinVisualSetting oldSetting, SeinVisualSetting newSetting) {
+            var valuesOld = TE.GetPropertyObjectsByType(oldSetting, "SeinVisualSettings", typeof(TColorPicker));
+
+            this.SeinVisualSettings = newSetting;
+            var valuesNew = TE.GetPropertyObjectsByType(SeinVisualSettings, "SeinVisualSettings", typeof(TColorPicker));
+
+            this.VisualSettings.ActiveVisualSetting = newSetting;
+
+            this.SuspendLayout();
+            foreach (var picker in PickerLayouts) { picker.Value.SuspendLayout(); }
+            foreach (var key in valuesOld.Keys) {
+                var property = valuesOld[key];
+                var propertyNew = valuesNew[key];
+
+                TColorPicker picker = (TColorPicker)property;
+                TColorPicker pickerNew = (TColorPicker)propertyNew;
+                FlowLayoutPanel layout = picker.Parent as FlowLayoutPanel;
+                int index = layout.Controls.IndexOf(picker);
+                layout.SuspendLayout();
+                pickerNew.SetColor(pickerNew.Color.Value);
+                layout.Controls.Remove(picker);
+                pickerNew.PickerSize = new Point(32, 32);
+                pickerNew.Size = new Size(146, 38);
+                layout.Controls.Add(pickerNew);
+                layout.Controls.SetChildIndex(pickerNew, index);
+                layout.ResumeLayout();
+            }
+            foreach (var picker in PickerLayouts) { picker.Value.ResumeLayout(); }
+            this.ResumeLayout();
+
+            if (VisualEditorSettings.AutoApplyOnStartup == true)
+                this.Manager.InjectCommunication.AddCall("CALL32PAR" + AppDomain.CurrentDomain.BaseDirectory + "\\visuals.settings");
         }
 
         private void SaveVisualSettings() {
@@ -137,9 +206,12 @@ namespace OriWotW.UI {
             this.ResetSettingsDropdownList();
             string jsonString = JsonSerializer.Serialize(this.VisualSettings);
             File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + "\\visuals.settings", jsonString);
+            jsonString = JsonSerializer.Serialize(this.VisualEditorSettings);
+            File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + "\\VisualEditorSettings.settings", jsonString);
         }
 
         private void btnTextureLoader_Click(object sender, EventArgs e) {
+            Button clickedButton = sender as Button;
             using (OpenFileDialog openFileDialog = new OpenFileDialog()) {
                 openFileDialog.InitialDirectory = AppDomain.CurrentDomain.BaseDirectory;
                 openFileDialog.Filter = "Texture file (*.dds)|*.dds|(*.png)|*.png|(*.jpeg)|*.jpeg";
@@ -159,9 +231,23 @@ FileErrorBrowseAgain:
                     if (File.Exists(filePath) == false)
                         goto FileErrorBrowseAgain;
 
-                    this.SeinVisualSettings.OriVisualSettings.TexturePath = filePath;
-                    this.textureImage.Image = Image.FromFile(this.SeinVisualSettings.OriVisualSettings.TexturePath);
-                    this.textureImage.SizeMode = PictureBoxSizeMode.StretchImage;
+                    if (TE.IsPathRelative(filePath, AppDomain.CurrentDomain.BaseDirectory)) {
+                        filePath = TE.GetRelativePath(filePath, AppDomain.CurrentDomain.BaseDirectory);
+                    }
+
+                    switch (clickedButton.Name) {
+                        case "btnTextureLoader":
+                            this.SeinVisualSettings.OriVisualSettings.TexturePath = filePath;
+                            this.textureImage.Image = Image.FromFile(this.SeinVisualSettings.OriVisualSettings.TexturePath);
+                            this.textureImage.SizeMode = PictureBoxSizeMode.StretchImage;
+                            break;
+
+                        case "btnOriHatTextureLoader":
+                            this.SeinVisualSettings.OriVisualSettings.HatVisualSettings.TexturePath = filePath;
+                            this.oriHatTexture.Image = Image.FromFile(this.SeinVisualSettings.OriVisualSettings.HatVisualSettings.TexturePath);
+                            this.oriHatTexture.SizeMode = PictureBoxSizeMode.StretchImage;
+                            break;
+                    }
                     this.SaveVisualSettings();
                 }
             }
@@ -179,23 +265,31 @@ FileErrorBrowseAgain:
 
         private void chkAutoApply_CheckedChanged(object sender, EventArgs e) {
             CheckBox checkBox = sender as CheckBox;
-            this.SeinVisualSettings.AutoApplyOnStartup = checkBox.Checked;
+            this.VisualEditorSettings.AutoApplyOnStartup = checkBox.Checked;
         }
 
         private void btnSaveSetting_Click(object sender, EventArgs e) {
-            string name = this.tbxSettingName.Text;
+            string name = tbxSettingName.Text;
 
             if (name == "")
-                name = "Visual Setting " + this.VisualSettings.VisualSettings.Count.ToString();
+                name = "Visual Setting " + VisualSettings.VisualSettings.Count.ToString();
 
-            this.SeinVisualSettings.SettingName = name;
+            if (ExistingVisualSettings.ContainsKey(name) == false || name == SeinVisualSettings.SettingName) {
+                string oldName = SeinVisualSettings.SettingName;
+                SeinVisualSettings.SettingName = name;
 
-            if (this.ExistingVisualSettings.ContainsKey(this.SeinVisualSettings.SettingName) == false) {
-                this.VisualSettings.VisualSettings.Add(this.SeinVisualSettings);
-                this.ExistingVisualSettings.Add(name, this.ExistingVisualSettings.Count());
+                if (ExistingVisualSettings.ContainsKey(oldName) == false) {
+                    VisualSettings.VisualSettings.Add(SeinVisualSettings);
+                    ExistingVisualSettings.Add(name, ExistingVisualSettings.Count());
+                } else {
+                    ExistingVisualSettings.Remove(oldName);
+                    ExistingVisualSettings.Add(name, ExistingVisualSettings.Count());
+                    VisualSettings.SetSettingsName(oldName, name);
+                }
+                SaveVisualSettings();
+            } else {
+                MessageBox.Show("A visual setting already exists with that name", "Error", MessageBoxButtons.OK);
             }
-
-            this.SaveVisualSettings();
         }
 
         private void input_Enter(object sender, EventArgs e) {
@@ -212,7 +306,7 @@ FileErrorBrowseAgain:
         }
 
         private void NukeVisualSettings() {
-            this.SeinVisualSettings = new SeinVisualSetting();
+            ResetSettings(this.SeinVisualSettings, new SeinVisualSetting());
         }
         private void chkEnableTrailMesh_CheckedChanged(object sender, EventArgs e) {
             CheckBox checkBox = sender as CheckBox;
@@ -220,17 +314,21 @@ FileErrorBrowseAgain:
         }
 
         private void removeActiveSettingToolStripMenuItem_Click(object sender, EventArgs e) {
-            int index = 0;
-            for (int i = 0; i < this.VisualSettings.VisualSettings.Count(); i++) {
-                if (this.VisualSettings.VisualSettings[i].SettingName == this.SeinVisualSettings.SettingName)
-                    index = i;
-            }
-            this.VisualSettings.VisualSettings.RemoveAt(index);
-            this.VisualSettings.ActiveVisualSetting = new SeinVisualSetting();
-            this.SeinVisualSettings = new SeinVisualSetting();
-            this.NukeVisualSettings();
-            this.ResetVisualSettings();
-            this.ResetSettingsDropdownList();
+            if (VisualSettings.VisualSettings.Count > 0) {
+                var results = MessageBox.Show("Do you really want to delete the current active setting " + SeinVisualSettings.SettingName + "?", "Remove Settings", MessageBoxButtons.YesNo);
+                if (results == DialogResult.Yes) {
+                    int index = 0;
+                    for (int i = 0; i < this.VisualSettings.VisualSettings.Count(); i++) {
+                        if (this.VisualSettings.VisualSettings[i].SettingName == this.SeinVisualSettings.SettingName)
+                            index = i;
+                    }
+                    this.VisualSettings.VisualSettings.RemoveAt(index);
+                    ResetSettings(this.SeinVisualSettings, new SeinVisualSetting());
+                    this.ResetVisualSettings();
+                    this.ResetSettingsDropdownList();
+                }
+            } else
+                MessageBox.Show("No more settings found", "Error", MessageBoxButtons.OK);
         }
 
         private void LoadColorPickers() {
@@ -238,6 +336,7 @@ FileErrorBrowseAgain:
             foreach (var property in value) {
                 string fieldName = property.Key.Name;
                 TColorPicker picker = (TColorPicker)property.Value;
+                picker.SetColor(picker.Color.Value, true);
                 picker.PickerSize = new Point(32, 32);
                 picker.Size = new Size(146, 38);
                 picker.Name = fieldName;
@@ -245,7 +344,6 @@ FileErrorBrowseAgain:
                 label.Text = fieldName + ":";
                 label.Size = new Size(131, 38);
                 label.TextAlign = ContentAlignment.MiddleRight;
-                picker.SetColor(picker.Color.Value);
 
                 if (PickerLayouts.ContainsKey(property.Key.Parent) == true) {
                     PickerLayouts[property.Key.Parent].Controls.Add(label);
@@ -253,17 +351,41 @@ FileErrorBrowseAgain:
                 }
             }
         }
+
+        private void defaultGameSettingsToolStripMenuItem_Click(object sender, EventArgs e) {
+            this.Manager.InjectCommunication.AddCall("CALL35");
+        }
+
+        private void newSettingToolStripMenuItem_Click(object sender, EventArgs e) {
+            var results = MessageBox.Show("Would you like to save the changes made to " + SeinVisualSettings.SettingName + " before creating a new one?", "Save", MessageBoxButtons.YesNo);
+
+            if (results == DialogResult.Yes)
+                SaveVisualSettings();
+
+            ResetSettings(this.SeinVisualSettings, new SeinVisualSetting());
+            ApplyVisualSettings();
+        }
+
+        private void btnRemoveOriHatTexture_Click(object sender, EventArgs e) {
+            Button clickedButton = sender as Button;
+
+            switch (clickedButton.Name) {
+                case "btnRemoveOriHatTexture": this.oriHatTexture.Image = null; this.SeinVisualSettings.OriVisualSettings.HatVisualSettings.TexturePath = "NONE"; break;
+            }
+        }
     }
 
     public class ArrowVisualSettings {
-        public TColorPicker ArrowEffect { get; set; } = new TColorPicker();
-        public TColorPicker ArrowEffectEmissive { get; set; } = new TColorPicker();
-        public TColorPicker ArrowSpear { get; set; } = new TColorPicker();
-        public TColorPicker ArrowSpearEmissive { get; set; } = new TColorPicker();
-        public TColorPicker TipImpact { get; set; } = new TColorPicker();
-        public TColorPicker TipImpactEmissive { get; set; } = new TColorPicker();
-        public TColorPicker TipParticle { get; set; } = new TColorPicker();
-        public TColorPicker TipParticleEmissive { get; set; } = new TColorPicker();
+        public TColorPicker ArrowEffect { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker ArrowEffectEmissive { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker ArrowSpear { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker ArrowSpearEmissive { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker TipImpact { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker TipImpactEmissive { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker TipParticle { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker TipParticleEmissive { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker ArrowTrail { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker ArrowTrailEmissive { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
 
         public ArrowVisualSettings() { }
 
@@ -276,15 +398,52 @@ FileErrorBrowseAgain:
             this.TipImpactEmissive = setting.TipImpactEmissive;
             this.TipParticle = setting.TipParticle;
             this.TipParticleEmissive = setting.TipParticleEmissive;
+            this.ArrowTrail = setting.ArrowTrail;
+            this.ArrowTrailEmissive = setting.ArrowTrailEmissive;
         }
     }
+    public class ArrowHitVisualSettings {
+        public TColorPicker DistortionNew { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker FxBox { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker BloodSplat { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker DebrisParticles { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker DebrisParticlesFallBig { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker GlowUnmask { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker VignetteMaskC { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker BlowingUpForceField { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker LensFlare20b { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker LensFlare9 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker RadialBurned { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker RadialBurned2 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker RadialIrisImpact { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker StarSpike2 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
 
+        public ArrowHitVisualSettings() { }
+
+        public ArrowHitVisualSettings(ArrowHitVisualSettings setting) {
+            this.DistortionNew = setting.DistortionNew;
+            this.FxBox = setting.FxBox;
+            this.BloodSplat = setting.BloodSplat;
+            this.DebrisParticles = setting.DebrisParticles;
+            this.DebrisParticlesFallBig = setting.DebrisParticlesFallBig;
+            this.GlowUnmask = setting.GlowUnmask;
+            this.VignetteMaskC = setting.VignetteMaskC;
+            this.BlowingUpForceField = setting.BlowingUpForceField;
+            this.LensFlare20b = setting.LensFlare20b;
+            this.LensFlare9 = setting.LensFlare9;
+            this.RadialBurned = setting.RadialBurned;
+            this.RadialBurned2 = setting.RadialBurned2;
+            this.RadialIrisImpact = setting.RadialIrisImpact;
+            this.StarSpike2 = setting.StarSpike2;
+        }
+    }
     public class BowVisualSettings {
-        public TColorPicker BowShaft { get; set; } = new TColorPicker();
-        public TColorPicker BowShaftEmissive { get; set; } = new TColorPicker();
-        public TColorPicker BowString { get; set; } = new TColorPicker();
-        public TColorPicker BowStringEmissive { get; set; } = new TColorPicker();
+        public TColorPicker BowShaft { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker BowShaftEmissive { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker BowString { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker BowStringEmissive { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
         public ArrowVisualSettings ArrowVisualSettings { get; set; } = new ArrowVisualSettings();
+        public ArrowHitVisualSettings ArrowHitVisualSettings { get; set; } = new ArrowHitVisualSettings();
 
         public BowVisualSettings() { }
 
@@ -294,14 +453,15 @@ FileErrorBrowseAgain:
             this.BowString = setting.BowString;
             this.BowStringEmissive = setting.BowStringEmissive;
             this.ArrowVisualSettings = new ArrowVisualSettings(setting.ArrowVisualSettings);
+            this.ArrowHitVisualSettings = new ArrowHitVisualSettings(setting.ArrowHitVisualSettings);
         }
     }
 
     public class GlideVisualSettings {
-        public TColorPicker Feather { get; set; } = new TColorPicker();
-        public TColorPicker FeatherEmissive { get; set; } = new TColorPicker();
-        public TColorPicker Featherflap { get; set; } = new TColorPicker();
-        public TColorPicker FeatherflapEmissive { get; set; } = new TColorPicker();
+        public TColorPicker Feather { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker FeatherEmissive { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker Featherflap { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker FeatherflapEmissive { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
 
         public GlideVisualSettings() { }
 
@@ -314,32 +474,49 @@ FileErrorBrowseAgain:
     }
 
     public class TorchHit {
-        public TColorPicker FsBox { get; set; } = new TColorPicker();
-        public TColorPicker FlameFireC { get; set; } = new TColorPicker();
-        public TColorPicker FlameGlow { get; set; } = new TColorPicker();
-        public TColorPicker FireEffect { get; set; } = new TColorPicker();
-        public TColorPicker FireEffect2 { get; set; } = new TColorPicker();
-        public TColorPicker RadialBurned { get; set; } = new TColorPicker();
-        public TColorPicker RadialBurned2 { get; set; } = new TColorPicker();
-        public TColorPicker SpriteSnowPattern { get; set; } = new TColorPicker();
-        public TColorPicker Glow { get; set; } = new TColorPicker();
-        public TColorPicker GlowUnmask { get; set; } = new TColorPicker();
+        public TColorPicker FsBox { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker FlameFireC { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker FlameGlow { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker FireEffect { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker FireEffect2 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker RadialBurned { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker RadialBurned2 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker SpriteSnowPattern { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker Glow { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker GlowUnmask { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
 
-        public override string ToString() {
-            return FsBox.ToString() + "|" + FlameFireC.ToString() + "|" + FlameGlow.ToString() + "|" + FireEffect.ToString() + "|" + FireEffect2.ToString() + "|" + RadialBurned.ToString() + "|" + RadialBurned2.ToString() + "|" + SpriteSnowPattern.ToString() + "|" + Glow.ToString() + "|" + GlowUnmask.ToString();
+        public TorchHit() { }
+
+        public TorchHit(TorchHit setting) {
+            this.FsBox = setting.FsBox;
+            this.FlameFireC = setting.FlameFireC;
+            this.FlameGlow = setting.FlameGlow;
+            this.FireEffect = setting.FireEffect;
+            this.FireEffect2 = setting.FireEffect2;
+            this.RadialBurned = setting.RadialBurned;
+            this.RadialBurned2 = setting.RadialBurned2;
+            this.SpriteSnowPattern = setting.SpriteSnowPattern;
+            this.Glow = setting.Glow;
+            this.GlowUnmask = setting.GlowUnmask;
         }
+
     }
     public class TorchBreak {
-        public TColorPicker AcidParticles { get; set; } = new TColorPicker();
-        public TColorPicker CharacterGlow { get; set; } = new TColorPicker();
+        public TColorPicker AcidParticles { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker CharacterGlow { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker Smoke { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
 
-        public override string ToString() {
-            return AcidParticles.ToString() + "|" + AcidParticles.ToString();
+        public TorchBreak() { }
+
+        public TorchBreak(TorchBreak setting) {
+            this.AcidParticles = setting.AcidParticles;
+            this.CharacterGlow = setting.CharacterGlow;
+            this.Smoke = setting.Smoke;
         }
     }
     public class TorchAttack {
-        public TColorPicker FireSprite { get; set; } = new TColorPicker();
-        public TColorPicker TrailZigZag { get; set; } = new TColorPicker();
+        public TColorPicker FireSprite { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker TrailZigZag { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
 
         public override string ToString() {
             return FireSprite.ToString() + "|" + TrailZigZag.ToString();
@@ -355,11 +532,11 @@ FileErrorBrowseAgain:
 
     public class TorchVisualSetting {
         public bool HideGlow { get; set; } = false;
-        public TColorPicker Torch { get; set; } = new TColorPicker();
-        public TColorPicker TorchFloatingSpark { get; set; } = new TColorPicker();
-        public TColorPicker TorchRunning { get; set; } = new TColorPicker();
+        public TColorPicker Torch { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker TorchFloatingSpark { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker TorchRunning { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
         public bool TorchTrailMeshEnable { get; set; } = false;
-        public TColorPicker TorchTrailMesh { get; set; } = new TColorPicker();
+        public TColorPicker TorchTrailMesh { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
         public TorchAttack TorchAirAttacks1 { get; set; } = new TorchAttack();
         public TorchAttack TorchAirAttacks2 { get; set; } = new TorchAttack();
         public TorchAttack TorchAirAttacks3 { get; set; } = new TorchAttack();
@@ -369,8 +546,8 @@ FileErrorBrowseAgain:
         public TorchBreak TorchBreak { get; set; } = new TorchBreak();
         public TorchHit TorchHit { get; set; } = new TorchHit();
         public TorchHit TorchHitSmall { get; set; } = new TorchHit();
-        public TColorPicker TorchLightEffect { get; set; } = new TColorPicker();
-        public TColorPicker TorchSpark { get; set; } = new TColorPicker();
+        public TColorPicker TorchLightEffect { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker TorchSpark { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
 
         public TorchVisualSetting() { }
 
@@ -378,46 +555,15 @@ FileErrorBrowseAgain:
             this.HideGlow = settings.HideGlow;
             this.TorchAirAttacks1 = new TorchAttack(settings.TorchAirAttacks1);
             this.TorchAirAttacks2 = new TorchAttack(settings.TorchAirAttacks2);
-            this.TorchAirAttacks3 = new TorchAttack(settings.TorchAirAttacks3);
-
-            TorchBreak torchBreak = new TorchBreak();
-            torchBreak.AcidParticles = settings.TorchBreak.AcidParticles;
-            torchBreak.CharacterGlow = settings.TorchBreak.CharacterGlow;
-            this.TorchBreak = torchBreak;
-
+            this.TorchAirAttacks3 = new TorchAttack(settings.TorchAirAttacks3); ;
+            this.TorchBreak = new TorchBreak(settings.TorchBreak);
             this.Torch = settings.Torch;
             this.TorchFloatingSpark = settings.TorchFloatingSpark;
-
             this.TorchGroundAttacks1 = new TorchAttack(settings.TorchGroundAttacks1);
             this.TorchGroundAttacks2 = new TorchAttack(settings.TorchGroundAttacks2);
             this.TorchGroundAttacks3 = new TorchAttack(settings.TorchGroundAttacks3);
-
-            TorchHit torchHit = new TorchHit();
-            torchHit.FireEffect = settings.TorchHit.FireEffect;
-            torchHit.FireEffect2 = settings.TorchHit.FireEffect2;
-            torchHit.FlameFireC = settings.TorchHit.FlameFireC;
-            torchHit.FlameGlow = settings.TorchHit.FlameGlow;
-            torchHit.FsBox = settings.TorchHit.FsBox;
-            torchHit.Glow = settings.TorchHit.Glow;
-            torchHit.GlowUnmask = settings.TorchHit.GlowUnmask;
-            torchHit.RadialBurned = settings.TorchHit.RadialBurned;
-            torchHit.RadialBurned2 = settings.TorchHit.RadialBurned2;
-            torchHit.SpriteSnowPattern = settings.TorchHit.SpriteSnowPattern;
-            this.TorchHit = torchHit;
-
-            TorchHit torchHitSmall = new TorchHit();
-            torchHitSmall.FireEffect = settings.TorchHitSmall.FireEffect;
-            torchHitSmall.FireEffect2 = settings.TorchHitSmall.FireEffect2;
-            torchHitSmall.FlameFireC = settings.TorchHitSmall.FlameFireC;
-            torchHitSmall.FlameGlow = settings.TorchHitSmall.FlameGlow;
-            torchHitSmall.FsBox = settings.TorchHitSmall.FsBox;
-            torchHitSmall.Glow = settings.TorchHitSmall.Glow;
-            torchHitSmall.GlowUnmask = settings.TorchHitSmall.GlowUnmask;
-            torchHitSmall.RadialBurned = settings.TorchHitSmall.RadialBurned;
-            torchHitSmall.RadialBurned2 = settings.TorchHitSmall.RadialBurned2;
-            torchHitSmall.SpriteSnowPattern = settings.TorchHitSmall.SpriteSnowPattern;
-            this.TorchHitSmall = torchHitSmall;
-
+            this.TorchHit = new TorchHit(settings.TorchHit);
+            this.TorchHitSmall = new TorchHit(settings.TorchHitSmall);
             this.TorchLightEffect = settings.TorchLightEffect;
             this.TorchRunning = settings.TorchRunning;
             this.TorchSpark = settings.TorchSpark;
@@ -426,19 +572,19 @@ FileErrorBrowseAgain:
         }
     }
     public class GrenadeEffect {
-        public TColorPicker FireEffect { get; set; } = new TColorPicker();
-        public TColorPicker Flame1 { get; set; } = new TColorPicker();
-        public TColorPicker Flame2 { get; set; } = new TColorPicker();
-        public TColorPicker Flame3 { get; set; } = new TColorPicker();
-        public TColorPicker Smoke { get; set; } = new TColorPicker();
-        public TColorPicker SnowPattern1 { get; set; } = new TColorPicker();
-        public TColorPicker SnowPattern2 { get; set; } = new TColorPicker();
-        public TColorPicker SnowPattern3 { get; set; } = new TColorPicker();
-        public TColorPicker FireSprite { get; set; } = new TColorPicker();
-        public TColorPicker LightCircle { get; set; } = new TColorPicker();
-        public TColorPicker MainTrail { get; set; } = new TColorPicker();
-        public TColorPicker ProtectiveLight { get; set; } = new TColorPicker();
-        public TColorPicker TrailZigZag { get; set; } = new TColorPicker();
+        public TColorPicker FireEffect { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker Flame1 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker Flame2 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker Flame3 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker Smoke { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker SnowPattern1 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker SnowPattern2 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker SnowPattern3 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker FireSprite { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker LightCircle { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker MainTrail { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker ProtectiveLight { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker TrailZigZag { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
 
         public GrenadeEffect() { }
 
@@ -459,15 +605,15 @@ FileErrorBrowseAgain:
         }
     }
     public class GrenadeExplosionFractured {
-        public TColorPicker Burst { get; set; } = new TColorPicker();
-        public TColorPicker Distortion { get; set; } = new TColorPicker();
-        public TColorPicker BurstPreGlow { get; set; } = new TColorPicker();
-        public TColorPicker ArrowDistortion { get; set; } = new TColorPicker();
-        public TColorPicker ArrowGlow { get; set; } = new TColorPicker();
-        public TColorPicker ArrowSingleParticle { get; set; } = new TColorPicker();
-        public TColorPicker ArrowSmoke { get; set; } = new TColorPicker();
-        public TColorPicker ArrowVignette { get; set; } = new TColorPicker();
-        public TColorPicker SnowPattern { get; set; } = new TColorPicker();
+        public TColorPicker Burst { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker Distortion { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker BurstPreGlow { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker ArrowDistortion { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker ArrowGlow { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker ArrowSingleParticle { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker ArrowSmoke { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker ArrowVignette { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker SnowPattern { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
 
         public GrenadeExplosionFractured() { }
 
@@ -484,14 +630,14 @@ FileErrorBrowseAgain:
         }
     }
     public class GrenadeFractured {
-        public TColorPicker OriSparkle { get; set; } = new TColorPicker();
-        public TColorPicker OuterGlow { get; set; } = new TColorPicker();
-        public TColorPicker ParticleDropGlow { get; set; } = new TColorPicker();
-        public TColorPicker ParticleImpactGlow { get; set; } = new TColorPicker();
-        public TColorPicker SingleSnowParticle { get; set; } = new TColorPicker();
-        public TColorPicker SharedCircleGlow { get; set; } = new TColorPicker();
-        public TColorPicker Sprite { get; set; } = new TColorPicker();
-        public TColorPicker Trail { get; set; } = new TColorPicker();
+        public TColorPicker OriSparkle { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker OuterGlow { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker ParticleDropGlow { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker ParticleImpactGlow { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker SingleSnowParticle { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker SharedCircleGlow { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker Sprite { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker Trail { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
 
         public GrenadeFractured() { }
 
@@ -507,20 +653,20 @@ FileErrorBrowseAgain:
         }
     }
     public class GrenadeExplosionEffect {
-        public TColorPicker ForceField { get; set; } = new TColorPicker();
-        public TColorPicker Distortion { get; set; } = new TColorPicker();
-        public TColorPicker LightCircle { get; set; } = new TColorPicker();
-        public TColorPicker LightGlow { get; set; } = new TColorPicker();
-        public TColorPicker StarSpike { get; set; } = new TColorPicker();
-        public TColorPicker FX { get; set; } = new TColorPicker();
-        public TColorPicker FireEffect { get; set; } = new TColorPicker();
-        public TColorPicker Smoke { get; set; } = new TColorPicker();
-        public TColorPicker SpriteSheetFire { get; set; } = new TColorPicker();
-        public TColorPicker SnowPattern { get; set; } = new TColorPicker();
-        public TColorPicker RadialBurned { get; set; } = new TColorPicker();
-        public TColorPicker RadialBurned2 { get; set; } = new TColorPicker();
-        public TColorPicker RadialCrack { get; set; } = new TColorPicker();
-        public TColorPicker RadialIrisImpact { get; set; } = new TColorPicker();
+        public TColorPicker ForceField { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker Distortion { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker LightCircle { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker LightGlow { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker StarSpike { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker FX { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker FireEffect { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker Smoke { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker SpriteSheetFire { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker SnowPattern { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker RadialBurned { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker RadialBurned2 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker RadialCrack { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker RadialIrisImpact { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
 
         public GrenadeExplosionEffect() { }
 
@@ -544,12 +690,12 @@ FileErrorBrowseAgain:
         }
     }
     public class GrenadeCharging {
-        public TColorPicker VignetteMask1 { get; set; } = new TColorPicker();
-        public TColorPicker VignetteMask2 { get; set; } = new TColorPicker();
-        public TColorPicker ArcaneOrb { get; set; } = new TColorPicker();
-        public TColorPicker ChargingJump { get; set; } = new TColorPicker();
-        public TColorPicker SnowPattern { get; set; } = new TColorPicker();
-        public TColorPicker EnergySplash { get; set; } = new TColorPicker();
+        public TColorPicker VignetteMask1 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker VignetteMask2 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker ArcaneOrb { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker ChargingJump { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker SnowPattern { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker EnergySplash { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
 
         public GrenadeCharging() { }
 
@@ -563,10 +709,10 @@ FileErrorBrowseAgain:
         }
     }
     public class GrenadeAiming {
-        public TColorPicker Sparkle { get; set; } = new TColorPicker();
-        public TColorPicker OuterGlow { get; set; } = new TColorPicker();
-        public TColorPicker Sprite1 { get; set; } = new TColorPicker();
-        public TColorPicker Sprite2 { get; set; } = new TColorPicker();
+        public TColorPicker Sparkle { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker OuterGlow { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker Sprite1 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker Sprite2 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
 
         public GrenadeAiming() { }
 
@@ -602,8 +748,8 @@ FileErrorBrowseAgain:
 
     }
     public class HammerStompPreparation {
-        public TColorPicker FireSprite3Flip { get; set; } = new TColorPicker();
-        public TColorPicker VignetteMaskC { get; set; } = new TColorPicker();
+        public TColorPicker FireSprite3Flip { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker VignetteMaskC { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
 
         public HammerStompPreparation() { }
 
@@ -613,9 +759,29 @@ FileErrorBrowseAgain:
         }
     }
     public class HammerHit {
-        public TColorPicker DistortionNew { get; set; } = new TColorPicker();
-        public TColorPicker FxBox { get; set; } = new TColorPicker();
-        public TColorPicker Glow { get; set; } = new TColorPicker();
+        public TColorPicker DistortionNew { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker FxBox { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker Glow { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker DebrisParticles { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker DebrisParticles1 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker DebrisParticles2 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker DebrisParticles3 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker DebrisParticlesFallBig { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker GlowUnmask { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker KuroNestEggCrackD { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker LensFlare20b { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker LensFlare3 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker LensFlare9 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker LensRadialSpike { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker RadialBurned2 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker RadialIrisImpact { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker RadialLightRays { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker RadialMaskB { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker SpikeHitLarge1 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker SpikeHitLarge2 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker ParticleShape { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker StarSpike2 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker VignetteMaskC { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
 
         public HammerHit() { }
 
@@ -623,15 +789,35 @@ FileErrorBrowseAgain:
             this.DistortionNew = setting.DistortionNew;
             this.FxBox = setting.FxBox;
             this.Glow = setting.Glow;
+            this.DebrisParticles = setting.DebrisParticles;
+            this.DebrisParticles1 = setting.DebrisParticles1;
+            this.DebrisParticles2 = setting.DebrisParticles2;
+            this.DebrisParticles3 = setting.DebrisParticles3;
+            this.DebrisParticlesFallBig = setting.DebrisParticlesFallBig;
+            this.GlowUnmask = setting.GlowUnmask;
+            this.KuroNestEggCrackD = setting.KuroNestEggCrackD;
+            this.LensFlare20b = setting.LensFlare20b;
+            this.LensFlare3 = setting.LensFlare3;
+            this.LensFlare9 = setting.LensFlare9;
+            this.LensRadialSpike = setting.LensRadialSpike;
+            this.RadialBurned2 = setting.RadialBurned2;
+            this.RadialIrisImpact = setting.RadialIrisImpact;
+            this.RadialLightRays = setting.RadialLightRays;
+            this.RadialMaskB = setting.RadialMaskB;
+            this.SpikeHitLarge1 = setting.SpikeHitLarge1;
+            this.SpikeHitLarge2 = setting.SpikeHitLarge2;
+            this.ParticleShape = setting.ParticleShape;
+            this.StarSpike2 = setting.StarSpike2;
+            this.VignetteMaskC = setting.VignetteMaskC;
         }
     }
     public class HammerBlock {
-        public TColorPicker AcidParticles { get; set; } = new TColorPicker();
-        public TColorPicker Glow { get; set; } = new TColorPicker();
-        public TColorPicker CharacterGlow { get; set; } = new TColorPicker();
-        public TColorPicker Circle { get; set; } = new TColorPicker();
-        public TColorPicker LavaFountainA { get; set; } = new TColorPicker();
-        public TColorPicker SingleSnowParticleA { get; set; } = new TColorPicker();
+        public TColorPicker AcidParticles { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker Glow { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker CharacterGlow { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker Circle { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker LavaFountainA { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker SingleSnowParticleA { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
 
         public HammerBlock() { }
 
@@ -644,12 +830,36 @@ FileErrorBrowseAgain:
             this.SingleSnowParticleA = setting.SingleSnowParticleA;
         }
     }
+    public class HammerShockwave {
+        public TColorPicker BulletGlow { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker FxBox { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker AtlantisRockFarBackgroundAg { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker RadialMaskB { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker SharedSmokeA { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker Sparks { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker SplashEdge2localOrient { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker SpritesheetSpikes { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+
+        public HammerShockwave() { }
+
+        public HammerShockwave(HammerShockwave setting) {
+            this.BulletGlow = setting.BulletGlow;
+            this.FxBox = setting.FxBox;
+            this.AtlantisRockFarBackgroundAg = setting.AtlantisRockFarBackgroundAg;
+            this.RadialMaskB = setting.RadialMaskB;
+            this.SharedSmokeA = setting.SharedSmokeA;
+            this.Sparks = setting.Sparks;
+            this.SplashEdge2localOrient = setting.SplashEdge2localOrient;
+            this.SpritesheetSpikes = setting.SpritesheetSpikes;
+        }
+    }
     public class HammerStomp {
-        public TColorPicker Glow { get; set; } = new TColorPicker();
-        public TColorPicker GiftLeafTransformationLightRing { get; set; } = new TColorPicker();
-        public TColorPicker Glow1 { get; set; } = new TColorPicker();
-        public TColorPicker Smoke { get; set; } = new TColorPicker();
-        public TColorPicker SingleSnowParticleA { get; set; } = new TColorPicker();
+        public TColorPicker Glow { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker GiftLeafTransformationLightRing { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker Glow1 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker Smoke { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker DebrisParticles { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker SingleSnowParticleA { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
 
         public HammerStomp() { }
 
@@ -659,14 +869,15 @@ FileErrorBrowseAgain:
             this.Glow1 = setting.Glow1;
             this.Smoke = setting.Smoke;
             this.SingleSnowParticleA = setting.SingleSnowParticleA;
+            this.DebrisParticles = setting.DebrisParticles;
         }
     }
     public class HammerAttack {
-        public TColorPicker FireSprite { get; set; } = new TColorPicker();
-        public TColorPicker LinearGradientMask { get; set; } = new TColorPicker();
-        public TColorPicker VignetteMaskC { get; set; } = new TColorPicker();
-        public TColorPicker EnergyEffect { get; set; } = new TColorPicker();
-        public TColorPicker SpriteSnowPettern2 { get; set; } = new TColorPicker();
+        public TColorPicker FireSprite { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker LinearGradientMask { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker VignetteMaskC { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker EnergyEffect { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker SpriteSnowPettern2 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
 
         public HammerAttack() { }
 
@@ -675,13 +886,14 @@ FileErrorBrowseAgain:
             this.LinearGradientMask = setting.LinearGradientMask;
             this.VignetteMaskC = setting.VignetteMaskC;
             this.SpriteSnowPettern2 = setting.SpriteSnowPettern2;
+            this.EnergyEffect = setting.EnergyEffect;
         }
     }
     public class HammerVisualSettings {
-        public TColorPicker Hammer { get; set; } = new TColorPicker();
-        public TColorPicker HammerEmissive { get; set; } = new TColorPicker();
-        public TColorPicker HammerHitEffect { get; set; } = new TColorPicker();
-        public TColorPicker HammerHitEffectEmissive { get; set; } = new TColorPicker();
+        public TColorPicker Hammer { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker HammerEmissive { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker HammerHitEffect { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker HammerHitEffectEmissive { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
         public HammerAttack HammerAttackAir1 { get; set; } = new HammerAttack();
         public HammerAttack HammerAttackAir2 { get; set; } = new HammerAttack();
         public HammerAttack HammerAttackAir3 { get; set; } = new HammerAttack();
@@ -691,6 +903,7 @@ FileErrorBrowseAgain:
         public HammerAttack HammerAttackGroundDown { get; set; } = new HammerAttack();
         public HammerAttack HammerAttackGroundUpSwipe { get; set; } = new HammerAttack();
         public HammerStomp HammerAttackStomp { get; set; } = new HammerStomp();
+        public HammerShockwave HammerShockwave { get; set; } = new HammerShockwave();
         public HammerBlock HammerBlock { get; set; } = new HammerBlock();
         public HammerHit HammerHit { get; set; } = new HammerHit();
         public HammerStompPreparation HammerStompPreparation { get; set; } = new HammerStompPreparation();
@@ -711,14 +924,15 @@ FileErrorBrowseAgain:
             this.HammerAttackGroundDown = new HammerAttack(setting.HammerAttackGroundDown);
             this.HammerAttackGroundUpSwipe = new HammerAttack(setting.HammerAttackGroundUpSwipe);
             this.HammerAttackStomp = new HammerStomp(setting.HammerAttackStomp);
+            this.HammerShockwave = new HammerShockwave(setting.HammerShockwave);
             this.HammerBlock = new HammerBlock(setting.HammerBlock);
             this.HammerHit = new HammerHit(setting.HammerHit);
             this.HammerStompPreparation = new HammerStompPreparation(setting.HammerStompPreparation);
         }
     }
     public class SwordAttackAirPoke {
-        public TColorPicker BlowingSand { get; set; } = new TColorPicker();
-        public TColorPicker Glow { get; set; } = new TColorPicker();
+        public TColorPicker BlowingSand { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker Glow { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
 
         public SwordAttackAirPoke() { }
 
@@ -728,10 +942,10 @@ FileErrorBrowseAgain:
         }
     }
     public class SwordAttack {
-        public TColorPicker EnergyEffect { get; set; } = new TColorPicker();
-        public TColorPicker SnowPattern { get; set; } = new TColorPicker();
-        public TColorPicker FireSprite { get; set; } = new TColorPicker();
-        public TColorPicker VignetteMaskC { get; set; } = new TColorPicker();
+        public TColorPicker EnergyEffect { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker SnowPattern { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker FireSprite { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker VignetteMaskC { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
 
         public SwordAttack() { }
 
@@ -743,10 +957,10 @@ FileErrorBrowseAgain:
         }
     }
     public class SwordAttackC {
-        public TColorPicker BlowingSand { get; set; } = new TColorPicker();
-        public TColorPicker SnowPattern { get; set; } = new TColorPicker();
-        public TColorPicker SnowPattern2 { get; set; } = new TColorPicker();
-        public TColorPicker VignetteMaskC { get; set; } = new TColorPicker();
+        public TColorPicker BlowingSand { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker SnowPattern { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker SnowPattern2 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker VignetteMaskC { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
 
         public SwordAttackC() { }
 
@@ -758,19 +972,20 @@ FileErrorBrowseAgain:
         }
     }
     public class SwordBlock {
-        public TColorPicker AcidParticles { get; set; } = new TColorPicker();
-        public TColorPicker CharacterGlow { get; set; } = new TColorPicker();
-        public TColorPicker Distortion { get; set; } = new TColorPicker();
-        public TColorPicker Circle { get; set; } = new TColorPicker();
-        public TColorPicker FxBox { get; set; } = new TColorPicker();
-        public TColorPicker CircleGlowC { get; set; } = new TColorPicker();
-        public TColorPicker NoiseCaustic { get; set; } = new TColorPicker();
-        public TColorPicker LavaFountainA { get; set; } = new TColorPicker();
-        public TColorPicker SnowPattern { get; set; } = new TColorPicker();
-        public TColorPicker SnowPattern2 { get; set; } = new TColorPicker();
-        public TColorPicker StarSpike { get; set; } = new TColorPicker();
-        public TColorPicker Glow { get; set; } = new TColorPicker();
-        public TColorPicker SingleSnowParticleA { get; set; } = new TColorPicker();
+        public TColorPicker AcidParticles { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker CharacterGlow { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker Distortion { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker Circle { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker FxBox { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker CircleGlowC { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker NoiseCaustic { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker LavaFountainA { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker SnowPattern { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker SnowPattern2 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker StarSpike { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker Glow { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker SingleSnowParticleA { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+
 
         public SwordBlock() { }
 
@@ -791,15 +1006,16 @@ FileErrorBrowseAgain:
         }
     }
     public class SwordDamageBlue {
-        public TColorPicker BurningCoreParticles { get; set; } = new TColorPicker();
-        public TColorPicker BurnMarks { get; set; } = new TColorPicker();
-        public TColorPicker ImpactSparklesA { get; set; } = new TColorPicker();
-        public TColorPicker DebrisParticles { get; set; } = new TColorPicker();
-        public TColorPicker Distortion { get; set; } = new TColorPicker();
-        public TColorPicker ImpactCenter { get; set; } = new TColorPicker();
-        public TColorPicker SmokeParticles { get; set; } = new TColorPicker();
-        public TColorPicker SparkStartParticles { get; set; } = new TColorPicker();
-        public TColorPicker VignetteMaskC { get; set; } = new TColorPicker();
+        public TColorPicker BurningCoreParticles { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker BurnMarks { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker ImpactSparklesA { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker DebrisParticles { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker Distortion { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker ImpactCenter { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker SmokeParticles { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker SparkStartParticles { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker VignetteMaskC { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+
 
         public SwordDamageBlue() { }
 
@@ -816,26 +1032,27 @@ FileErrorBrowseAgain:
         }
     }
     public class SwordHit {
-        public TColorPicker DistortionNew { get; set; } = new TColorPicker();
-        public TColorPicker FxBox { get; set; } = new TColorPicker();
-        public TColorPicker DropGlowB { get; set; } = new TColorPicker();
-        public TColorPicker DebrisParticles { get; set; } = new TColorPicker();
-        public TColorPicker DebrisParticlesFallBig { get; set; } = new TColorPicker();
-        public TColorPicker GlowUnmask { get; set; } = new TColorPicker();
-        public TColorPicker VignetteMaskC { get; set; } = new TColorPicker();
-        public TColorPicker LensCrossStart { get; set; } = new TColorPicker();
-        public TColorPicker LensFlare20b { get; set; } = new TColorPicker();
-        public TColorPicker LensFlare9 { get; set; } = new TColorPicker();
-        public TColorPicker LensRadialSpike { get; set; } = new TColorPicker();
-        public TColorPicker LightCircleShape { get; set; } = new TColorPicker();
-        public TColorPicker LightGlow { get; set; } = new TColorPicker();
-        public TColorPicker RadialBurned2 { get; set; } = new TColorPicker();
-        public TColorPicker RadialLightRays { get; set; } = new TColorPicker();
-        public TColorPicker RadialMaskB { get; set; } = new TColorPicker();
-        public TColorPicker SparksLong { get; set; } = new TColorPicker();
-        public TColorPicker SplashEdge { get; set; } = new TColorPicker();
-        public TColorPicker SplashEdge2 { get; set; } = new TColorPicker();
-        public TColorPicker StarSpike2 { get; set; } = new TColorPicker();
+        public TColorPicker DistortionNew { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker FxBox { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker DropGlowB { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker DebrisParticles { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker DebrisParticlesFallBig { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker GlowUnmask { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker VignetteMaskC { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker LensCrossStart { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker LensFlare20b { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker LensFlare9 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker LensRadialSpike { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker LightCircleShape { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker LightGlow { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker RadialBurned2 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker RadialLightRays { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker RadialMaskB { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker SparksLong { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker SplashEdge { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker SplashEdge2 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker StarSpike2 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+
 
         public SwordHit() { }
 
@@ -863,10 +1080,10 @@ FileErrorBrowseAgain:
         }
     }
     public class SwordVisualSettings {
-        public TColorPicker Sword { get; set; } = new TColorPicker();
-        public TColorPicker SwordEmissive { get; set; } = new TColorPicker();
-        public TColorPicker SwordHitEffect { get; set; } = new TColorPicker();
-        public TColorPicker SwordHitEffectEmissive { get; set; } = new TColorPicker();
+        public TColorPicker Sword { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker SwordEmissive { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker SwordHitEffect { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker SwordHitEffectEmissive { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
         public SwordAttackAirPoke SwordAttackAirPoke { get; set; } = new SwordAttackAirPoke();
         public SwordAttack SwordAttackDownAir { get; set; } = new SwordAttack();
         public SwordAttack SwordAttackGroundA { get; set; } = new SwordAttack();
@@ -896,12 +1113,12 @@ FileErrorBrowseAgain:
         }
     }
     public class GoldenSeinVisualSettings {
-        public TColorPicker SeinBody { get; set; } = new TColorPicker();
-        public TColorPicker SeinBodyEmissive { get; set; } = new TColorPicker();
-        public TColorPicker SeinParticle { get; set; } = new TColorPicker();
-        public TColorPicker SeinRadialLight { get; set; } = new TColorPicker();
-        public TColorPicker SeinTrail { get; set; } = new TColorPicker();
-        public TColorPicker SeinTrailMesh { get; set; } = new TColorPicker();
+        public TColorPicker SeinBody { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker SeinBodyEmissive { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker SeinParticle { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker SeinRadialLight { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker SeinTrail { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker SeinTrailMesh { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
 
         public GoldenSeinVisualSettings() { }
 
@@ -914,10 +1131,24 @@ FileErrorBrowseAgain:
             this.SeinTrailMesh = setting.SeinTrailMesh;
         }
     }
+    public class HatVisualSettings {
+        public TColorPicker Hat { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker HatEmissive { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public string TexturePath { get; set; } = "NONE";
+
+        public HatVisualSettings() {}
+
+        public HatVisualSettings(HatVisualSettings setting) {
+            this.TexturePath = setting.TexturePath;
+            this.Hat = setting.Hat;
+            this.HatEmissive = setting.HatEmissive;
+        }
+    }
     public class OriVisualSettings {
-        public TColorPicker Ori { get; set; } = new TColorPicker();
-        public TColorPicker OriGlow { get; set; } = new TColorPicker();
-        public TColorPicker OriTrail { get; set; } = new TColorPicker();
+        public HatVisualSettings HatVisualSettings { get; set; } = new HatVisualSettings();
+        public TColorPicker Ori { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker OriGlow { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker OriTrail { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
         public bool HideGlow { get; set; } = false;
         public string TexturePath { get; set; } = "NONE";
 
@@ -929,10 +1160,10 @@ FileErrorBrowseAgain:
             this.OriTrail = setting.OriTrail;
             this.HideGlow = setting.HideGlow;
             this.TexturePath = setting.TexturePath;
+            this.HatVisualSettings = new HatVisualSettings(setting.HatVisualSettings);
         }
     }
     public class SeinVisualSetting {
-        public bool AutoApplyOnStartup { get; set; } = false;
         public string SettingName { get; set; } = "";
         public OriVisualSettings OriVisualSettings { get; set; } = new OriVisualSettings();
         public TorchVisualSetting TorchVisualSettings { get; set; } = new TorchVisualSetting();
@@ -951,7 +1182,6 @@ FileErrorBrowseAgain:
             foreach (SeinVisualSetting setting in this.VisualSettings) {
                 if (name == setting.SettingName) {
                     SeinVisualSetting foundSetting = new SeinVisualSetting();
-                    foundSetting.AutoApplyOnStartup = setting.AutoApplyOnStartup;
                     foundSetting.SettingName = setting.SettingName;
                     foundSetting.OriVisualSettings = new OriVisualSettings(setting.OriVisualSettings);
                     foundSetting.TorchVisualSettings = new TorchVisualSetting(setting.TorchVisualSettings);
@@ -967,6 +1197,13 @@ FileErrorBrowseAgain:
 
             return null;
         }
+        public void SetSettingsName(string oldName, string newName) {
+            foreach (SeinVisualSetting setting in this.VisualSettings) {
+                if (oldName == setting.SettingName) {
+                    setting.SettingName = newName;
+                }
+            }
+        }
         public void SaveActiveSetting() {
             for (int i = 0; i < this.VisualSettings.Count(); i++) {
                 SeinVisualSetting setting = this.VisualSettings[i];
@@ -975,5 +1212,9 @@ FileErrorBrowseAgain:
                 }
             }
         }
+    }
+
+    public class VisualEditorSettings {
+        public bool AutoApplyOnStartup { get; set; } = false;
     }
 }
