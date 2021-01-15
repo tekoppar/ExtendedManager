@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using OriWotW.GameWorld;
 using OriWotW.Memory;
 using OriWotW.UberController;
+using Tem.TemClass;
 
 namespace OriWotW {
     public partial class MemoryManager {

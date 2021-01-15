@@ -1,7 +1,11 @@
-﻿using OriWotW.UI.VisualEditor;
-using System;
+﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Collections.Generic;
+using OriWotW;
+using OriWotW.UI.Editor;
+using Tem.TemUI;
+using Tem.Utility;
 
 namespace OriWotW.UI {
     partial class WotwEditor {
@@ -19,6 +23,7 @@ namespace OriWotW.UI {
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing) {
+            this.Manager.rawInput.AddMessageFilter();
             if (disposing && (components != null)) {
                 components.Dispose();
             }
@@ -33,16 +38,26 @@ namespace OriWotW.UI {
 
         private string GetTreeNodeHierarchy(TreeNode node) {
             TreeNode parent = node;
-            string hierarchy = "";
+            List<int> hierarchy = new List<int>();
+            string stringHierarchy = "";
 
             while (parent != null) {
-                if (parent.Tag != null && parent.Tag.ToString() == "GameObject") {
-                    hierarchy = hierarchy + parent.Index.ToString() + ",";
+                if (parent.Tag != null && parent.Tag.GetType().Name == "SceneObject" && parent.Index.ToString() != "") {
+                    hierarchy.Add(parent.Index);
                 }
                 parent = parent.Parent;
             }
-            hierarchy = TE.Reverse(hierarchy);
-            return hierarchy;
+            hierarchy.Reverse();
+            
+            for (int i = 0; i < hierarchy.Count; i++) {
+                int index = hierarchy[i];
+                if (i == hierarchy.Count - 1)
+                    stringHierarchy += index.ToString();
+                else
+                    stringHierarchy += index.ToString() + ",";
+            }
+
+            return stringHierarchy;
         }
 
         private void OnMouseMove(object sender, MouseEventArgs e) {
@@ -59,7 +74,7 @@ namespace OriWotW.UI {
 
         private void treeView1_ItemDrag(object sender, ItemDragEventArgs e) {
             TreeNode targetNode = e.Item as TreeNode;
-            if (targetNode.Tag != null && targetNode.Tag.ToString() == "GameObject") {
+            if (targetNode.Tag != null && targetNode.Tag.GetType().Name == "SceneObject") {
                 DraggingTreeNodeHierarchy = GetTreeNodeHierarchy(targetNode);
                 DoDragDrop(e.Item, DragDropEffects.Move);
             }
@@ -69,7 +84,7 @@ namespace OriWotW.UI {
             Point targetPoint = sceneHierarchyTree.PointToClient(new Point(e.X, e.Y));
             TreeNode targetNode = sceneHierarchyTree.GetNodeAt(targetPoint);
             if (targetNode != null) { 
-                if (targetNode.Tag != null && targetNode.Tag.ToString() == "GameObject")
+                if (targetNode.Tag != null && targetNode.Tag.GetType().Name == "SceneObject")
                     e.Effect = DragDropEffects.Move;
                 else
                     e.Effect = DragDropEffects.None;
@@ -91,14 +106,36 @@ namespace OriWotW.UI {
 
             string newHierarchy = GetTreeNodeHierarchy(targetNode);
 
-            if (targetNode.Tag == null || targetNode.Tag.ToString() != "GameObject")
+            if (targetNode.Tag == null || targetNode.Tag.GetType().Name != "SceneObject")
                 return;
 
             if (!draggedNode.Equals(targetNode) && targetNode != null) {
                 draggedNode.Remove();
+
+                if (targetNode.Nodes.ContainsKey("Children") == false) {
+                    targetNode.Nodes.Add("Children", "Children");
+                    targetNode.Nodes[2].Tag = "NodeChildren";
+                }
+
                 targetNode.Nodes[2].Nodes.Add(draggedNode);
+                UserExpanded = false;
                 targetNode.Expand();
-                MoveGameObjectInHierarchy(DraggingTreeNodeHierarchy, newHierarchy);
+                UserExpanded = true;
+                SceneObject movingScene = draggedNode.Tag as SceneObject;
+
+                if (movingScene.SceneIndexHierarchy.Count == 0) {
+                    SceneHierarchy parentHierarchy = movingScene.ParentObject;
+                    SceneHierarchy.UpdateHierarchyIndex(ref parentHierarchy);
+                }
+
+                SceneObject movingTo = targetNode.Tag as SceneObject;
+
+                if (movingTo.SceneIndexHierarchy.Count == 0) {
+                    SceneHierarchy parentHierarchy = movingTo.ParentObject;
+                    SceneHierarchy.UpdateHierarchyIndex(ref parentHierarchy);
+                }
+
+                MoveGameObjectInHierarchy(TE.IntVectorToString(movingScene.SceneIndexHierarchy, ","), TE.IntVectorToString(movingTo.SceneIndexHierarchy, ","));
                 DraggingTreeNodeHierarchy = "";
             }
         }
@@ -110,238 +147,46 @@ namespace OriWotW.UI {
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.matSortingOrder = new System.Windows.Forms.NumericUpDown();
-            this.label6 = new System.Windows.Forms.Label();
-            this.moonZOffset = new System.Windows.Forms.NumericUpDown();
-            this.label7 = new System.Windows.Forms.Label();
-            this.matRenderQueue = new System.Windows.Forms.NumericUpDown();
-            this.label8 = new System.Windows.Forms.Label();
-            this.layerMaskValue = new System.Windows.Forms.NumericUpDown();
-            this.button1 = new System.Windows.Forms.Button();
             this.sceneHierarchyTree = new System.Windows.Forms.TreeView();
             this.label9 = new System.Windows.Forms.Label();
             this.lblSelectedObject = new System.Windows.Forms.Label();
-            this.rotation = new OriWotW.UI.VisualEditor.Vector4Control();
-            this.scale = new OriWotW.UI.VisualEditor.Vector4Control();
-            this.localPosition = new OriWotW.UI.VisualEditor.Vector4Control();
-            this.position = new OriWotW.UI.VisualEditor.Vector4Control();
+            this.cloneGameObject = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
+            this.btnLoadWorld = new System.Windows.Forms.Button();
+            this.FieldsPropertiesTree = new System.Windows.Forms.TreeView();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.fieldPropVector4Value = new Vector4Control();
+            this.fieldPropVector3Value = new Vector3Control();
+            this.fieldPropVector2Value = new Vector2Control();
+            this.fieldPropStringValue = new System.Windows.Forms.TextBox();
+            this.fieldPropFloatValue = new System.Windows.Forms.NumericUpDown();
+            this.fieldPropIntValue = new System.Windows.Forms.NumericUpDown();
+            this.fieldPropBooleanValue = new System.Windows.Forms.CheckBox();
+            this.fieldPropBoundsValue = new BoundsControl();
+            this.selectedFieldProperty = new System.Windows.Forms.Label();
             this.flowLayoutPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.matSortingOrder)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.moonZOffset)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.matRenderQueue)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layerMaskValue)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.fieldPropFloatValue)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.fieldPropIntValue)).BeginInit();
             this.SuspendLayout();
-            // 
-            // label2
-            // 
-            this.label2.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.label2.Location = new System.Drawing.Point(8, 89);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(77, 40);
-            this.label2.TabIndex = 3;
-            this.label2.Text = "Position Local:";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // label3
-            // 
-            this.label3.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.label3.Location = new System.Drawing.Point(38, 40);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(47, 40);
-            this.label3.TabIndex = 4;
-            this.label3.Text = "Position:";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // label1
-            // 
-            this.label1.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.label1.Location = new System.Drawing.Point(41, 135);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(44, 40);
-            this.label1.TabIndex = 6;
-            this.label1.Text = "Scale:";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // label4
-            // 
-            this.label4.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.label4.Location = new System.Drawing.Point(31, 181);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(54, 40);
-            this.label4.TabIndex = 8;
-            this.label4.Text = "Rotation:";
-            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // label5
-            // 
-            this.label5.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.label5.Location = new System.Drawing.Point(3, 3);
-            this.label5.Margin = new System.Windows.Forms.Padding(3);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(119, 20);
-            this.label5.TabIndex = 9;
-            this.label5.Text = "Material Sorting Order:";
-            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // flowLayoutPanel1
-            // 
-            this.flowLayoutPanel1.Controls.Add(this.label5);
-            this.flowLayoutPanel1.Controls.Add(this.matSortingOrder);
-            this.flowLayoutPanel1.Controls.Add(this.label6);
-            this.flowLayoutPanel1.Controls.Add(this.moonZOffset);
-            this.flowLayoutPanel1.Controls.Add(this.label7);
-            this.flowLayoutPanel1.Controls.Add(this.matRenderQueue);
-            this.flowLayoutPanel1.Controls.Add(this.label8);
-            this.flowLayoutPanel1.Controls.Add(this.layerMaskValue);
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(12, 227);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(536, 60);
-            this.flowLayoutPanel1.TabIndex = 10;
-            // 
-            // matSortingOrder
-            // 
-            this.matSortingOrder.Location = new System.Drawing.Point(128, 3);
-            this.matSortingOrder.Maximum = new decimal(new int[] {
-            30000,
-            0,
-            0,
-            0});
-            this.matSortingOrder.Minimum = new decimal(new int[] {
-            30000,
-            0,
-            0,
-            -2147483648});
-            this.matSortingOrder.Name = "matSortingOrder";
-            this.matSortingOrder.Size = new System.Drawing.Size(120, 20);
-            this.matSortingOrder.TabIndex = 10;
-            this.matSortingOrder.Enter += new System.EventHandler(this.input_Enter);
-            this.matSortingOrder.Leave += new System.EventHandler(this.input_Leave);
-            // 
-            // label6
-            // 
-            this.label6.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.label6.Location = new System.Drawing.Point(254, 3);
-            this.label6.Margin = new System.Windows.Forms.Padding(3);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(136, 20);
-            this.label6.TabIndex = 11;
-            this.label6.Text = "Renderer Moon Z -Offset:";
-            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // moonZOffset
-            // 
-            this.moonZOffset.DecimalPlaces = 5;
-            this.moonZOffset.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            131072});
-            this.moonZOffset.Location = new System.Drawing.Point(396, 3);
-            this.moonZOffset.Maximum = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-            this.moonZOffset.Minimum = new decimal(new int[] {
-            5,
-            0,
-            0,
-            -2147483648});
-            this.moonZOffset.Name = "moonZOffset";
-            this.moonZOffset.Size = new System.Drawing.Size(120, 20);
-            this.moonZOffset.TabIndex = 12;
-            this.moonZOffset.Enter += new System.EventHandler(this.input_Enter);
-            this.moonZOffset.Leave += new System.EventHandler(this.input_Leave);
-            // 
-            // label7
-            // 
-            this.label7.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.label7.Location = new System.Drawing.Point(3, 29);
-            this.label7.Margin = new System.Windows.Forms.Padding(3);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(129, 20);
-            this.label7.TabIndex = 13;
-            this.label7.Text = "Material Render Queue:";
-            this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // matRenderQueue
-            // 
-            this.matRenderQueue.Location = new System.Drawing.Point(138, 29);
-            this.matRenderQueue.Maximum = new decimal(new int[] {
-            30000,
-            0,
-            0,
-            0});
-            this.matRenderQueue.Minimum = new decimal(new int[] {
-            30000,
-            0,
-            0,
-            -2147483648});
-            this.matRenderQueue.Name = "matRenderQueue";
-            this.matRenderQueue.Size = new System.Drawing.Size(120, 20);
-            this.matRenderQueue.TabIndex = 14;
-            this.matRenderQueue.Enter += new System.EventHandler(this.input_Enter);
-            this.matRenderQueue.Leave += new System.EventHandler(this.input_Leave);
-            // 
-            // label8
-            // 
-            this.label8.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.label8.Location = new System.Drawing.Point(264, 29);
-            this.label8.Margin = new System.Windows.Forms.Padding(3);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(129, 20);
-            this.label8.TabIndex = 15;
-            this.label8.Text = "Rendering Layer Mask:";
-            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // layerMaskValue
-            // 
-            this.layerMaskValue.Location = new System.Drawing.Point(399, 29);
-            this.layerMaskValue.Maximum = new decimal(new int[] {
-            9999999,
-            0,
-            0,
-            0});
-            this.layerMaskValue.Minimum = new decimal(new int[] {
-            9999999,
-            0,
-            0,
-            -2147483648});
-            this.layerMaskValue.Name = "layerMaskValue";
-            this.layerMaskValue.Size = new System.Drawing.Size(120, 20);
-            this.layerMaskValue.TabIndex = 16;
-            this.layerMaskValue.Enter += new System.EventHandler(this.input_Enter);
-            this.layerMaskValue.Leave += new System.EventHandler(this.input_Leave);
-            // 
-            // button1
-            // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(603, 787);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(97, 24);
-            this.button1.TabIndex = 11;
-            this.button1.Text = "Apply Changes";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // sceneHierarchyTree
             // 
             this.sceneHierarchyTree.AllowDrop = true;
+            this.sceneHierarchyTree.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.sceneHierarchyTree.HideSelection = false;
             this.sceneHierarchyTree.HotTracking = true;
-            this.sceneHierarchyTree.Location = new System.Drawing.Point(12, 293);
+            this.sceneHierarchyTree.Location = new System.Drawing.Point(12, 30);
             this.sceneHierarchyTree.Name = "sceneHierarchyTree";
-            this.sceneHierarchyTree.Size = new System.Drawing.Size(688, 488);
+            this.sceneHierarchyTree.Size = new System.Drawing.Size(609, 776);
             this.sceneHierarchyTree.TabIndex = 12;
+            this.sceneHierarchyTree.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.sceneHierarchyTree_BeforeExpand);
             this.sceneHierarchyTree.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.treeView1_ItemDrag);
+            this.sceneHierarchyTree.BeforeSelect += new System.Windows.Forms.TreeViewCancelEventHandler(this.sceneHierarchyTree_BeforeSelect);
             this.sceneHierarchyTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.sceneHierarchyTree_AfterSelect);
             this.sceneHierarchyTree.DragDrop += new System.Windows.Forms.DragEventHandler(this.treeView1_DragDrop);
             this.sceneHierarchyTree.DragEnter += new System.Windows.Forms.DragEventHandler(this.treeView1_DragEnter);
+            this.sceneHierarchyTree.DragOver += new System.Windows.Forms.DragEventHandler(this.treeView_DragOver);
             this.sceneHierarchyTree.MouseMove += new System.Windows.Forms.MouseEventHandler(this.OnMouseMove);
             this.sceneHierarchyTree.MouseUp += new System.Windows.Forms.MouseEventHandler(this.OnMouseUp);
             // 
@@ -366,111 +211,266 @@ namespace OriWotW.UI {
             this.lblSelectedObject.Size = new System.Drawing.Size(0, 18);
             this.lblSelectedObject.TabIndex = 14;
             // 
-            // rotation
+            // cloneGameObject
             // 
-            this.rotation.AutoSize = true;
-            this.rotation.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.rotation.BackColor = System.Drawing.Color.Transparent;
-            this.rotation.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.rotation.Location = new System.Drawing.Point(91, 181);
-            this.rotation.Name = "rotation";
-            this.rotation.Size = new System.Drawing.Size(610, 40);
-            this.rotation.TabIndex = 7;
-            this.rotation.Enter += new System.EventHandler(this.input_Enter);
-            this.rotation.Leave += new System.EventHandler(this.input_Leave);
+            this.cloneGameObject.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.cloneGameObject.Location = new System.Drawing.Point(11, 812);
+            this.cloneGameObject.Name = "cloneGameObject";
+            this.cloneGameObject.Size = new System.Drawing.Size(109, 25);
+            this.cloneGameObject.TabIndex = 15;
+            this.cloneGameObject.Text = "Clone Game Object";
+            this.cloneGameObject.UseVisualStyleBackColor = true;
+            this.cloneGameObject.Click += new System.EventHandler(this.cloneGameObject_Click);
             // 
-            // scale
+            // button3
             // 
-            this.scale.AutoSize = true;
-            this.scale.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.scale.BackColor = System.Drawing.Color.Transparent;
-            this.scale.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.scale.Location = new System.Drawing.Point(91, 135);
-            this.scale.Name = "scale";
-            this.scale.Size = new System.Drawing.Size(610, 40);
-            this.scale.TabIndex = 5;
-            this.scale.Enter += new System.EventHandler(this.input_Enter);
-            this.scale.Leave += new System.EventHandler(this.input_Leave);
+            this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button3.Location = new System.Drawing.Point(560, 814);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(75, 23);
+            this.button3.TabIndex = 17;
+            this.button3.Text = "Save World";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
-            // localPosition
+            // btnLoadWorld
             // 
-            this.localPosition.AutoSize = true;
-            this.localPosition.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.localPosition.BackColor = System.Drawing.Color.Transparent;
-            this.localPosition.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.localPosition.Location = new System.Drawing.Point(91, 89);
-            this.localPosition.Name = "localPosition";
-            this.localPosition.Size = new System.Drawing.Size(610, 40);
-            this.localPosition.TabIndex = 1;
-            this.localPosition.Enter += new System.EventHandler(this.input_Enter);
-            this.localPosition.Leave += new System.EventHandler(this.input_Leave);
+            this.btnLoadWorld.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnLoadWorld.Location = new System.Drawing.Point(472, 814);
+            this.btnLoadWorld.Name = "btnLoadWorld";
+            this.btnLoadWorld.Size = new System.Drawing.Size(82, 23);
+            this.btnLoadWorld.TabIndex = 18;
+            this.btnLoadWorld.Text = "Load World";
+            this.btnLoadWorld.UseVisualStyleBackColor = true;
+            this.btnLoadWorld.Click += new System.EventHandler(this.btnLoadWorld_Click);
             // 
-            // position
+            // FieldsPropertiesTree
             // 
-            this.position.AutoSize = true;
-            this.position.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.position.BackColor = System.Drawing.Color.Transparent;
-            this.position.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.position.Location = new System.Drawing.Point(91, 43);
-            this.position.Name = "position";
-            this.position.Size = new System.Drawing.Size(610, 40);
-            this.position.TabIndex = 0;
-            this.position.Enter += new System.EventHandler(this.input_Enter);
-            this.position.Leave += new System.EventHandler(this.input_Leave);
+            this.FieldsPropertiesTree.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.FieldsPropertiesTree.HideSelection = false;
+            this.FieldsPropertiesTree.HotTracking = true;
+            this.FieldsPropertiesTree.Location = new System.Drawing.Point(627, 89);
+            this.FieldsPropertiesTree.MaximumSize = new System.Drawing.Size(800, 1200);
+            this.FieldsPropertiesTree.Name = "FieldsPropertiesTree";
+            this.FieldsPropertiesTree.Size = new System.Drawing.Size(13, 719);
+            this.FieldsPropertiesTree.TabIndex = 19;
+            this.FieldsPropertiesTree.Visible = false;
+            this.FieldsPropertiesTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.FieldsPropertiesTree_AfterSelect);
+            // 
+            // flowLayoutPanel1
+            // 
+            this.flowLayoutPanel1.Controls.Add(this.fieldPropVector4Value);
+            this.flowLayoutPanel1.Controls.Add(this.fieldPropVector3Value);
+            this.flowLayoutPanel1.Controls.Add(this.fieldPropVector2Value);
+            this.flowLayoutPanel1.Controls.Add(this.fieldPropStringValue);
+            this.flowLayoutPanel1.Controls.Add(this.fieldPropFloatValue);
+            this.flowLayoutPanel1.Controls.Add(this.fieldPropIntValue);
+            this.flowLayoutPanel1.Controls.Add(this.fieldPropBooleanValue);
+            this.flowLayoutPanel1.Controls.Add(this.fieldPropBoundsValue);
+            this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(627, 35);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(548, 48);
+            this.flowLayoutPanel1.TabIndex = 20;
+            this.flowLayoutPanel1.WrapContents = false;
+            // 
+            // fieldPropVector4Value
+            // 
+            this.fieldPropVector4Value.AutoSize = true;
+            this.fieldPropVector4Value.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.fieldPropVector4Value.BackColor = System.Drawing.Color.Transparent;
+            this.fieldPropVector4Value.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.fieldPropVector4Value.Location = new System.Drawing.Point(0, 0);
+            this.fieldPropVector4Value.Margin = new System.Windows.Forms.Padding(0);
+            this.fieldPropVector4Value.MinimumSize = new System.Drawing.Size(2, 14);
+            this.fieldPropVector4Value.Name = "fieldPropVector4Value";
+            this.fieldPropVector4Value.Size = new System.Drawing.Size(494, 22);
+            this.fieldPropVector4Value.TabIndex = 0;
+            this.fieldPropVector4Value.Visible = false;
+            this.fieldPropVector4Value.OnValueChangedNoArgs += new System.EventHandler(this.Component_ValueChanged);
+            this.fieldPropVector4Value.Enter += new System.EventHandler(this.WotwEditor_Enter);
+            this.fieldPropVector4Value.Leave += new System.EventHandler(this.WotwEditor_Leave);
+            // 
+            // fieldPropVector3Value
+            // 
+            this.fieldPropVector3Value.AutoSize = true;
+            this.fieldPropVector3Value.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.fieldPropVector3Value.BackColor = System.Drawing.Color.Transparent;
+            this.fieldPropVector3Value.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.fieldPropVector3Value.Location = new System.Drawing.Point(0, 22);
+            this.fieldPropVector3Value.Margin = new System.Windows.Forms.Padding(0);
+            this.fieldPropVector3Value.MinimumSize = new System.Drawing.Size(2, 14);
+            this.fieldPropVector3Value.Name = "fieldPropVector3Value";
+            this.fieldPropVector3Value.Size = new System.Drawing.Size(371, 22);
+            this.fieldPropVector3Value.TabIndex = 1;
+            this.fieldPropVector3Value.Visible = false;
+            this.fieldPropVector3Value.OnValueChangedNoArgs += new System.EventHandler(this.Component_ValueChanged);
+            this.fieldPropVector3Value.Enter += new System.EventHandler(this.WotwEditor_Enter);
+            this.fieldPropVector3Value.Leave += new System.EventHandler(this.WotwEditor_Leave);
+            // 
+            // fieldPropVector2Value
+            // 
+            this.fieldPropVector2Value.AutoSize = true;
+            this.fieldPropVector2Value.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.fieldPropVector2Value.BackColor = System.Drawing.Color.Transparent;
+            this.fieldPropVector2Value.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.fieldPropVector2Value.Location = new System.Drawing.Point(0, 44);
+            this.fieldPropVector2Value.Margin = new System.Windows.Forms.Padding(0);
+            this.fieldPropVector2Value.MinimumSize = new System.Drawing.Size(2, 14);
+            this.fieldPropVector2Value.Name = "fieldPropVector2Value";
+            this.fieldPropVector2Value.Size = new System.Drawing.Size(248, 22);
+            this.fieldPropVector2Value.TabIndex = 6;
+            this.fieldPropVector2Value.Visible = false;
+            this.fieldPropVector2Value.OnValueChangedNoArgs += new System.EventHandler(this.Component_ValueChanged);
+            this.fieldPropVector2Value.Enter += new System.EventHandler(this.WotwEditor_Enter);
+            this.fieldPropVector2Value.Leave += new System.EventHandler(this.WotwEditor_Leave);
+            // 
+            // fieldPropStringValue
+            // 
+            this.fieldPropStringValue.Location = new System.Drawing.Point(3, 69);
+            this.fieldPropStringValue.Name = "fieldPropStringValue";
+            this.fieldPropStringValue.Size = new System.Drawing.Size(493, 20);
+            this.fieldPropStringValue.TabIndex = 2;
+            this.fieldPropStringValue.Visible = false;
+            this.fieldPropStringValue.TextChanged += new System.EventHandler(this.Component_ValueChanged);
+            this.fieldPropStringValue.Enter += new System.EventHandler(this.WotwEditor_Enter);
+            this.fieldPropStringValue.Leave += new System.EventHandler(this.WotwEditor_Leave);
+            // 
+            // fieldPropFloatValue
+            // 
+            this.fieldPropFloatValue.DecimalPlaces = 5;
+            this.fieldPropFloatValue.Location = new System.Drawing.Point(3, 95);
+            this.fieldPropFloatValue.Maximum = new decimal(new int[] {
+            -1,
+            -1,
+            -1,
+            0});
+            this.fieldPropFloatValue.Minimum = new decimal(new int[] {
+            -1,
+            -1,
+            -1,
+            -2147483648});
+            this.fieldPropFloatValue.Name = "fieldPropFloatValue";
+            this.fieldPropFloatValue.Size = new System.Drawing.Size(120, 20);
+            this.fieldPropFloatValue.TabIndex = 3;
+            this.fieldPropFloatValue.Visible = false;
+            this.fieldPropFloatValue.ValueChanged += new System.EventHandler(this.Component_ValueChanged);
+            this.fieldPropFloatValue.Enter += new System.EventHandler(this.WotwEditor_Enter);
+            this.fieldPropFloatValue.Leave += new System.EventHandler(this.WotwEditor_Leave);
+            // 
+            // fieldPropIntValue
+            // 
+            this.fieldPropIntValue.Location = new System.Drawing.Point(3, 121);
+            this.fieldPropIntValue.Maximum = new decimal(new int[] {
+            -1,
+            -1,
+            -1,
+            0});
+            this.fieldPropIntValue.Minimum = new decimal(new int[] {
+            -1,
+            -1,
+            -1,
+            -2147483648});
+            this.fieldPropIntValue.Name = "fieldPropIntValue";
+            this.fieldPropIntValue.Size = new System.Drawing.Size(120, 20);
+            this.fieldPropIntValue.TabIndex = 4;
+            this.fieldPropIntValue.Visible = false;
+            this.fieldPropIntValue.ValueChanged += new System.EventHandler(this.Component_ValueChanged);
+            this.fieldPropIntValue.Enter += new System.EventHandler(this.WotwEditor_Enter);
+            this.fieldPropIntValue.Leave += new System.EventHandler(this.WotwEditor_Leave);
+            // 
+            // fieldPropBooleanValue
+            // 
+            this.fieldPropBooleanValue.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.fieldPropBooleanValue.Location = new System.Drawing.Point(3, 147);
+            this.fieldPropBooleanValue.Name = "fieldPropBooleanValue";
+            this.fieldPropBooleanValue.Size = new System.Drawing.Size(493, 24);
+            this.fieldPropBooleanValue.TabIndex = 5;
+            this.fieldPropBooleanValue.Text = "checkBox1";
+            this.fieldPropBooleanValue.UseVisualStyleBackColor = true;
+            this.fieldPropBooleanValue.Visible = false;
+            this.fieldPropBooleanValue.CheckedChanged += new System.EventHandler(this.Component_ValueChanged);
+            this.fieldPropBooleanValue.Enter += new System.EventHandler(this.WotwEditor_Enter);
+            this.fieldPropBooleanValue.Leave += new System.EventHandler(this.WotwEditor_Leave);
+            // 
+            // fieldPropBoundsValue
+            // 
+            this.fieldPropBoundsValue.AutoSize = true;
+            this.fieldPropBoundsValue.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.fieldPropBoundsValue.BackColor = System.Drawing.Color.Transparent;
+            this.fieldPropBoundsValue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.fieldPropBoundsValue.Location = new System.Drawing.Point(0, 174);
+            this.fieldPropBoundsValue.Margin = new System.Windows.Forms.Padding(0);
+            this.fieldPropBoundsValue.MinimumSize = new System.Drawing.Size(2, 14);
+            this.fieldPropBoundsValue.Name = "fieldPropBoundsValue";
+            this.fieldPropBoundsValue.Size = new System.Drawing.Size(422, 42);
+            this.fieldPropBoundsValue.TabIndex = 7;
+            this.fieldPropBoundsValue.Visible = false;
+            this.fieldPropBoundsValue.OnValueChangedNoArgs += new System.EventHandler(this.Component_ValueChanged);
+            this.fieldPropBoundsValue.Enter += new System.EventHandler(this.WotwEditor_Enter);
+            this.fieldPropBoundsValue.Leave += new System.EventHandler(this.WotwEditor_Leave);
+            // 
+            // selectedFieldProperty
+            // 
+            this.selectedFieldProperty.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.selectedFieldProperty.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.selectedFieldProperty.Location = new System.Drawing.Point(627, 9);
+            this.selectedFieldProperty.Name = "selectedFieldProperty";
+            this.selectedFieldProperty.Size = new System.Drawing.Size(536, 23);
+            this.selectedFieldProperty.TabIndex = 21;
+            this.selectedFieldProperty.Text = "label1";
+            this.selectedFieldProperty.Visible = false;
             // 
             // WotwEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.ClientSize = new System.Drawing.Size(712, 823);
+            this.ClientSize = new System.Drawing.Size(647, 845);
+            this.Controls.Add(this.selectedFieldProperty);
+            this.Controls.Add(this.flowLayoutPanel1);
+            this.Controls.Add(this.FieldsPropertiesTree);
+            this.Controls.Add(this.btnLoadWorld);
+            this.Controls.Add(this.button3);
+            this.Controls.Add(this.cloneGameObject);
             this.Controls.Add(this.lblSelectedObject);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.sceneHierarchyTree);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.flowLayoutPanel1);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.rotation);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.scale);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.localPosition);
-            this.Controls.Add(this.position);
             this.Name = "WotwEditor";
             this.Text = "WotwEditor";
+            this.TopMost = true;
+            this.Activated += new System.EventHandler(this.WotwEditor_Enter);
+            this.Deactivate += new System.EventHandler(this.WotwEditor_Leave);
+            this.Enter += new System.EventHandler(this.WotwEditor_Enter);
+            this.Leave += new System.EventHandler(this.WotwEditor_Leave);
             this.flowLayoutPanel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.matSortingOrder)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.moonZOffset)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.matRenderQueue)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layerMaskValue)).EndInit();
+            this.flowLayoutPanel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.fieldPropFloatValue)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.fieldPropIntValue)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        public Vector4Control position;
-        public Vector4Control localPosition;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label1;
-        public Vector4Control scale;
-        private System.Windows.Forms.Label label4;
-        public Vector4Control rotation;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
-        public System.Windows.Forms.NumericUpDown matSortingOrder;
-        private System.Windows.Forms.Label label6;
-        public System.Windows.Forms.NumericUpDown moonZOffset;
-        private System.Windows.Forms.Label label7;
-        public System.Windows.Forms.NumericUpDown matRenderQueue;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Label label8;
-        public System.Windows.Forms.NumericUpDown layerMaskValue;
         private System.Windows.Forms.TreeView sceneHierarchyTree;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label lblSelectedObject;
+        private Button cloneGameObject;
+        private Button button3;
+        private Button btnLoadWorld;
+        private TreeView FieldsPropertiesTree;
+        private FlowLayoutPanel flowLayoutPanel1;
+        private Vector4Control fieldPropVector4Value;
+        private Vector3Control fieldPropVector3Value;
+        private TextBox fieldPropStringValue;
+        private NumericUpDown fieldPropFloatValue;
+        private NumericUpDown fieldPropIntValue;
+        private CheckBox fieldPropBooleanValue;
+        private Label selectedFieldProperty;
+        private Vector2Control fieldPropVector2Value;
+        private BoundsControl fieldPropBoundsValue;
     }
 }

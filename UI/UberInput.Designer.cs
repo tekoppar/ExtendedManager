@@ -194,6 +194,11 @@
             0,
             0,
             0});
+            this.uberIdValueInt.Minimum = new decimal(new int[] {
+            10000000,
+            0,
+            0,
+            -2147483648});
             this.uberIdValueInt.Name = "uberIdValueInt";
             this.uberIdValueInt.Size = new System.Drawing.Size(120, 20);
             this.uberIdValueInt.TabIndex = 1;

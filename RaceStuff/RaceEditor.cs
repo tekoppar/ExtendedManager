@@ -13,6 +13,7 @@ using System.Timers;
 using System.Drawing.Drawing2D;
 using OriWotW.RaceStuff;
 using OriWotW.Properties;
+using Tem.TemClass;
 
 namespace OriWotW.UI {
 

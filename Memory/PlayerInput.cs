@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 using System.Collections.Generic;
 using System.Windows.Forms.VisualStyles;
 using System.Runtime.Remoting.Messaging;
+using Tem.TemClass;
 
 namespace OriWotW.Memory {
     [StructLayout(LayoutKind.Explicit, Size = 200, Pack = 1)]

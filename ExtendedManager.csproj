@@ -216,7 +216,6 @@
     <Compile Include="Il2Cpp\PlusSearch.cs" />
     <Compile Include="Logic\Inject.cs" />
     <Compile Include="Logic\InjectCommunication.cs" />
-    <Compile Include="Logic\MathTE.cs" />
     <Compile Include="Logic\Utility.cs" />
     <Compile Include="Memory\Ability.cs" />
     <Compile Include="Memory\AreaType.cs" />
@@ -237,7 +236,6 @@
     <Compile Include="Memory\SeinGrenade.cs" />
     <Compile Include="Memory\UberStateLUT.cs" />
     <Compile Include="Memory\UberStateValueStore.cs" />
-    <Compile Include="Memory\Vector3.cs" />
     <Compile Include="Memory\WorldMapIcon.cs" />
     <Compile Include="Memory\SeinLeash.cs" />
     <Compile Include="Memory\MessageWrapper.cs" />
@@ -254,9 +252,7 @@
     <Compile Include="Memory\SeinEnergy.cs" />
     <Compile Include="Memory\Shard.cs" />
     <Compile Include="Memory\Stats.cs" />
-    <Compile Include="Memory\Vector2.cs" />
     <Compile Include="Memory\ProgramPointer.cs" />
-    <Compile Include="Memory\Vector4.cs" />
     <Compile Include="Memory\UberState.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -282,12 +278,6 @@
       <DependentUpon>BackupsaveUI.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\Editor\SceneHierarchy.cs" />
-    <Compile Include="UI\VisualEditor\ColorWheel.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\VisualEditor\ColorWheel.Designer.cs">
-      <DependentUpon>ColorWheel.cs</DependentUpon>
-    </Compile>
     <Compile Include="UI\ControllerUI.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -362,12 +352,6 @@
     <Compile Include="UI\VisualEditor\SeinVisualEditor.Designer.cs">
       <DependentUpon>SeinVisualEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\VisualEditor\TColorPicker.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UI\VisualEditor\TColorPicker.Designer.cs">
-      <DependentUpon>TColorPicker.cs</DependentUpon>
-    </Compile>
     <Compile Include="UI\Teleporter\TeleportLocation.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -400,12 +384,6 @@
     </Compile>
     <Compile Include="Memory\MemoryReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UI\VisualEditor\Vector4Control.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UI\VisualEditor\Vector4Control.Designer.cs">
-      <DependentUpon>Vector4Control.cs</DependentUpon>
-    </Compile>
     <Compile Include="UI\Editor\WotwEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -618,9 +596,6 @@
     <EmbeddedResource Include="UI\Backup saves\BackupsaveUI.resx">
       <DependentUpon>BackupsaveUI.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\VisualEditor\ColorWheel.resx">
-      <DependentUpon>ColorWheel.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="UI\ControllerUI.resx">
       <DependentUpon>ControllerUI.cs</DependentUpon>
     </EmbeddedResource>
@@ -654,9 +629,6 @@
     <EmbeddedResource Include="UI\VisualEditor\SeinVisualEditor.resx">
       <DependentUpon>SeinVisualEditor.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\VisualEditor\TColorPicker.resx">
-      <DependentUpon>TColorPicker.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="UI\Teleporter\TeleportLocation.resx">
       <DependentUpon>TeleportLocation.cs</DependentUpon>
     </EmbeddedResource>
@@ -671,9 +643,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Backup saves\BackupSaveSlot.resx">
       <DependentUpon>BackupSaveSlot.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\VisualEditor\Vector4Control.resx">
-      <DependentUpon>Vector4Control.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Editor\WotwEditor.resx">
       <DependentUpon>WotwEditor.cs</DependentUpon>
@@ -692,6 +661,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\source\repos\CustomClasses\CustomClasses.csproj">
+      <Project>{9a57b726-4eca-4f7b-aaae-7145f6f0b4b3}</Project>
+      <Name>CustomClasses</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\source\repos\ManagerAutoUpdater\ManagerAutoUpdater.csproj">
       <Project>{1f31b6b9-9e9e-454a-88de-0677837ed1c9}</Project>
       <Name>ManagerAutoUpdater</Name>

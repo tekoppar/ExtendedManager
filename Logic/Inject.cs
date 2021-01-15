@@ -39,6 +39,10 @@ namespace GijSoft.DllInjection {
 
         static DllInjector _instance;
 
+        public static IntPtr DllHandle = IntPtr.Zero;
+        public static IntPtr DllPtr = IntPtr.Zero;
+        public static IntPtr DllPtr2 = IntPtr.Zero;
+
         public static DllInjector GetInstance {
             get {
                 if (_instance == null) {
@@ -130,6 +134,9 @@ namespace GijSoft.DllInjection {
             if (CreateRemoteThread(hndProc, (IntPtr)null, INTPTR_ZERO, lpLLAddress, lpAddress, 0, (IntPtr)null) == INTPTR_ZERO) {
                 return false;
             }
+            DllInjector.DllPtr = lpLLAddress;
+            DllInjector.DllPtr2 = lpAddress;
+            DllInjector.DllHandle = hndProc;
 
             CloseHandle(hndProc);
 

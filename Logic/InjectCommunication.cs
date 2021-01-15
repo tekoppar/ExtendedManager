@@ -13,8 +13,62 @@ using OriWotW.RaceStuff;
 using OriWotW.UI;
 using System.Security.Principal;
 using System.Security.AccessControl;
+using Tem.Utility;
 
 namespace OriWotW.Logic {
+    enum MessageType {
+        EndThread = 0,
+        GameCompletion = 1,
+        CreateCheckpoint = 2,
+        CreateObject = 3,
+        StopRecorder = 4,
+        WriteRecorder = 5,
+        GhostPlayerRun = 6,
+        GhostPlayerStop = 7,
+        GetQuestByName = 8,
+        FrameStep = 9,
+        FrameStepStop = 10,
+        NextAnimation = 11,
+        GetShriekData = 12,
+        CreateRaceCheckpoint = 13,
+        RunRace = 14,
+        RemoveCheckpoint = 15,
+        LoadRace = 16,
+        KuDash = 17,
+        UpdateRaceCheckpoint = 18,
+        SetManagerPath = 19,
+        ToggleDebugObjects = 20,
+        GetSeinFaces = 21,
+        UpdateHitbox = 22,
+        RemoveHitbox = 23,
+        RestartRace = 24,
+        StopRace = 25,
+        SaveUberStates = 26,
+        LoadUberStates = 27,
+        SetSeinPosition = 28,
+        CreateBackupSave = 29,
+        GetSaveInfo = 30,
+        RefreshBackups = 31,
+        SetOriVisuals = 32,
+        FinishedRace = 33,
+        StartedRace = 34,
+        ResetOriVisuals = 35,
+        GetSceneHierarchy = 36,
+        SetSelectedGameObject = 37,
+        CreateGameObject = 38,
+        MoveGameObjectHierarchy = 39,
+        CloneGameObject = 40,
+        ExpandSceneHierarchy = 41,
+        GetFieldsProperties = 42,
+        SetFieldsProperties = 43,
+        SaveEditorWorld = 44,
+        LoadEditorWorld = 45,
+        AddCollisionPosition = 46,
+        GetFieldsPropertiesGameObject = 47,
+        StoppedRace = 48,
+        ManagerInitialized = 49
+    };
+
     public class InjectCommunication {
         public NamedPipeServerStream NamedPipeServer;
         public NamedPipeServerStream NamedPipeServerDLL;
@@ -46,7 +100,7 @@ namespace OriWotW.Logic {
             var id = new SecurityIdentifier(WellKnownSidType.AuthenticatedUserSid, null);
 
             // Allow Everyone read and write access to the pipe. 
-            pipeSecurity.SetAccessRule(new PipeAccessRule(id, PipeAccessRights.ReadWrite, AccessControlType.Allow));
+            pipeSecurity.SetAccessRule(new PipeAccessRule(id, PipeAccessRights.FullControl, AccessControlType.Allow));
 
             return pipeSecurity;
         }
@@ -72,6 +126,7 @@ namespace OriWotW.Logic {
         private async Task ReadServerAsync(string pipeName) {
             PipeSecurity pipeSecurity = CreateSystemIOPipeSecurity();
             this.NamedPipeServerDLL = new NamedPipeServerStream(pipeName, PipeDirection.In, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous, 2048, 2048, pipeSecurity);
+            File.AppendAllText("C:\\moon\\manager_error.log", "Starting pipe reader\r\n");
 
             try {
                 await Task.Factory.FromAsync(
@@ -82,6 +137,7 @@ namespace OriWotW.Logic {
             this.StreamReader = new StreamReader(this.NamedPipeServerDLL);
             this.ConnectionIsEstablished = true;
             this.Manager.managerStatus.Text = "Piped DLL server connected";
+            File.AppendAllText("C:\\moon\\manager_error.log", "Pipe reader started\r\n");
 
             this.Read();
         }
@@ -89,6 +145,7 @@ namespace OriWotW.Logic {
         private async Task RunServerAsync(string pipeName) {
             PipeSecurity pipeSecurity = CreateSystemIOPipeSecurity();
             this.NamedPipeServer = new NamedPipeServerStream(pipeName, PipeDirection.Out, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous, 2048, 2048, pipeSecurity);
+            File.AppendAllText("C:\\moon\\manager_error.log", "Starting pipe writer\r\n");
 
             try {
                 await Task.Factory.FromAsync(
@@ -101,6 +158,7 @@ namespace OriWotW.Logic {
             this.StreamWriter.AutoFlush = true;
 
             this.Manager.managerStatus.Text = "Piped Manager server connected";
+            File.AppendAllText("C:\\moon\\manager_error.log", "Pipe writer started\r\n");
 
             this.Send();
         }
@@ -115,89 +173,72 @@ namespace OriWotW.Logic {
                     } else {
                         string[] messages = line.Split(new string[] { "||" }, StringSplitOptions.RemoveEmptyEntries);
                         foreach (string s in messages) {
-                            if (s.Contains("GAMECOMPLETION:") == true) {
-                                this.Manager.GameCompletion = float.Parse(s.Replace("GAMECOMPLETION:", ""), CultureInfo.InvariantCulture.NumberFormat);
-                            }
-                            if (s.Contains("SHRIEKDATA:") == true) {
-                                string shriekData = s.Replace("SHRIEKDATA:", "");
-                                shriekData = shriekData.Replace("POSITION:", "\nPosition:");
-                                //this.Manager.lblInputInts.Text = shriekData;
-                            }
-                            if (s.Contains("SEINFACES:") == true) {
-                                string seinFaces = s.Replace("SEINFACES:", "");
-                                this.Manager.RaceEditor.SeinFacesDirection = int.Parse(seinFaces);
-                            }
-                            if (s.Contains("FINISHEDRACE") == true) {
-                                this.Manager.IsRacing = RaceState.FinishedRacing;
-                            }
-                            if (s.Contains("STARTEDRACE") == true) {
-                                this.Manager.IsRacing = RaceState.IsRacing;
-                            }
-                            if (s.Contains("STOPPEDRACE") == true) {
-                                this.Manager.WindowState = FormWindowState.Normal;
-                                this.Manager.IsRacing = RaceState.Waiting;
-                            }
-                            if (s.Contains("MANAGERINITIALIZED") == true) {
-                                this.Manager.ManagerInitialized();
-                            }
-                            if (s.Contains("GETSCENEHIERARCHY") == true) {
-                                string data = s.Replace("GETSCENEHIERARCHY", "");
-                                this.Manager.transformEditor.SetSceneHierarchy(data);
-                            }
-                            if (s.Contains("SELECTEDGAMEOBJECT") == true) {
-                                string data = s.Replace("SELECTEDGAMEOBJECT", "");
-                                this.Manager.transformEditor.SetSelectedGameObject(data);
-                            }
-                            if (s.Contains("SAVEINFO") == true) {
-                                string data = s.Replace("SAVEINFO", "");
-                                var backupsaves = data.Split(';');
-                                this.Manager.backupsaveUI.Backupsaves.Clear();
+                            MessageType type;
+                            string values = "";
+                            if (s.Contains("|") == true) {
+                                int index = s.IndexOf("|");
+                                type = (MessageType)int.Parse(s.Substring(0, index));
+                                values = s.Remove(0, index + 1);
+                            } else
+                                type = (MessageType)int.Parse(s);
 
-                                for (int i = 0; i < backupsaves.Length; i += 10) {
-                                    if (backupsaves[i] != "") {
-                                        Backupsave backupsave = new Backupsave();
-                                        backupsave.AreaName = backupsaves[i];
-                                        backupsave.Completion = int.Parse(backupsaves[i + 1]);
-
-                                        var health = backupsaves[i + 2].Split('/');
-                                        backupsave.Health = int.Parse(health[0]);
-                                        backupsave.MaxHealth = int.Parse(health[1]);
-
-                                        var energy = backupsaves[i + 3].Split('/');
-                                        backupsave.Energy = int.Parse(energy[0]);
-                                        backupsave.MaxEnergy = int.Parse(energy[1]);
-
-                                        backupsave.Order = int.Parse(backupsaves[i + 4]);
-                                        backupsave.Difficulty = (DifficultyMode)int.Parse(backupsaves[i + 5]);
-
-                                        var time = backupsaves[i + 6].Split(':');
-                                        backupsave.Hours = int.Parse(time[0]);
-                                        backupsave.Minutes = int.Parse(time[1]);
-                                        backupsave.Seconds = int.Parse(time[2]);
-
-                                        backupsave.DebugOn = int.Parse(backupsaves[i + 7]);
-                                        int killed = int.Parse(backupsaves[i + 8]);
-                                        backupsave.WasKilled = killed == 0 ? false : true;
-                                        backupsave.BackupIndex = int.Parse(backupsaves[i + 9]);
-                                        this.Manager.backupsaveUI.Backupsaves.Add(backupsave);
+                            switch (type) {
+                                case MessageType.GameCompletion: this.Manager.GameCompletion = float.Parse(values, CultureInfo.InvariantCulture.NumberFormat); break;
+                                case MessageType.GetSeinFaces: this.Manager.RaceEditor.SeinFacesDirection = int.Parse(values); break;
+                                case MessageType.FinishedRace: this.Manager.IsRacing = RaceState.FinishedRacing; break;
+                                case MessageType.StartedRace: this.Manager.IsRacing = RaceState.IsRacing; break;
+                                case MessageType.StoppedRace: this.Manager.WindowState = FormWindowState.Normal; this.Manager.IsRacing = RaceState.Waiting; break;
+                                case MessageType.ManagerInitialized: this.Manager.ManagerInitialized(); break;
+                                case MessageType.GetSceneHierarchy: this.Manager.transformEditor.SetSceneHierarchy(values); break;
+                                case MessageType.ExpandSceneHierarchy: this.Manager.transformEditor.AddStringToSceneHierarchy(values); break;
+                                case MessageType.GetFieldsProperties: this.Manager.transformEditor.LoadFieldsProperties(values); break;
+                                case MessageType.GetFieldsPropertiesGameObject: {
+                                        string[] splitValues = values.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
+                                        this.Manager.transformEditor.LoadFieldsProperties(splitValues[0], TE.StringToIntVector(splitValues[1], ","));
                                     }
-                                }
+                                    break;
+                                case MessageType.CloneGameObject: this.Manager.transformEditor.AddStringToSceneHierarchy(values); break;
+                                case MessageType.SetSelectedGameObject: this.Manager.transformEditor.SetSelectedGameObject(values); break;
+                                case MessageType.GetSaveInfo: {
+                                        var backupsaves = values.Split(';');
+                                        this.Manager.backupsaveUI.Backupsaves.Clear();
 
-                                this.Manager.backupsaveUI.RefreshSaves();
-                            }
-                            if (s.Contains("GETTRANSFORM") == true) {
-                                string data = s.Replace("GETTRANSFORM", "");
-                                var values = data.Split('|');
-                                this.Manager.transformEditor.position.SetValue(new TColor(values[0]));
-                                this.Manager.transformEditor.localPosition.SetValue(new TColor(values[1]));
-                                this.Manager.transformEditor.rotation.SetValue(new TColor(values[2]));
-                                this.Manager.transformEditor.scale.SetValue(new TColor(values[3]));
-                                this.Manager.transformEditor.matSortingOrder.Value = decimal.Parse(values[4]);
-                                this.Manager.transformEditor.moonZOffset.Value = decimal.Parse(values[5], CultureInfo.InvariantCulture.NumberFormat);
-                                this.Manager.transformEditor.matRenderQueue.Value = decimal.Parse(values[6]);
-                                this.Manager.transformEditor.layerMaskValue.Value = decimal.Parse(values[7]);
+                                        for (int i = 0; i < backupsaves.Length; i += 10) {
+                                            if (backupsaves[i] != "") {
+                                                Backupsave backupsave = new Backupsave();
+                                                backupsave.AreaName = backupsaves[i];
+                                                backupsave.Completion = int.Parse(backupsaves[i + 1]);
+
+                                                var health = backupsaves[i + 2].Split('/');
+                                                backupsave.Health = int.Parse(health[0]);
+                                                backupsave.MaxHealth = int.Parse(health[1]);
+
+                                                var energy = backupsaves[i + 3].Split('/');
+                                                backupsave.Energy = int.Parse(energy[0]);
+                                                backupsave.MaxEnergy = int.Parse(energy[1]);
+
+                                                backupsave.Order = int.Parse(backupsaves[i + 4]);
+                                                backupsave.Difficulty = (DifficultyMode)int.Parse(backupsaves[i + 5]);
+
+                                                var time = backupsaves[i + 6].Split(':');
+                                                backupsave.Hours = int.Parse(time[0]);
+                                                backupsave.Minutes = int.Parse(time[1]);
+                                                backupsave.Seconds = int.Parse(time[2]);
+
+                                                backupsave.DebugOn = int.Parse(backupsaves[i + 7]);
+                                                int killed = int.Parse(backupsaves[i + 8]);
+                                                backupsave.WasKilled = killed == 0 ? false : true;
+                                                backupsave.BackupIndex = int.Parse(backupsaves[i + 9]);
+                                                this.Manager.backupsaveUI.Backupsaves.Add(backupsave);
+                                            }
+                                        }
+
+                                        this.Manager.backupsaveUI.RefreshSaves();
+                                    }
+                                    break;
                             }
                         }
+
                     }
                 }
             } while (ConnectionIsEstablished);
@@ -229,7 +270,7 @@ namespace OriWotW.Logic {
         }
 
         public void AddCall(string message = "CALL1") {
-            if (this.Messages.Count < 10) {
+            if (this.Messages.Count < 250) {
                 if (message == "CALL0") {
                     if (this.StreamWriter != null) {
                         this.StreamWriter.Flush();

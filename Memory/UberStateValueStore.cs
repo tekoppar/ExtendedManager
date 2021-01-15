@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+
+
 namespace OriWotW.UberController {
     [StructLayout(LayoutKind.Explicit, Size = 200, Pack = 1)]
     public struct UberStateValueStore {

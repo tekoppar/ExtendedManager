@@ -14,7 +14,6 @@ using RawInput_dll;
 using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.InteropServices;
-using System.Numerics;
 using System.Runtime.CompilerServices;
 using OriWotW;
 using OriWotW.UI;
@@ -33,6 +32,8 @@ using OriWotW.RaceStuff;
 using TemAutoUpdater;
 using OriWotW.UI.Teleporter;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using Tem.TemClass;
+using Tem.Utility;
 
 namespace OriWotW {
     public partial class Manager : Form {
@@ -84,7 +85,7 @@ namespace OriWotW {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Manager managerWindow = new Manager();
-           TemAutoUpdater.ManagerAutoUpdater ManagerAutoUpdater = new TemAutoUpdater.ManagerAutoUpdater(true);
+            TemAutoUpdater.ManagerAutoUpdater ManagerAutoUpdater = new TemAutoUpdater.ManagerAutoUpdater(true);
             if (ManagerAutoUpdater.IsDisposed == false)
                 Application.Run(ManagerAutoUpdater);
 
@@ -94,10 +95,14 @@ namespace OriWotW {
             this.DoubleBuffered = true;
             this.TopLevel = true;
             InitializeComponent();
+
+            string pathTemp = Path.GetTempPath();
+            File.WriteAllText(pathTemp + "\\extendedmanager.tmp", AppDomain.CurrentDomain.BaseDirectory);
+
             comboManager.SetForm(this);
             managerStatus.Text = "Initializing the manager";
 
-           this.SeinStateUI = new SeinStateUI(this.flowStateList, new List<Tuple<string, string>>() { new Tuple<string, string>("Dash", "Dash"),
+            this.SeinStateUI = new SeinStateUI(this.flowStateList, new List<Tuple<string, string>>() { new Tuple<string, string>("Dash", "Dash"),
             new Tuple<string, string>("Djump", "Jump"),
             new Tuple<string, string>("Walljump", "Walljump"),
             new Tuple<string, string>("IsOnWall", "Is On Wall"),
@@ -433,36 +438,40 @@ namespace OriWotW {
             else
                 IsUsingController = false;
 
-            if (this.canStart == true && this.DllInjector == null && gameState != GameState.Logos && gameState != GameState.StartScreen && isLoading == false) { //&& gameState != GameState.TitleScreen
+            if (this.canStart == true && this.DllInjector == null) { //&& gameState != GameState.TitleScreen
                 this.DllInjector = DllInjector.GetInstance;
                 Memory.PatchNoPause(true);
                 DllInjectionResult result = this.DllInjector.Inject("oriwotw", AppDomain.CurrentDomain.BaseDirectory + "\\injectdll.dll");
+
+                File.AppendAllText("C:\\moon\\manager_error.log", "DLL Handle intptr: " + DllInjector.DllHandle.ToString() + " DLL adress1: " + DllInjector.DllPtr.ToString() + " DLL adress2: " + DllInjector.DllPtr2.ToString() + " Injection result: " + result.ToString() + "\r\n");
 
                 if (result != DllInjectionResult.Success)
                     managerStatus.Text = "Injection failed, reason: " + result.ToString();
                 else
                     managerStatus.Text = "Injection was successful";
 
-               this.InjectCommunication.AddCall("CALL19PAR" + AppDomain.CurrentDomain.BaseDirectory);
+                this.InjectCommunication.AddCall("CALL19PAR" + AppDomain.CurrentDomain.BaseDirectory);
 
-                Memory.ReadPlayerInputs(ref SeinInput);
-                List<CompoundButtonInput> allBinds = Memory.GenerateBindingsMap(); //this.Bindings.AllKeyBindings <- replace
-                WOTWKeyBindings.InputMap.Clear();
-                this.Bindings.AllKeyBindingsMap.Clear();
-                this.Bindings.AllKeyBindings.Clear();
+                if (gameState != GameState.Logos && gameState != GameState.StartScreen && isLoading == false) {
+                    Memory.ReadPlayerInputs(ref SeinInput);
+                    List<CompoundButtonInput> allBinds = Memory.GenerateBindingsMap(); //this.Bindings.AllKeyBindings <- replace
+                    WOTWKeyBindings.InputMap.Clear();
+                    this.Bindings.AllKeyBindingsMap.Clear();
+                    this.Bindings.AllKeyBindings.Clear();
 
-                foreach (CompoundButtonInput button in allBinds) {
-                    WOTWKeyBinding keyBind = new WOTWKeyBinding(button.BindName.Trim(), "NONE", "NONE", "NONE", "NONE");
+                    foreach (CompoundButtonInput button in allBinds) {
+                        WOTWKeyBinding keyBind = new WOTWKeyBinding(button.BindName.Trim(), "NONE", "NONE", "NONE", "NONE");
 
-                    foreach (string keyName in button.Buttons) {
-                        keyBind.AddBind(keyName.Trim());
-                        //this.Bindings.AllInputBindingsMap.Add(keyName.Trim(), this.Bindings.AllKeyBindings.Count);
+                        foreach (string keyName in button.Buttons) {
+                            keyBind.AddBind(keyName.Trim());
+                            //this.Bindings.AllInputBindingsMap.Add(keyName.Trim(), this.Bindings.AllKeyBindings.Count);
+                        }
+
+                        this.Bindings.AllKeyBindings.Add(keyBind);
+                        this.Bindings.AllKeyBindingsNamedMap.Add(keyBind.ActualBind, keyBind);
                     }
-
-                    this.Bindings.AllKeyBindings.Add(keyBind);
-                    this.Bindings.AllKeyBindingsNamedMap.Add(keyBind.ActualBind, keyBind);
+                    this.Bindings.GenerateKeyBindindMap();
                 }
-                this.Bindings.GenerateKeyBindindMap();
             }
 
             float FPS = Memory.FPS();
@@ -572,7 +581,7 @@ namespace OriWotW {
             ToolStripMenuItem menuTransformEditor = new ToolStripMenuItem("Transform Editor");
 
             List<string> visibilityMenuItemsNames = new List<string> { "Visibility Health", "Visibility Energy", "Visibility Area", "Visibility Scene", "Visibility Ore", "Visibility Keys", "Visibility Save",
-            "Visibility Total", "Visibility FPS", "Visibility Debug", "Visibility Position", "Visibility Speed", "Visibility SpeedLocal", "Visibility AdditiveLocalSpeed", "Visibility AirNoDeceleration", "Visibility SpeedFactor"};
+            "Visibility Total", "Visibility FPS", "Visibility Debug", "Visibility Position", "Visibility Speed", "Visibility SpeedLocal", "Visibility AdditiveLocalSpeed", "Visibility AirNoDeceleration", "Visibility SpeedFactor", "ManagerAlwaysOnTop"};
 
 #if IL2CPP
             List<string> debugMenuItemsNames = new List<string> { "Complete Quests", "Create Object", "Stop Recorder",
@@ -675,7 +684,7 @@ namespace OriWotW {
             menuStrip.Items.Add(menuTeleport);
             menuStrip.Items.Add(menuBackupSave);
             menuStrip.Items.Add(menuSeinVisualEditor);
-            //menuStrip.Items.Add(menuTransformEditor);
+            menuStrip.Items.Add(menuTransformEditor);
             menuStrip.Items.Add("-");
             menuStrip.Items.Add(menuItem);
             menuStrip.Items.Add(menuDebugActions);
@@ -863,6 +872,11 @@ namespace OriWotW {
                 case "WRAngle":
                     this.SeinStateUI.SetVisibility("WallRightAngle", vis);
                     break;
+                case "ManagerAlwaysOnTop":
+                    this.TopMost = vis;
+                    visibilitySettings.ManagerAlwaysOnTop = vis;
+                    menuVisibilityItems.Find(x => x.Name == "ManagerAlwaysOnTop").Checked = vis;
+                    break;
             }
 
             if (this.visibilitySettings.VisibilityHealth == false && this.visibilitySettings.VisibilityEnergy == false) {
@@ -914,6 +928,10 @@ namespace OriWotW {
                         this.InjectCommunication.AddCall("CALL25");
                         break;
 
+                    case "ManagerAlwaysOnTop":
+                        this.SetManagerVisiblity("ManagerAlwaysOnTop", menuItem.Checked);
+                        break;
+
                     case "Hitbox Split":
                         if (HitboxSplit.IsDisposed == true)
                             HitboxSplit = new HitboxSplit(this);
@@ -952,6 +970,7 @@ namespace OriWotW {
                         break;
 
                     case "Transform Editor":
+                        rawInput.RemoveMessageFilter();
                         transformEditor = new WotwEditor(this);
                         transformEditor.Show(this);
                         break;
@@ -1133,6 +1152,7 @@ namespace OriWotW {
                 keyCombos.Add(new Tuple<String, int, long>(keyString1, currentFrame, sw.ElapsedMilliseconds));
 
                 switch (keyString1) {
+                    case "F4": this.InjectCommunication.AddCall("CALL46"); break;
                     case "F5": this.InjectCommunication.AddCall("CALL9"); break;
                     case "F6": this.InjectCommunication.AddCall("CALL10"); break;
                     case "F9": this.RaceEditor.StartRace(); break;

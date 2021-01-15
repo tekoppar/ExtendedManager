@@ -13,6 +13,9 @@ using System.IO;
 using System.Globalization;
 using System.Text.Json.Serialization.Converters;
 using System.Reflection;
+using Tem.TemClass;
+using Tem.TemUI;
+using Tem.Utility;
 
 namespace OriWotW.UI {
     public partial class SeinVisualEditor : Form {
@@ -376,16 +379,16 @@ FileErrorBrowseAgain:
     }
 
     public class ArrowVisualSettings {
-        public TColorPicker ArrowEffect { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker ArrowEffectEmissive { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker ArrowSpear { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker ArrowSpearEmissive { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker TipImpact { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker TipImpactEmissive { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker TipParticle { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker TipParticleEmissive { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker ArrowTrail { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker ArrowTrailEmissive { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker ArrowEffect { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker ArrowEffectEmissive { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker ArrowSpear { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker ArrowSpearEmissive { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker TipImpact { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker TipImpactEmissive { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker TipParticle { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker TipParticleEmissive { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker ArrowTrail { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker ArrowTrailEmissive { get; set; } = TColorPicker.ColorPicker();
 
         public ArrowVisualSettings() { }
 
@@ -403,20 +406,20 @@ FileErrorBrowseAgain:
         }
     }
     public class ArrowHitVisualSettings {
-        public TColorPicker DistortionNew { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker FxBox { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker BloodSplat { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker DebrisParticles { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker DebrisParticlesFallBig { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker GlowUnmask { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker VignetteMaskC { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker BlowingUpForceField { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker LensFlare20b { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker LensFlare9 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker RadialBurned { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker RadialBurned2 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker RadialIrisImpact { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker StarSpike2 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker DistortionNew { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker FxBox { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker BloodSplat { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker DebrisParticles { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker DebrisParticlesFallBig { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker GlowUnmask { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker VignetteMaskC { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker BlowingUpForceField { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker LensFlare20b { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker LensFlare9 { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker RadialBurned { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker RadialBurned2 { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker RadialIrisImpact { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker StarSpike2 { get; set; } = TColorPicker.ColorPicker();
 
         public ArrowHitVisualSettings() { }
 
@@ -438,10 +441,10 @@ FileErrorBrowseAgain:
         }
     }
     public class BowVisualSettings {
-        public TColorPicker BowShaft { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker BowShaftEmissive { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker BowString { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker BowStringEmissive { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker BowShaft { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker BowShaftEmissive { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker BowString { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker BowStringEmissive { get; set; } = TColorPicker.ColorPicker();
         public ArrowVisualSettings ArrowVisualSettings { get; set; } = new ArrowVisualSettings();
         public ArrowHitVisualSettings ArrowHitVisualSettings { get; set; } = new ArrowHitVisualSettings();
 
@@ -458,10 +461,10 @@ FileErrorBrowseAgain:
     }
 
     public class GlideVisualSettings {
-        public TColorPicker Feather { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker FeatherEmissive { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker Featherflap { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker FeatherflapEmissive { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker Feather { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker FeatherEmissive { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker Featherflap { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker FeatherflapEmissive { get; set; } = TColorPicker.ColorPicker();
 
         public GlideVisualSettings() { }
 
@@ -474,16 +477,16 @@ FileErrorBrowseAgain:
     }
 
     public class TorchHit {
-        public TColorPicker FsBox { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker FlameFireC { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker FlameGlow { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker FireEffect { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker FireEffect2 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker RadialBurned { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker RadialBurned2 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker SpriteSnowPattern { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker Glow { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker GlowUnmask { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker FsBox { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker FlameFireC { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker FlameGlow { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker FireEffect { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker FireEffect2 { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker RadialBurned { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker RadialBurned2 { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker SpriteSnowPattern { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker Glow { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker GlowUnmask { get; set; } = TColorPicker.ColorPicker();
 
         public TorchHit() { }
 
@@ -502,9 +505,9 @@ FileErrorBrowseAgain:
 
     }
     public class TorchBreak {
-        public TColorPicker AcidParticles { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker CharacterGlow { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker Smoke { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker AcidParticles { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker CharacterGlow { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker Smoke { get; set; } = TColorPicker.ColorPicker();
 
         public TorchBreak() { }
 
@@ -515,8 +518,8 @@ FileErrorBrowseAgain:
         }
     }
     public class TorchAttack {
-        public TColorPicker FireSprite { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker TrailZigZag { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker FireSprite { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker TrailZigZag { get; set; } = TColorPicker.ColorPicker();
 
         public override string ToString() {
             return FireSprite.ToString() + "|" + TrailZigZag.ToString();
@@ -532,11 +535,11 @@ FileErrorBrowseAgain:
 
     public class TorchVisualSetting {
         public bool HideGlow { get; set; } = false;
-        public TColorPicker Torch { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker TorchFloatingSpark { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker TorchRunning { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker Torch { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker TorchFloatingSpark { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker TorchRunning { get; set; } = TColorPicker.ColorPicker();
         public bool TorchTrailMeshEnable { get; set; } = false;
-        public TColorPicker TorchTrailMesh { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker TorchTrailMesh { get; set; } = TColorPicker.ColorPicker();
         public TorchAttack TorchAirAttacks1 { get; set; } = new TorchAttack();
         public TorchAttack TorchAirAttacks2 { get; set; } = new TorchAttack();
         public TorchAttack TorchAirAttacks3 { get; set; } = new TorchAttack();
@@ -546,8 +549,8 @@ FileErrorBrowseAgain:
         public TorchBreak TorchBreak { get; set; } = new TorchBreak();
         public TorchHit TorchHit { get; set; } = new TorchHit();
         public TorchHit TorchHitSmall { get; set; } = new TorchHit();
-        public TColorPicker TorchLightEffect { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker TorchSpark { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker TorchLightEffect { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker TorchSpark { get; set; } = TColorPicker.ColorPicker();
 
         public TorchVisualSetting() { }
 
@@ -572,19 +575,19 @@ FileErrorBrowseAgain:
         }
     }
     public class GrenadeEffect {
-        public TColorPicker FireEffect { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker Flame1 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker Flame2 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker Flame3 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker Smoke { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker SnowPattern1 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker SnowPattern2 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker SnowPattern3 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker FireSprite { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker LightCircle { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker MainTrail { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker ProtectiveLight { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker TrailZigZag { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker FireEffect { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker Flame1 { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker Flame2 { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker Flame3 { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker Smoke { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker SnowPattern1 { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker SnowPattern2 { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker SnowPattern3 { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker FireSprite { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker LightCircle { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker MainTrail { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker ProtectiveLight { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker TrailZigZag { get; set; } = TColorPicker.ColorPicker();
 
         public GrenadeEffect() { }
 
@@ -605,15 +608,15 @@ FileErrorBrowseAgain:
         }
     }
     public class GrenadeExplosionFractured {
-        public TColorPicker Burst { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker Distortion { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker BurstPreGlow { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker ArrowDistortion { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker ArrowGlow { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker ArrowSingleParticle { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker ArrowSmoke { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker ArrowVignette { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker SnowPattern { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker Burst { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker Distortion { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker BurstPreGlow { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker ArrowDistortion { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker ArrowGlow { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker ArrowSingleParticle { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker ArrowSmoke { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker ArrowVignette { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker SnowPattern { get; set; } = TColorPicker.ColorPicker();
 
         public GrenadeExplosionFractured() { }
 
@@ -630,14 +633,14 @@ FileErrorBrowseAgain:
         }
     }
     public class GrenadeFractured {
-        public TColorPicker OriSparkle { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker OuterGlow { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker ParticleDropGlow { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker ParticleImpactGlow { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker SingleSnowParticle { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker SharedCircleGlow { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker Sprite { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker Trail { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker OriSparkle { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker OuterGlow { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker ParticleDropGlow { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker ParticleImpactGlow { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker SingleSnowParticle { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker SharedCircleGlow { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker Sprite { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker Trail { get; set; } = TColorPicker.ColorPicker();
 
         public GrenadeFractured() { }
 
@@ -653,20 +656,20 @@ FileErrorBrowseAgain:
         }
     }
     public class GrenadeExplosionEffect {
-        public TColorPicker ForceField { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker Distortion { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker LightCircle { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker LightGlow { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker StarSpike { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker FX { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker FireEffect { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker Smoke { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker SpriteSheetFire { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker SnowPattern { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker RadialBurned { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker RadialBurned2 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker RadialCrack { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker RadialIrisImpact { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker ForceField { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker Distortion { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker LightCircle { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker LightGlow { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker StarSpike { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker FX { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker FireEffect { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker Smoke { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker SpriteSheetFire { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker SnowPattern { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker RadialBurned { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker RadialBurned2 { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker RadialCrack { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker RadialIrisImpact { get; set; } = TColorPicker.ColorPicker();
 
         public GrenadeExplosionEffect() { }
 
@@ -690,12 +693,12 @@ FileErrorBrowseAgain:
         }
     }
     public class GrenadeCharging {
-        public TColorPicker VignetteMask1 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker VignetteMask2 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker ArcaneOrb { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker ChargingJump { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker SnowPattern { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker EnergySplash { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker VignetteMask1 { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker VignetteMask2 { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker ArcaneOrb { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker ChargingJump { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker SnowPattern { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker EnergySplash { get; set; } = TColorPicker.ColorPicker();
 
         public GrenadeCharging() { }
 
@@ -709,10 +712,10 @@ FileErrorBrowseAgain:
         }
     }
     public class GrenadeAiming {
-        public TColorPicker Sparkle { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker OuterGlow { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker Sprite1 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker Sprite2 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker Sparkle { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker OuterGlow { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker Sprite1 { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker Sprite2 { get; set; } = TColorPicker.ColorPicker();
 
         public GrenadeAiming() { }
 
@@ -748,8 +751,8 @@ FileErrorBrowseAgain:
 
     }
     public class HammerStompPreparation {
-        public TColorPicker FireSprite3Flip { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker VignetteMaskC { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker FireSprite3Flip { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker VignetteMaskC { get; set; } = TColorPicker.ColorPicker();
 
         public HammerStompPreparation() { }
 
@@ -759,29 +762,29 @@ FileErrorBrowseAgain:
         }
     }
     public class HammerHit {
-        public TColorPicker DistortionNew { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker FxBox { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker Glow { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker DebrisParticles { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker DebrisParticles1 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker DebrisParticles2 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker DebrisParticles3 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker DebrisParticlesFallBig { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker GlowUnmask { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker KuroNestEggCrackD { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker LensFlare20b { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker LensFlare3 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker LensFlare9 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker LensRadialSpike { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker RadialBurned2 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker RadialIrisImpact { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker RadialLightRays { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker RadialMaskB { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker SpikeHitLarge1 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker SpikeHitLarge2 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker ParticleShape { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker StarSpike2 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker VignetteMaskC { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker DistortionNew { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker FxBox { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker Glow { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker DebrisParticles { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker DebrisParticles1 { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker DebrisParticles2 { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker DebrisParticles3 { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker DebrisParticlesFallBig { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker GlowUnmask { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker KuroNestEggCrackD { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker LensFlare20b { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker LensFlare3 { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker LensFlare9 { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker LensRadialSpike { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker RadialBurned2 { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker RadialIrisImpact { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker RadialLightRays { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker RadialMaskB { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker SpikeHitLarge1 { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker SpikeHitLarge2 { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker ParticleShape { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker StarSpike2 { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker VignetteMaskC { get; set; } = TColorPicker.ColorPicker();
 
         public HammerHit() { }
 
@@ -812,12 +815,12 @@ FileErrorBrowseAgain:
         }
     }
     public class HammerBlock {
-        public TColorPicker AcidParticles { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker Glow { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker CharacterGlow { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker Circle { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker LavaFountainA { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker SingleSnowParticleA { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker AcidParticles { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker Glow { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker CharacterGlow { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker Circle { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker LavaFountainA { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker SingleSnowParticleA { get; set; } = TColorPicker.ColorPicker();
 
         public HammerBlock() { }
 
@@ -831,14 +834,14 @@ FileErrorBrowseAgain:
         }
     }
     public class HammerShockwave {
-        public TColorPicker BulletGlow { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker FxBox { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker AtlantisRockFarBackgroundAg { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker RadialMaskB { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker SharedSmokeA { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker Sparks { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker SplashEdge2localOrient { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker SpritesheetSpikes { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker BulletGlow { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker FxBox { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker AtlantisRockFarBackgroundAg { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker RadialMaskB { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker SharedSmokeA { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker Sparks { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker SplashEdge2localOrient { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker SpritesheetSpikes { get; set; } = TColorPicker.ColorPicker();
 
         public HammerShockwave() { }
 
@@ -854,12 +857,12 @@ FileErrorBrowseAgain:
         }
     }
     public class HammerStomp {
-        public TColorPicker Glow { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker GiftLeafTransformationLightRing { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker Glow1 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker Smoke { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker DebrisParticles { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker SingleSnowParticleA { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker Glow { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker GiftLeafTransformationLightRing { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker Glow1 { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker Smoke { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker DebrisParticles { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker SingleSnowParticleA { get; set; } = TColorPicker.ColorPicker();
 
         public HammerStomp() { }
 
@@ -873,11 +876,11 @@ FileErrorBrowseAgain:
         }
     }
     public class HammerAttack {
-        public TColorPicker FireSprite { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker LinearGradientMask { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker VignetteMaskC { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker EnergyEffect { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker SpriteSnowPettern2 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker FireSprite { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker LinearGradientMask { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker VignetteMaskC { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker EnergyEffect { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker SpriteSnowPettern2 { get; set; } = TColorPicker.ColorPicker();
 
         public HammerAttack() { }
 
@@ -890,10 +893,10 @@ FileErrorBrowseAgain:
         }
     }
     public class HammerVisualSettings {
-        public TColorPicker Hammer { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker HammerEmissive { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker HammerHitEffect { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker HammerHitEffectEmissive { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker Hammer { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker HammerEmissive { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker HammerHitEffect { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker HammerHitEffectEmissive { get; set; } = TColorPicker.ColorPicker();
         public HammerAttack HammerAttackAir1 { get; set; } = new HammerAttack();
         public HammerAttack HammerAttackAir2 { get; set; } = new HammerAttack();
         public HammerAttack HammerAttackAir3 { get; set; } = new HammerAttack();
@@ -931,8 +934,8 @@ FileErrorBrowseAgain:
         }
     }
     public class SwordAttackAirPoke {
-        public TColorPicker BlowingSand { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker Glow { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker BlowingSand { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker Glow { get; set; } = TColorPicker.ColorPicker();
 
         public SwordAttackAirPoke() { }
 
@@ -942,10 +945,10 @@ FileErrorBrowseAgain:
         }
     }
     public class SwordAttack {
-        public TColorPicker EnergyEffect { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker SnowPattern { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker FireSprite { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker VignetteMaskC { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker EnergyEffect { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker SnowPattern { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker FireSprite { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker VignetteMaskC { get; set; } = TColorPicker.ColorPicker();
 
         public SwordAttack() { }
 
@@ -957,10 +960,10 @@ FileErrorBrowseAgain:
         }
     }
     public class SwordAttackC {
-        public TColorPicker BlowingSand { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker SnowPattern { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker SnowPattern2 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker VignetteMaskC { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker BlowingSand { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker SnowPattern { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker SnowPattern2 { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker VignetteMaskC { get; set; } = TColorPicker.ColorPicker();
 
         public SwordAttackC() { }
 
@@ -972,19 +975,19 @@ FileErrorBrowseAgain:
         }
     }
     public class SwordBlock {
-        public TColorPicker AcidParticles { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker CharacterGlow { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker Distortion { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker Circle { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker FxBox { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker CircleGlowC { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker NoiseCaustic { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker LavaFountainA { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker SnowPattern { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker SnowPattern2 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker StarSpike { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker Glow { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker SingleSnowParticleA { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker AcidParticles { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker CharacterGlow { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker Distortion { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker Circle { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker FxBox { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker CircleGlowC { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker NoiseCaustic { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker LavaFountainA { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker SnowPattern { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker SnowPattern2 { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker StarSpike { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker Glow { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker SingleSnowParticleA { get; set; } = TColorPicker.ColorPicker();
 
 
         public SwordBlock() { }
@@ -1006,15 +1009,15 @@ FileErrorBrowseAgain:
         }
     }
     public class SwordDamageBlue {
-        public TColorPicker BurningCoreParticles { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker BurnMarks { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker ImpactSparklesA { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker DebrisParticles { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker Distortion { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker ImpactCenter { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker SmokeParticles { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker SparkStartParticles { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker VignetteMaskC { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker BurningCoreParticles { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker BurnMarks { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker ImpactSparklesA { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker DebrisParticles { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker Distortion { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker ImpactCenter { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker SmokeParticles { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker SparkStartParticles { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker VignetteMaskC { get; set; } = TColorPicker.ColorPicker();
 
 
         public SwordDamageBlue() { }
@@ -1032,26 +1035,26 @@ FileErrorBrowseAgain:
         }
     }
     public class SwordHit {
-        public TColorPicker DistortionNew { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker FxBox { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker DropGlowB { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker DebrisParticles { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker DebrisParticlesFallBig { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker GlowUnmask { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker VignetteMaskC { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker LensCrossStart { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker LensFlare20b { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker LensFlare9 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker LensRadialSpike { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker LightCircleShape { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker LightGlow { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker RadialBurned2 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker RadialLightRays { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker RadialMaskB { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker SparksLong { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker SplashEdge { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker SplashEdge2 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker StarSpike2 { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker DistortionNew { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker FxBox { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker DropGlowB { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker DebrisParticles { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker DebrisParticlesFallBig { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker GlowUnmask { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker VignetteMaskC { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker LensCrossStart { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker LensFlare20b { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker LensFlare9 { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker LensRadialSpike { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker LightCircleShape { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker LightGlow { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker RadialBurned2 { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker RadialLightRays { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker RadialMaskB { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker SparksLong { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker SplashEdge { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker SplashEdge2 { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker StarSpike2 { get; set; } = TColorPicker.ColorPicker();
 
 
         public SwordHit() { }
@@ -1080,10 +1083,10 @@ FileErrorBrowseAgain:
         }
     }
     public class SwordVisualSettings {
-        public TColorPicker Sword { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker SwordEmissive { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker SwordHitEffect { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker SwordHitEffectEmissive { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker Sword { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker SwordEmissive { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker SwordHitEffect { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker SwordHitEffectEmissive { get; set; } = TColorPicker.ColorPicker();
         public SwordAttackAirPoke SwordAttackAirPoke { get; set; } = new SwordAttackAirPoke();
         public SwordAttack SwordAttackDownAir { get; set; } = new SwordAttack();
         public SwordAttack SwordAttackGroundA { get; set; } = new SwordAttack();
@@ -1113,12 +1116,12 @@ FileErrorBrowseAgain:
         }
     }
     public class GoldenSeinVisualSettings {
-        public TColorPicker SeinBody { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker SeinBodyEmissive { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker SeinParticle { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker SeinRadialLight { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker SeinTrail { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker SeinTrailMesh { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker SeinBody { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker SeinBodyEmissive { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker SeinParticle { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker SeinRadialLight { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker SeinTrail { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker SeinTrailMesh { get; set; } = TColorPicker.ColorPicker();
 
         public GoldenSeinVisualSettings() { }
 
@@ -1132,8 +1135,8 @@ FileErrorBrowseAgain:
         }
     }
     public class HatVisualSettings {
-        public TColorPicker Hat { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker HatEmissive { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker Hat { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker HatEmissive { get; set; } = TColorPicker.ColorPicker();
         public string TexturePath { get; set; } = "NONE";
 
         public HatVisualSettings() {}
@@ -1146,9 +1149,9 @@ FileErrorBrowseAgain:
     }
     public class OriVisualSettings {
         public HatVisualSettings HatVisualSettings { get; set; } = new HatVisualSettings();
-        public TColorPicker Ori { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker OriGlow { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
-        public TColorPicker OriTrail { get; set; } = OriWotW.UI.TColorPicker.ColorPicker();
+        public TColorPicker Ori { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker OriGlow { get; set; } = TColorPicker.ColorPicker();
+        public TColorPicker OriTrail { get; set; } = TColorPicker.ColorPicker();
         public bool HideGlow { get; set; } = false;
         public string TexturePath { get; set; } = "NONE";
 

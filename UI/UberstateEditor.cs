@@ -24824,6 +24824,11 @@ namespace OriWotW.UI {
                 this.UberInputs.Add(uberInput);
                 this.uberStateList.Controls.Add(uberInput);
             }
+            if (this.UberInputs.Count >= 16) {
+                this.uberStateList.AutoScroll = true;
+            } else {
+                this.uberStateList.AutoScroll = false;
+            }
             this.uberStateList.ResumeLayout(false);
             this.uberStateList.PerformLayout();
         }

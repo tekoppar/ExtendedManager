@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
+
 namespace OriWotW {
     public static class MemoryReader {
         private static readonly Dictionary<int, Module64[]> ModuleCache = new Dictionary<int, Module64[]>();

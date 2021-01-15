@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Globalization;
+using Tem.TemClass;
 
 namespace OriWotW.UI {
     public partial class HitboxSplit : Form {

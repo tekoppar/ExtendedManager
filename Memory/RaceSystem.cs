@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using Tem.TemClass;
+
 namespace OriWotW.Memory {
     [StructLayout(LayoutKind.Explicit, Size = 200, Pack = 1)]
     public struct RaceSystemPtr {

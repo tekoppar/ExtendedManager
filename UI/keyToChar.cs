@@ -57,6 +57,7 @@ public class ManagerSettings {
     public bool VisibilityVGrenadeBash { get; set; } = true;
     public bool VisibilityWallLeftAngle { get; set; } = true;
     public bool VisibilityWallRightAngle { get; set; } = true;
+    public bool ManagerAlwaysOnTop { get; set; } = true;
 
     public void SetSetting(string name, bool vis) {
         if (this.GetType().GetProperty(name) != null)
@@ -711,6 +712,7 @@ namespace WMKeyToChar {
             this.Parent.SetManagerVisiblity("WallRight", this.Settings.VisibilityWallRight);
             this.Parent.SetManagerVisiblity("Bash", this.Settings.VisibilityBash);
             this.Parent.SetManagerVisiblity("Leash", this.Settings.VisibilityLeash);
+            this.Parent.SetManagerVisiblity("ManagerAlwaysOnTop", this.Settings.ManagerAlwaysOnTop);
         }
 
         public List<UberState> GetComboUberStates(int index) {

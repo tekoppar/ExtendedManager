@@ -11,6 +11,7 @@ using OriWotW.UI.Teleporter;
 using OriWotW.Memory;
 using System.Globalization;
 using System.IO;
+using Tem.Utility;
 
 namespace OriWotW.UI.Teleporter {
     public partial class TeleportUI : Form {
