@@ -540,7 +540,7 @@ namespace OriWotW.UI {
         private void createCheckpoint_Click(object sender, EventArgs e) {
             RaceSettings.AddCheckpoint(Manager.Memory.Position());
             Vector3 pos = Manager.Memory.Position();
-            Manager.InjectCommunication.AddCall("CALL13PAR" + pos.X.ToString(CultureInfo.CreateSpecificCulture("en-US")) + ";" + pos.Y.ToString(CultureInfo.CreateSpecificCulture("en-US")));
+            Manager.InjectCommunication.AddCall("CALL13PAR" + pos.ToString());
             InsertCheckpoint(pos);
         }
 

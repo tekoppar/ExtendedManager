@@ -12,63 +12,40 @@ using Tem.TemClass;
 
 namespace OriWotW.UI {
     public partial class HitboxSplit : Form {
-        public Vector2 Position = new Vector2();
-        public Vector2 HitboxScale = new Vector2();
+        public Tem.TemClass.TColor Rect = new Tem.TemClass.TColor();
         public Manager Manager;
         public bool UserChangedValue = false;
 
         public HitboxSplit(Manager manager) {
             this.Manager = manager;
             InitializeComponent();
-            Vector3 position = Manager.Memory.Position();
-            HitboxScale.Y = HitboxScale.X = 1.0f;
-            Position.Y = position.Y;
-            Position.X = position.X;
+            Tem.TemClass.Vector3 position = Manager.Memory.Position();
+            this.Rect.r = position.X;
+            this.Rect.g = position.Y;
+            this.Rect.b = this.Rect.a = 1.0f;
 
             UserChangedValue = false;
-            startX.Value = (decimal)position.X;
-            startY.Value = (decimal)position.Y;
-            scaleX.Value = 1;
-            scaleY.Value = 1;
+            hitboxSplitValues.SetValue(this.Rect);
 
             if (this.Visible == true) {
-                Manager.InjectCommunication.AddCall("CALL22PAR" + Position.X.ToString() + ";" + Position.Y.ToString() + "|" + HitboxScale.X.ToString() + ";" + HitboxScale.Y.ToString());
+                Manager.InjectCommunication.AddCall("CALL22PAR" + this.Rect.ToString());
             }
         }
 
         private void setStart_Click(object sender, EventArgs e) {
             Vector3 position = Manager.Memory.Position();
-            Position.X = position.X;
-            Position.Y = position.Y;
+            this.Rect.r = position.X;
+            this.Rect.g = position.Y;
 
             UserChangedValue = false;
-            startX.Value = (decimal)position.X;
-            startY.Value = (decimal)position.Y;
+            hitboxSplitValues.SetValue(this.Rect);
 
-            hitboxSplitCopy.Text = Position.X.ToString() + ", " + Position.Y.ToString() + ", " + HitboxScale.X.ToString() + ", " + HitboxScale.Y.ToString();
-            Manager.InjectCommunication.AddCall("CALL22PAR" + Position.X.ToString() + ";" + Position.Y.ToString() + "|" + HitboxScale.X.ToString() + ";" + HitboxScale.Y.ToString());
+            hitboxSplitCopy.Text = this.Rect.ToString();
+            Manager.InjectCommunication.AddCall("CALL22PAR" + this.Rect.ToString());
         }
 
         private void createHitbox_Click(object sender, EventArgs e) {
-            Manager.InjectCommunication.AddCall("CALL22PAR" + Position.X.ToString() + ";" + Position.Y.ToString() + "|" + HitboxScale.X.ToString() + ";" + HitboxScale.Y.ToString());
-        }
-
-        private void start_ValueChanged(object sender, EventArgs e) {
-            if (UserChangedValue == true) {
-                Position.X = (float)startX.Value;
-                Position.Y = (float)startY.Value;
-                hitboxSplitCopy.Text = Position.X.ToString() + ", " + Position.Y.ToString() + ", " + HitboxScale.X.ToString() + ", " + HitboxScale.Y.ToString();
-                Manager.InjectCommunication.AddCall("CALL22PAR" + Position.X.ToString() + ";" + Position.Y.ToString() + "|" + HitboxScale.X.ToString() + ";" + HitboxScale.Y.ToString());
-            }
-        }
-
-        private void scale_ValueChanged(object sender, EventArgs e) {
-            if (UserChangedValue == true) {
-                HitboxScale.X = (float)scaleX.Value;
-                HitboxScale.Y = (float)scaleY.Value;
-                hitboxSplitCopy.Text = Position.X.ToString() + ", " + Position.Y.ToString() + ", " + HitboxScale.X.ToString() + ", " + HitboxScale.Y.ToString();
-                Manager.InjectCommunication.AddCall("CALL22PAR" + Position.X.ToString() + ";" + Position.Y.ToString() + "|" + HitboxScale.X.ToString() + ";" + HitboxScale.Y.ToString());
-            }
+            Manager.InjectCommunication.AddCall("CALL22PAR" + this.Rect.ToString());
         }
 
         private void input_Enter(object sender, EventArgs e) {
@@ -82,7 +59,12 @@ namespace OriWotW.UI {
         }
 
         private void textBox1_MouseClick(object sender, MouseEventArgs e) {
-            Clipboard.SetText(Position.X.ToString(CultureInfo.CreateSpecificCulture("en-US")) + ", " + Position.Y.ToString(CultureInfo.CreateSpecificCulture("en-US")) + ", " + HitboxScale.X.ToString(CultureInfo.CreateSpecificCulture("en-US")) + ", " + HitboxScale.Y.ToString(CultureInfo.CreateSpecificCulture("en-US")));
+            Clipboard.SetText(this.Rect.ToString().ToString());
+        }
+
+        private void hitboxSplitValues_OnValueChangedNoArgs(object sender, EventArgs e) {
+            hitboxSplitCopy.Text = this.Rect.ToString();
+            Manager.InjectCommunication.AddCall("CALL22PAR" + this.Rect.ToString());
         }
     }
 }

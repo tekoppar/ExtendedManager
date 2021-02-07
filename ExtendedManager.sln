@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExtendedManager", "Extended
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomClasses", "..\..\source\repos\CustomClasses\CustomClasses.csproj", "{9A57B726-4ECA-4F7B-AAAE-7145F6F0B4B3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PsuedoTimer", "..\..\source\repos\PsuedoTimer\PsuedoTimer.csproj", "{F86F05C6-5B2B-42D3-A4FB-B1548C8EF567}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OriCMemory", "..\..\source\repos\OriCMemory\OriCMemory.csproj", "{E9C1E11E-9EDF-496C-A971-0870806DC468}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Console|Any CPU = Console|Any CPU
@@ -51,6 +55,22 @@ Global
 		{9A57B726-4ECA-4F7B-AAAE-7145F6F0B4B3}.Manager|Any CPU.Build.0 = Debug|Any CPU
 		{9A57B726-4ECA-4F7B-AAAE-7145F6F0B4B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9A57B726-4ECA-4F7B-AAAE-7145F6F0B4B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F86F05C6-5B2B-42D3-A4FB-B1548C8EF567}.Console|Any CPU.ActiveCfg = Debug|Any CPU
+		{F86F05C6-5B2B-42D3-A4FB-B1548C8EF567}.Console|Any CPU.Build.0 = Debug|Any CPU
+		{F86F05C6-5B2B-42D3-A4FB-B1548C8EF567}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F86F05C6-5B2B-42D3-A4FB-B1548C8EF567}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F86F05C6-5B2B-42D3-A4FB-B1548C8EF567}.Manager|Any CPU.ActiveCfg = Debug|Any CPU
+		{F86F05C6-5B2B-42D3-A4FB-B1548C8EF567}.Manager|Any CPU.Build.0 = Debug|Any CPU
+		{F86F05C6-5B2B-42D3-A4FB-B1548C8EF567}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F86F05C6-5B2B-42D3-A4FB-B1548C8EF567}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9C1E11E-9EDF-496C-A971-0870806DC468}.Console|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9C1E11E-9EDF-496C-A971-0870806DC468}.Console|Any CPU.Build.0 = Debug|Any CPU
+		{E9C1E11E-9EDF-496C-A971-0870806DC468}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9C1E11E-9EDF-496C-A971-0870806DC468}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9C1E11E-9EDF-496C-A971-0870806DC468}.Manager|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9C1E11E-9EDF-496C-A971-0870806DC468}.Manager|Any CPU.Build.0 = Debug|Any CPU
+		{E9C1E11E-9EDF-496C-A971-0870806DC468}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9C1E11E-9EDF-496C-A971-0870806DC468}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

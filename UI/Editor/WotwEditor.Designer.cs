@@ -155,15 +155,16 @@ namespace OriWotW.UI {
             this.btnLoadWorld = new System.Windows.Forms.Button();
             this.FieldsPropertiesTree = new System.Windows.Forms.TreeView();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.fieldPropVector4Value = new Vector4Control();
-            this.fieldPropVector3Value = new Vector3Control();
-            this.fieldPropVector2Value = new Vector2Control();
+            this.fieldPropVector4Value = new Tem.TemUI.Vector4Control();
+            this.fieldPropVector3Value = new Tem.TemUI.Vector3Control();
+            this.fieldPropVector2Value = new Tem.TemUI.Vector2Control();
             this.fieldPropStringValue = new System.Windows.Forms.TextBox();
             this.fieldPropFloatValue = new System.Windows.Forms.NumericUpDown();
             this.fieldPropIntValue = new System.Windows.Forms.NumericUpDown();
             this.fieldPropBooleanValue = new System.Windows.Forms.CheckBox();
-            this.fieldPropBoundsValue = new BoundsControl();
+            this.fieldPropBoundsValue = new Tem.TemUI.BoundsControl();
             this.selectedFieldProperty = new System.Windows.Forms.Label();
+            this.btnNewScene = new System.Windows.Forms.Button();
             this.flowLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fieldPropFloatValue)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fieldPropIntValue)).BeginInit();
@@ -286,7 +287,7 @@ namespace OriWotW.UI {
             this.fieldPropVector4Value.Margin = new System.Windows.Forms.Padding(0);
             this.fieldPropVector4Value.MinimumSize = new System.Drawing.Size(2, 14);
             this.fieldPropVector4Value.Name = "fieldPropVector4Value";
-            this.fieldPropVector4Value.Size = new System.Drawing.Size(494, 22);
+            this.fieldPropVector4Value.Size = new System.Drawing.Size(488, 22);
             this.fieldPropVector4Value.TabIndex = 0;
             this.fieldPropVector4Value.Visible = false;
             this.fieldPropVector4Value.OnValueChangedNoArgs += new System.EventHandler(this.Component_ValueChanged);
@@ -303,7 +304,7 @@ namespace OriWotW.UI {
             this.fieldPropVector3Value.Margin = new System.Windows.Forms.Padding(0);
             this.fieldPropVector3Value.MinimumSize = new System.Drawing.Size(2, 14);
             this.fieldPropVector3Value.Name = "fieldPropVector3Value";
-            this.fieldPropVector3Value.Size = new System.Drawing.Size(371, 22);
+            this.fieldPropVector3Value.Size = new System.Drawing.Size(365, 22);
             this.fieldPropVector3Value.TabIndex = 1;
             this.fieldPropVector3Value.Visible = false;
             this.fieldPropVector3Value.OnValueChangedNoArgs += new System.EventHandler(this.Component_ValueChanged);
@@ -320,7 +321,7 @@ namespace OriWotW.UI {
             this.fieldPropVector2Value.Margin = new System.Windows.Forms.Padding(0);
             this.fieldPropVector2Value.MinimumSize = new System.Drawing.Size(2, 14);
             this.fieldPropVector2Value.Name = "fieldPropVector2Value";
-            this.fieldPropVector2Value.Size = new System.Drawing.Size(248, 22);
+            this.fieldPropVector2Value.Size = new System.Drawing.Size(242, 22);
             this.fieldPropVector2Value.TabIndex = 6;
             this.fieldPropVector2Value.Visible = false;
             this.fieldPropVector2Value.OnValueChangedNoArgs += new System.EventHandler(this.Component_ValueChanged);
@@ -405,7 +406,7 @@ namespace OriWotW.UI {
             this.fieldPropBoundsValue.Margin = new System.Windows.Forms.Padding(0);
             this.fieldPropBoundsValue.MinimumSize = new System.Drawing.Size(2, 14);
             this.fieldPropBoundsValue.Name = "fieldPropBoundsValue";
-            this.fieldPropBoundsValue.Size = new System.Drawing.Size(422, 42);
+            this.fieldPropBoundsValue.Size = new System.Drawing.Size(416, 42);
             this.fieldPropBoundsValue.TabIndex = 7;
             this.fieldPropBoundsValue.Visible = false;
             this.fieldPropBoundsValue.OnValueChangedNoArgs += new System.EventHandler(this.Component_ValueChanged);
@@ -423,12 +424,23 @@ namespace OriWotW.UI {
             this.selectedFieldProperty.Text = "label1";
             this.selectedFieldProperty.Visible = false;
             // 
+            // btnNewScene
+            // 
+            this.btnNewScene.Location = new System.Drawing.Point(126, 814);
+            this.btnNewScene.Name = "btnNewScene";
+            this.btnNewScene.Size = new System.Drawing.Size(75, 23);
+            this.btnNewScene.TabIndex = 22;
+            this.btnNewScene.Text = "New Scene";
+            this.btnNewScene.UseVisualStyleBackColor = true;
+            this.btnNewScene.Click += new System.EventHandler(this.btnNewScene_Click);
+            // 
             // WotwEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.ClientSize = new System.Drawing.Size(647, 845);
+            this.Controls.Add(this.btnNewScene);
             this.Controls.Add(this.selectedFieldProperty);
             this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.FieldsPropertiesTree);
@@ -472,5 +484,6 @@ namespace OriWotW.UI {
         private Label selectedFieldProperty;
         private Vector2Control fieldPropVector2Value;
         private BoundsControl fieldPropBoundsValue;
+        private Button btnNewScene;
     }
 }

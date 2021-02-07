@@ -34,7 +34,8 @@ namespace OriWotW.UI.Editor {
         Short = 17,
         UShort = 18,
         UInt = 19,
-        ULong = 20
+        ULong = 20,
+        Matrix4x4 = 21
     };
     public class ClassProperty {
         [NonSerialized] public bool IsSceneOrComponent = false;
@@ -59,33 +60,12 @@ namespace OriWotW.UI.Editor {
         public int TypeDefIndex { get; set; } = -1;
         public VariableType Type { get; set; } = VariableType.Null;
         public string FieldValue { get; set; } = "";
-        public List<ClassField> Fields { get; set; } = new List<ClassField>();
         public string ParentName { get; set; } = "";
         public string Namespace { get; set; } = "";
         public string ClassName { get; set; } = "";
         public void AddFieldControls(ref Control control, EventHandler eventHandler, EventHandler onEnter, EventHandler onLeave) {
             Control newControl = Component.AddValueControls(ref control, ref eventHandler, ref onEnter, ref onLeave, this.Name, this.FieldValue, true, this.Type);
             newControl.Tag = this;
-
-            foreach (ClassField nestedField in this.Fields) {
-                nestedField.AddFieldControls(ref control, eventHandler, onEnter, onLeave);
-            }
-        }
-
-        public void SetFieldParent(Component ParentObject) {
-            foreach (ClassField nestedField in this.Fields) {
-                nestedField.ParentObject = ParentObject;
-                nestedField.ParentField = this;
-                nestedField.SetFieldParent(ParentObject);
-            }
-        }
-
-        public void SetFieldParent(SceneObject ParentObject) {
-            foreach (ClassField nestedField in this.Fields) {
-                nestedField.ParentObject = ParentObject;
-                nestedField.ParentField = this;
-                nestedField.SetFieldParent(ParentObject);
-            }
         }
 
         public string GetFieldHierarchy() {
@@ -105,17 +85,54 @@ namespace OriWotW.UI.Editor {
         public void AddValueTreeNodes(ref TreeNode node) {
             TreeNode newNode = node.Nodes.Add(Name);
             newNode.Tag = this;
-
-            for (int i = 0; i < Fields.Count(); i++) {
-                Fields[i].AddValueTreeNodes(ref newNode);
-            }
         }
     };
+
+    public class ObjectData {
+        public bool HasChanged { get; set; } = false;
+        public string Namespace { get; set; } = "";
+        public string Name { get; set; } = "";
+        public List<ClassField> Fields { get; set; } = new List<ClassField>();
+        public List<ClassProperty> Properties { get; set; } = new List<ClassProperty>();
+        public List<ObjectData> NestedObjects { get; set; } = new List<ObjectData>();
+
+        public void AddValueTreeNodes(ref TreeNode node) {
+            TreeNode newNode = node.Nodes.Add(Name);
+            newNode.Tag = this;
+
+            for (int i = 0; i < Fields.Count; i++) {
+                Fields[i].AddValueTreeNodes(ref newNode);
+            }
+            for (int i = 0; i < Properties.Count; i++) {
+                Properties[i].AddValueTreeNodes(ref newNode);
+            }
+            for (int i = 0; i < NestedObjects.Count; i++) {
+                NestedObjects[i].AddValueTreeNodes(ref newNode);
+            }
+        }
+
+        public static void SetParent(ref ObjectData data, ref Component component) {
+            int index = 0;
+            foreach (var child2 in data.Fields) {
+                child2.ParentObject = component;
+                index++;
+            }
+            index = 0;
+            foreach (var child2 in data.Properties) {
+                child2.ParentObject = component;
+                index++;
+            }
+
+            for (int i = 0; i < data.NestedObjects.Count; i++) {
+                ObjectData temp = data.NestedObjects[i];
+                SetParent(ref temp, ref component);
+            }
+        }
+}
     public class Component {
         [NonSerialized] public SceneObject? ParentObject = null;
         public string ClassName { get; set; } = "";
-        public List<ClassField> Fields { get; set; } = new List<ClassField>();
-        public List<ClassProperty> Properties { get; set; } = new List<ClassProperty>();
+        public ObjectData ObjectData { get; set; } = new ObjectData();
 
         public static Control AddValueControls(ref Control control, ref EventHandler eventHandler, ref EventHandler onEnter, ref EventHandler onLeave, string name, string value, bool isField, VariableType type) {
             Control newControl;
@@ -305,31 +322,15 @@ namespace OriWotW.UI.Editor {
         }
 
         public static void SetParent(ref SceneHierarchy hierarchy) {
-            int index = 0;
-
-            foreach (var child2 in hierarchy.Object.Fields) {
-                child2.ParentObject = hierarchy.Object;
-                child2.SetFieldParent(hierarchy.Object);
-            }
-
             foreach (var child2 in hierarchy.Object.Properties) {
                 child2.ParentObject = hierarchy.Object;
             }
 
-            foreach (var child in hierarchy.Object.SceneComponents) {
-                child.ParentObject = hierarchy.Object;
-
-                index = 0;
-                foreach (var child2 in child.Fields) {
-                    child2.ParentObject = child;
-                    child2.SetFieldParent((Component)child2.ParentObject);
-                    index++;
-                }
-                index = 0;
-                foreach (var child2 in child.Properties) {
-                    child2.ParentObject = child;
-                    index++;
-                }
+            for (int i = 0; i < hierarchy.Object.SceneComponents.Count; i++) {
+                Component component = hierarchy.Object.SceneComponents[i];
+                component.ParentObject = hierarchy.Object;
+                ObjectData temp = component.ObjectData;
+                ObjectData.SetParent(ref temp, ref component);
             }
 
             foreach (var child in hierarchy.SceneChildren) {

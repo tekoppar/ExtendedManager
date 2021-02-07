@@ -92,9 +92,7 @@
   <PropertyGroup>
     <SignManifests>false</SignManifests>
   </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
-  </PropertyGroup>
+  <PropertyGroup />
   <ItemGroup>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.Bcl.AsyncInterfaces.1.1.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
@@ -276,6 +274,12 @@
     </Compile>
     <Compile Include="UI\Backup saves\BackupsaveUI.Designer.cs">
       <DependentUpon>BackupsaveUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Editor\SceneCreator.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Editor\SceneCreator.Designer.cs">
+      <DependentUpon>SceneCreator.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\Editor\SceneHierarchy.cs" />
     <Compile Include="UI\ControllerUI.cs">
@@ -598,6 +602,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UI\ControllerUI.resx">
       <DependentUpon>ControllerUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Editor\SceneCreator.resx">
+      <DependentUpon>SceneCreator.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\HitboxSplit.resx">
       <DependentUpon>HitboxSplit.cs</DependentUpon>

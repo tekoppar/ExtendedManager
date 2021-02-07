@@ -25,7 +25,7 @@ namespace OriWotW.Logic {
         WriteRecorder = 5,
         GhostPlayerRun = 6,
         GhostPlayerStop = 7,
-        GetQuestByName = 8,
+        CreateScene = 8,
         FrameStep = 9,
         FrameStepStop = 10,
         NextAnimation = 11,

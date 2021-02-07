@@ -48,7 +48,7 @@ namespace OriWotW.UI {
 
         public void SetSelectedGameObject(string name) {
             lblSelectedObject.Text = name;
-
+           
             if (name != "None")
                 this.Manager.InjectCommunication.AddCall("CALL34");
         }
@@ -200,21 +200,46 @@ namespace OriWotW.UI {
             List<string> contentT = content.Split('|').ToList();
             List<int> pathInt = TE.StringToIntVector(contentT[0], ",");
 
-            SceneHierarchy oldScene = MSceneHierarchy.GetHierarchyByIndexPath(pathInt, MSceneHierarchy);
-            SceneHierarchy newHierarchy = JsonSerializer.Deserialize<SceneHierarchy>(contentT[1], new JsonSerializerOptions { MaxDepth = 256 });
+            if (pathInt.Count == 1 && pathInt[0] == 999) {
+                SceneHierarchy newHierarchy = JsonSerializer.Deserialize<SceneHierarchy>(contentT[1], new JsonSerializerOptions { MaxDepth = 256 });
 
-            if (oldScene != null && newHierarchy != null && oldScene.Object.ParentObject != null) {
-                newHierarchy.Object.ParentObject = oldScene.Object.ParentObject;
-                oldScene.Object.ParentObject.SceneChildren[oldScene.Object.HierarchyIndex.ToString()] = newHierarchy;
-                oldScene.Object.ParentObject.SceneChildren[oldScene.Object.HierarchyIndex.ToString()].Object.TreeNode = oldScene.Object.TreeNode;
-                oldScene.Object.ParentObject.SceneChildren[oldScene.Object.HierarchyIndex.ToString()].Object.TreeNode.Tag = oldScene.Object.ParentObject.SceneChildren[oldScene.Object.HierarchyIndex.ToString()].Object;
-                SceneHierarchy.SetParent(ref newHierarchy);
-                BuildSceneHierarchy(oldScene.Object.ParentObject.SceneChildren[oldScene.Object.HierarchyIndex.ToString()].Object.TreeNode, oldScene.Object.ParentObject.SceneChildren[oldScene.Object.HierarchyIndex.ToString()]);
+                if (newHierarchy != null) {
+                    foreach (var child in newHierarchy.SceneChildren) {
+                        if (MSceneHierarchy.SceneChildren.ContainsKey(child.Key) == false) {
+                            child.Value.Object.ParentObject = MSceneHierarchy;
+                            string treeKey = child.Value.Object.Name + child.Value.Object.HierarchyIndex.ToString();
+                            MSceneHierarchy.Object.TreeNode.Nodes.Add(treeKey, child.Value.Object.Name);
+                            MSceneHierarchy.Object.TreeNode.Nodes[treeKey].Tag = child.Value.Object;
+                            child.Value.Object.TreeNode = MSceneHierarchy.Object.TreeNode.Nodes[treeKey];
+                            MSceneHierarchy.SceneChildren.Add(child.Key, child.Value);
+                            BuildSceneHierarchy(MSceneHierarchy.Object.TreeNode.Nodes[treeKey], child.Value);
+                        }
+                    }
+                    sceneHierarchyTree.ResumeLayout();
+                }
+            } else {
+                SceneHierarchy oldScene = MSceneHierarchy.GetHierarchyByIndexPath(pathInt, MSceneHierarchy);
+                SceneHierarchy newHierarchy = JsonSerializer.Deserialize<SceneHierarchy>(contentT[1], new JsonSerializerOptions { MaxDepth = 256 });
+
+                if (oldScene != null && newHierarchy != null && oldScene.Object.ParentObject != null) {
+                    oldScene.SceneChildren.Clear();
+
+                    if (oldScene.Object.TreeNode.Nodes.Count > 2)
+                        oldScene.Object.TreeNode.Nodes[2].Nodes.Clear();
+
+                    newHierarchy.Object.ParentObject = oldScene.Object.ParentObject;
+                    oldScene.Object.ParentObject.SceneChildren[oldScene.Object.HierarchyIndex.ToString()] = newHierarchy;
+                    oldScene.Object.ParentObject.SceneChildren[oldScene.Object.HierarchyIndex.ToString()].Object.TreeNode = oldScene.Object.TreeNode;
+                    oldScene.Object.ParentObject.SceneChildren[oldScene.Object.HierarchyIndex.ToString()].Object.TreeNode.Tag = oldScene.Object.ParentObject.SceneChildren[oldScene.Object.HierarchyIndex.ToString()].Object;
+                    SceneHierarchy.SetParent(ref newHierarchy);
+                    BuildSceneHierarchy(oldScene.Object.ParentObject.SceneChildren[oldScene.Object.HierarchyIndex.ToString()].Object.TreeNode, oldScene.Object.ParentObject.SceneChildren[oldScene.Object.HierarchyIndex.ToString()]);
+                    sceneHierarchyTree.ResumeLayout();
+                }
             }
         }
 
         private void cloneGameObject_Click(object sender, EventArgs e) {
-            if (sceneHierarchyTree.SelectedNode.Tag != null && sceneHierarchyTree.SelectedNode.Tag.GetType().Name == "SceneObject") {
+            if (sceneHierarchyTree.SelectedNode != null && sceneHierarchyTree.SelectedNode.Tag != null && sceneHierarchyTree.SelectedNode.Tag.GetType().Name == "SceneObject") {
                 SceneObject temp = sceneHierarchyTree.SelectedNode.Tag as SceneObject;
 
                 if (temp.SceneIndexHierarchy.Count == 0) {
@@ -227,7 +252,7 @@ namespace OriWotW.UI {
         }
 
         private void sceneHierarchyTree_BeforeExpand(object sender, TreeViewCancelEventArgs e) {
-            if (e.Node.Tag != null && UserExpanded == true) {
+            if (e.Node != null && e.Node.Tag != null && UserExpanded == true) {
                 if (e.Node.Tag.GetType().Name == "SceneObject") {
                     SceneObject temp = e.Node.Tag as SceneObject;
 
@@ -237,6 +262,8 @@ namespace OriWotW.UI {
                     }
 
                     this.Manager.InjectCommunication.AddCall("CALL41PAR" + TE.IntVectorToString(temp.SceneIndexHierarchy, ","));
+                } else if (e.Node.Text == "Scene Roots") {
+                    this.Manager.InjectCommunication.AddCall("CALL41PAR999");
                 } else {
                     switch (e.Node.Tag.ToString()) {
 
@@ -296,7 +323,16 @@ namespace OriWotW.UI {
         }
 
         private void ShowFieldsPropertie(Editor.Component component) {
-            ShowFieldsProperties(component.Properties, component.Fields);
+            FieldsPropertiesTree.Nodes.Clear();
+
+            FieldsPropertiesTree.Nodes.Add("Tree", "Tree");
+            TreeNode tree = FieldsPropertiesTree.Nodes[0];
+            FieldsPropertiesTree.Visible = true;
+            selectedFieldProperty.Visible = true;
+            selectedFieldProperty.Text = "Selected Field/Property: None";
+
+            component.ObjectData.AddValueTreeNodes(ref tree);
+            //ShowFieldsProperties(component.Properties, component.Fields);
         }
 
         private void ShowFieldsProperties(List<ClassProperty> properties, List<ClassField> fields) {
@@ -317,6 +353,20 @@ namespace OriWotW.UI {
 
         private static void OnTimedEvent(Object source, ElapsedEventArgs e) {
             BlockValueChanges = false;
+        }
+
+        public string GetFieldPropertyTreePath(TreeNode node) {
+            List<string> path = new List<string>();
+            TreeNode active = node;
+
+            while (active.Parent != null) {
+                path.Add(active.Text);
+                TreeNode temp = active.Parent;
+                active = temp;
+            }
+
+            path.Reverse();
+            return string.Join(".", path.ToArray());
         }
 
         public void Component_ValueChanged(object sender, EventArgs e) {
@@ -357,9 +407,6 @@ namespace OriWotW.UI {
 
                 hierarchyIndex = TE.IntVectorToString(indexes, ",");
                 fieldPropName = field.Name;
-                fieldPropPath = field.GetFieldHierarchy();
-                if (fieldPropPath == "")
-                    fieldPropPath = " ";
             } else {
                 isField = false;
                 ClassProperty property = (ClassProperty)control.Tag;
@@ -386,8 +433,9 @@ namespace OriWotW.UI {
 
                 hierarchyIndex = TE.IntVectorToString(indexes, ",");
                 fieldPropName = property.Name;
-                fieldPropPath = " ";
             }
+
+            fieldPropPath = GetFieldPropertyTreePath(FieldsPropertiesTree.SelectedNode);
 
             switch (type) {
                 default:
@@ -486,6 +534,12 @@ namespace OriWotW.UI {
                         this.Manager.InjectCommunication.AddCall("CALL43PAR" + hierarchyIndex + "|" + componentName + "|" + fieldPropPath + "|" + fieldPropName + "|" + temp.GetValue().ToString() + "|" + isField.ToString());
                     }
                     break;
+                case VariableType.Matrix4x4: {
+                        TextBox temp = control as TextBox;
+                        newValue = temp.Text;
+                        this.Manager.InjectCommunication.AddCall("CALL43PAR" + hierarchyIndex + "|" + componentName + "|" + fieldPropPath + "|" + fieldPropName + "|" + temp.Text + "|" + isField.ToString());
+                    }
+                    break;
             }
 
             if (cType.Name == "ClassField") {
@@ -531,13 +585,14 @@ namespace OriWotW.UI {
                 value = field.FieldValue;
                 name = field.Name;
                 fieldProperty = field;
-            } else {
+            } else if (cType.Name == "ClassProperty") {
                 ClassProperty property = (ClassProperty)node.Tag;
                 type = property.ReturnType;
                 value = property.PropertyValue;
                 name = property.Name;
                 fieldProperty = property;
-            }
+            } else
+                return;
 
             fieldPropFloatValue.Visible = false;
             fieldPropIntValue.Visible = false;
@@ -555,6 +610,7 @@ namespace OriWotW.UI {
                 case VariableType.Pointer:
                 case VariableType.Vector:
                 case VariableType.Map:
+                case VariableType.Matrix4x4:
                 case VariableType.Enum:
                     fieldPropStringValue.Text = value;
                     fieldPropStringValue.Visible = true;
@@ -646,7 +702,7 @@ namespace OriWotW.UI {
         }
 
         private void sceneHierarchyTree_BeforeSelect(object sender, TreeViewCancelEventArgs e) {
-            if (e.Node.Tag.GetType().Name == "SceneObject") {
+            if (e.Node != null && e.Node.Tag != null && e.Node.Tag.GetType().Name == "SceneObject") {
                 SceneObject temp = e.Node.Tag as SceneObject;
 
                 if (temp.SceneIndexHierarchy.Count == 0) {
@@ -655,6 +711,13 @@ namespace OriWotW.UI {
                 }
                 this.Manager.InjectCommunication.AddCall("CALL47PAR" + TE.IntVectorToString(temp.SceneIndexHierarchy, ","));
             }
+        }
+
+        private void btnNewScene_Click(object sender, EventArgs e) {
+            SceneCreator sceneCreator = new SceneCreator(this.Manager);
+
+            if (sceneCreator.ShowDialog() == DialogResult.OK)
+                this.Manager.InjectCommunication.AddCall("CALL8PAR" + sceneCreator.ReturnName + "|" + sceneCreator.ReturnPosition.ToString() + "|" + sceneCreator.ReturnSize.ToString() + "|" + sceneCreator.ReturnLoadingRect.ToString());
         }
     }
 

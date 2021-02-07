@@ -37,6 +37,7 @@ using Tem.Utility;
 
 namespace OriWotW {
     public partial class Manager : Form {
+        public static bool IsDisposingNow = false;
         private static int AverageFPSLength = 25;
         public MemoryManager Memory { get; set; }
         private TemAutoUpdater.ManagerAutoUpdater ManagerAutoUpdater;
@@ -158,10 +159,10 @@ namespace OriWotW {
         private void UpdateLoop() {
             bool lastHooked = false;
 
-            while (TE.IsDisposingNow == false && timerLoop != null) {
+            while (IsDisposingNow == false && timerLoop != null) {
                 try {
                     bool hooked = Memory.HookProcess();
-                    if (hooked && TE.IsDisposingNow == false) {
+                    if (hooked && IsDisposingNow == false) {
                         UpdateValues();
                     }
                     if (lastHooked != hooked) {
@@ -170,9 +171,9 @@ namespace OriWotW {
                     }
                 } catch { }
                 if (Thread.CurrentThread.IsAlive == false) { return; }
-                if (TE.IsDisposingNow == true) { return; }
-                if (timerLoop == null || TE.IsDisposingNow == true || timerLoop.IsAlive == false) { return; }
-                if (TE.IsDisposingNow == true || this.Disposing == true) { timerLoop.Abort(); return; }
+                if (IsDisposingNow == true) { return; }
+                if (timerLoop == null || IsDisposingNow == true || timerLoop.IsAlive == false) { return; }
+                if (IsDisposingNow == true || this.Disposing == true) { timerLoop.Abort(); return; }
                 LoopTimer++;
                 InputLockTimer++;
                 Thread.Sleep(7);
@@ -187,14 +188,14 @@ namespace OriWotW {
         }
 
         private void DLLCommunicationLoop() {
-            while (TE.IsDisposingNow == false && this.DLLCommunication != null && Thread.CurrentThread.IsAlive) {
+            while (IsDisposingNow == false && this.DLLCommunication != null && Thread.CurrentThread.IsAlive) {
                 try {
-                    if (TE.IsDisposingNow == false && this.InjectCommunication != null && this.InjectCommunication.StreamWriter != null) {
+                    if (IsDisposingNow == false && this.InjectCommunication != null && this.InjectCommunication.StreamWriter != null) {
                         UpdateDLLValues();
                     }
                 } catch { }
                 if (Thread.CurrentThread.IsAlive == false) { return; }
-                if (TE.IsDisposingNow == true) { return; }
+                if (IsDisposingNow == true) { return; }
                 Thread.Sleep(16);
             }
         }
@@ -203,9 +204,9 @@ namespace OriWotW {
             if (Thread.CurrentThread.IsAlive == false) { return; }
             if (DLLCommunication == null) { Thread.CurrentThread.Abort(); return; }
             if (DLLCommunication.IsAlive == false) { Thread.CurrentThread.Abort(); return; }
-            if (TE.IsDisposingNow == true) { Thread.CurrentThread.Abort(); return; }
-            if (TE.IsDisposingNow == false && InvokeRequired) {
-                if (TE.IsDisposingNow == true) {
+            if (IsDisposingNow == true) { Thread.CurrentThread.Abort(); return; }
+            if (IsDisposingNow == false && InvokeRequired) {
+                if (IsDisposingNow == true) {
                     Thread.CurrentThread.Abort();
                     return;
                 } else {
@@ -408,13 +409,13 @@ namespace OriWotW {
             if (Thread.CurrentThread.IsAlive == false) { return; }
             if (this.timerLoop == null) { Thread.CurrentThread.Abort(); return; }
             if (this.timerLoop.IsAlive == false) { Thread.CurrentThread.Abort(); return; }
-            if (TE.IsDisposingNow == true) { Thread.CurrentThread.Abort(); return; }
-            if (TE.IsDisposingNow == true) { Thread.CurrentThread.Abort(); return; }
+            if (IsDisposingNow == true) { Thread.CurrentThread.Abort(); return; }
+            if (IsDisposingNow == true) { Thread.CurrentThread.Abort(); return; }
             if (this.Disposing == true) { Thread.CurrentThread.Abort(); return; }
-            if (TE.IsDisposingNow == true) { Thread.CurrentThread.Abort(); return; }
+            if (IsDisposingNow == true) { Thread.CurrentThread.Abort(); return; }
             if (this.Disposing == true) { Thread.CurrentThread.Abort(); return; }
-            if (TE.IsDisposingNow == false && InvokeRequired) {
-                if (TE.IsDisposingNow == true) {
+            if (IsDisposingNow == false && InvokeRequired) {
+                if (IsDisposingNow == true) {
                     Thread.CurrentThread.Abort();
                     return;
                 } else {
@@ -443,6 +444,9 @@ namespace OriWotW {
                 Memory.PatchNoPause(true);
                 DllInjectionResult result = this.DllInjector.Inject("oriwotw", AppDomain.CurrentDomain.BaseDirectory + "\\injectdll.dll");
 
+                if (result == DllInjectionResult.GameProcessNotFound)
+                    result = this.DllInjector.Inject("oriandthewillofthewisps-pc", AppDomain.CurrentDomain.BaseDirectory + "\\injectdll.dll");
+
                 File.AppendAllText("C:\\moon\\manager_error.log", "DLL Handle intptr: " + DllInjector.DllHandle.ToString() + " DLL adress1: " + DllInjector.DllPtr.ToString() + " DLL adress2: " + DllInjector.DllPtr2.ToString() + " Injection result: " + result.ToString() + "\r\n");
 
                 if (result != DllInjectionResult.Success)
@@ -468,7 +472,9 @@ namespace OriWotW {
                         }
 
                         this.Bindings.AllKeyBindings.Add(keyBind);
-                        this.Bindings.AllKeyBindingsNamedMap.Add(keyBind.ActualBind, keyBind);
+
+                        if (this.Bindings.AllKeyBindingsMap.ContainsKey(keyBind.ActualBind) == false)
+                            this.Bindings.AllKeyBindingsNamedMap.Add(keyBind.ActualBind, keyBind);
                     }
                     this.Bindings.GenerateKeyBindindMap();
                 }
@@ -999,8 +1005,6 @@ namespace OriWotW {
                     this.InjectCommunication.AddCall("CALL13");
                 } else if (menuItem.Name.Equals("Create Object") == true) {
                     this.InjectCommunication.AddCall("CALL3");
-                } else if (menuItem.Name.Equals("Get Quest") == true) {
-                    this.InjectCommunication.AddCall("CALL8");
                 } else if (menuItem.Name.Equals("Complete Quests") == true) {
                     //this.RaceTimer = new RaceTimer();
                     //this.RaceTimer.Show(this);

@@ -12,7 +12,7 @@ namespace OriWotW {
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing) {
-            TE.IsDisposingNow = true;
+            IsDisposingNow = true;
             if (this.InjectCommunication != null) {
                 this.InjectCommunication.AddCall("CALL0");
                 this.InjectCommunication.StopCommunication();

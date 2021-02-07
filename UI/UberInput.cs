@@ -1936,7 +1936,9 @@ namespace OriWotW.UI {
         public void GenerateUberGroupList() {
             this.uberGroupId.Items.Clear();
             foreach (KeyValuePair<string, UberIDGroup> uberIdGroup in UberInput.UberStates) {
-                this.uberGroupId.Items.Add(uberIdGroup.Value.Name);
+                if (this.uberGroupId.Items.Contains(uberIdGroup.Value.Name) == false) {
+                    this.uberGroupId.Items.Add(uberIdGroup.Value.Name);
+                }
             }
         }
 
@@ -1944,8 +1946,10 @@ namespace OriWotW.UI {
             this.uberId.Items.Clear();
             this.uberId.AutoCompleteCustomSource.Clear();
             foreach (KeyValuePair<string, UberID> uberId in UberInput.UberStates[this.uberGroupId.SelectedItem.ToString()].UberIDs) {
-                this.uberId.Items.Add(uberId.Value.Name);
-                this.uberId.AutoCompleteCustomSource.Add(uberId.Value.Name);
+                if (this.uberId.Items.Contains(uberId.Value.Name) == false) {
+                    this.uberId.Items.Add(uberId.Value.Name);
+                    this.uberId.AutoCompleteCustomSource.Add(uberId.Value.Name);
+                }
             }
         }
 
