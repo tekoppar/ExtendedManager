@@ -1,4 +1,4 @@
-# Extended Manager Ori WotW
+# Extended Manager for Ori WotW
 
 A tool that allows you to do a lot of things related to Ori and the Will of the Wisps. It has features like
 - Input validator.
@@ -8,6 +8,9 @@ A tool that allows you to do a lot of things related to Ori and the Will of the 
 - Hitbox split creator.
 - Race editor that allows you to create custom races with custom settings with ghosts.
 - Information regarding Ori and Ori's states.
+
+# Installation
+Download and extract the folder anywhere you'd like, run the application.
 
 # Credit to 
 - DevilSquirrel for creating the Manager
