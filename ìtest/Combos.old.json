@@ -1,0 +1,264 @@
+{
+    "Combos": [
+        {
+            "Name": "Dropshot",
+            "Settings": {
+                "Enabled" : true,
+                "ShowFrameTimings": false,
+                "ShowMSTimings": false,
+                "LogData": false,
+                "ShowFrameDifference": false,
+                "X": -179,
+                "Y": -4239
+            },
+            "Inputs": [
+                {
+                    "Keys": [
+                        "Ability1"
+                    ]
+                },
+                {
+                    "Keys": [
+                        "OpenWeaponWheel"
+                    ],
+                    "Timing": [
+                        17
+                    ]
+                }
+            ]
+        },
+        {
+            "Name": "Sdash Ku",
+            "Settings": {
+                "Enabled" : true,
+                "ShowFrameTimings": false,
+                "ShowMSTimings": false,
+                "LogData": false,
+                "ShowFrameDifference": false,
+                "X": 786,
+                "Y": -4193
+            },
+            "Inputs": [
+                {
+                    "Keys": [
+                        "Movement Left"
+                    ]
+                },
+                {
+                    "Keys": [
+                        "Ability1"
+                    ],
+                    "Timing": [
+                        1
+                    ]
+                },
+                {
+                    "Keys": [
+                        "Ability2",
+                        "Movement Right"
+                    ],
+                    "Timing": [
+                        1
+                    ]
+                },
+                {
+                    "Keys": [
+                        "Dash"
+                    ],
+                    "Timing": [
+                        6
+                    ]
+                }
+            ]
+        },
+        {
+            "Name": "Sjump",
+            "Settings": {
+                "Enabled" : true,
+                "ShowFrameTimings": false,
+                "ShowMSTimings": false,
+                "LogData": false,
+                "ShowFrameDifference": false
+            },
+            "Inputs": [
+                {
+                    "Keys": [
+                        "Ability2"
+                    ]
+                },
+                {
+                    "Keys": [
+                        "Ability1"
+                    ],
+                    "Timing": [
+                        0,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "Name": "Air Sjump",
+            "Settings": {
+                "Enabled" : true,
+                "ShowFrameTimings": false,
+                "ShowMSTimings": false,
+                "LogData": false,
+                "ShowFrameDifference": false
+            },
+            "Inputs": [
+                {
+                    "Keys": [
+                        "Ability2"
+                    ]
+                },
+                {
+                    "Keys": [
+                        "Movement Up",
+                        "Ability1"
+                    ],
+                    "Timing": [
+                        3,
+                        4,
+                        5
+                    ]
+                }
+            ]
+        },
+        {
+            "Name": "Clip",
+            "Settings": {
+                "Enabled" : false,
+                "ShowFrameTimings": true,
+                "ShowMSTimings": true,
+                "LogData": false,
+                "ShowFrameDifference": false
+            },
+            "Inputs": [
+                {
+                    "Keys": [
+                        "Dash"
+                    ]
+                },
+                {
+                    "Keys": [
+                        "Ability1"
+                    ],
+                    "Timing": [
+                        0,
+                        1,
+                        2,
+                        3,
+                        4,
+                        5
+                    ]
+                }
+            ]
+        },
+        {
+            "Name": "Bow Lift",
+            "Settings": {
+                "Enabled" : true,
+                "ShowFrameTimings": false,
+                "ShowMSTimings": true,
+                "LogData": false,
+                "ShowFrameDifference": false,
+                "X": -53,
+                "Y": -4444
+            },
+            "Inputs": [
+                {
+                    "Keys": [
+                        "Ability1"
+                    ]
+                },
+                {
+                    "Keys": [
+                        "Dash"
+                    ],
+                    "Timing": [
+                        17,
+                        18,
+                        19,
+                        20,
+                        21,
+                        22,
+                        23,
+                        24,
+                        25
+                    ]
+                },
+                {
+                    "Keys": [
+                        "Ability2"
+                    ],
+                    "Timing": [
+                        5,
+                        6,
+                        7,
+                        8,
+                        9,
+                        10,
+                        11,
+                        12
+                    ]
+                },
+                {
+                    "Keys": [
+                        "Ability1"
+                    ],
+                    "Timing": [
+                        9,
+                        10,
+                        11,
+                        12
+                    ]
+                }
+            ]
+        },
+        {
+            "Name": "Bow Lift No Dash",
+            "Settings": {
+                "Enabled" : true,
+                "ShowFrameTimings": false,
+                "ShowMSTimings": false,
+                "LogData": false,
+                "ShowFrameDifference": false
+            },
+            "Inputs": [
+                {
+                    "Keys": [
+                        "Ability1"
+                    ]
+                },
+                {
+                    "Keys": [
+                        "Ability2"
+                    ],
+                    "Timing": [
+                        27,
+                        28,
+                        29,
+                        30,
+                        31,
+                        32,
+                        33,
+                        34,
+                        35,
+                        36,
+                        37
+                    ]
+                },
+                {
+                    "Keys": [
+                        "Ability1"
+                    ],
+                    "Timing": [
+                        10,
+                        11
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -1,4 +1,5 @@
 ﻿#define IL2CPP
+#define WOTWMODDINGFALSE
 
 using System;
 using System.IO;
@@ -6,6 +7,7 @@ using System.Drawing;
 using System.Reflection;
 using System.Threading;
 using System.Windows;
+using System.Text;
 using System.Windows.Forms;
 using System.Collections.Generic;
 using Hotkeys;
@@ -690,7 +692,9 @@ namespace OriWotW {
             menuStrip.Items.Add(menuTeleport);
             menuStrip.Items.Add(menuBackupSave);
             menuStrip.Items.Add(menuSeinVisualEditor);
+#if WOTWMODDING
             menuStrip.Items.Add(menuTransformEditor);
+#endif
             menuStrip.Items.Add("-");
             menuStrip.Items.Add(menuItem);
             menuStrip.Items.Add(menuDebugActions);

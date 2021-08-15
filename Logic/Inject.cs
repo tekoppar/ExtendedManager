@@ -31,7 +31,7 @@ namespace GijSoft.DllInjection {
         static extern IntPtr VirtualAllocEx(IntPtr hProcess, IntPtr lpAddress, IntPtr dwSize, uint flAllocationType, uint flProtect);
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        static extern int WriteProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, byte[] buffer, uint size, int lpNumberOfBytesWritten);
+        static extern int WriteProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, byte[] buffer, uint size, ref int lpNumberOfBytesWritten);
 
         [DllImport("kernel32.dll", SetLastError = true)]
         static extern IntPtr CreateRemoteThread(IntPtr hProcess, IntPtr lpThreadAttribute, IntPtr dwStackSize, IntPtr lpStartAddress,
@@ -113,21 +113,23 @@ namespace GijSoft.DllInjection {
                 return false;
             }
 
-            IntPtr lpLLAddress = GetProcAddress(GetModuleHandle("kernel32.dll"), "LoadLibraryA");
+            IntPtr lpLLAddress = GetProcAddress(GetModuleHandle("kernel32.dll"), "LoadLibraryW");
+            
+            byte[] bytes = Encoding.Unicode.GetBytes(sDllPath);
+            int byteCount = Encoding.Unicode.GetByteCount(sDllPath);
 
             if (lpLLAddress == INTPTR_ZERO) {
                 return false;
             }
 
-            IntPtr lpAddress = VirtualAllocEx(hndProc, (IntPtr)null, (IntPtr)sDllPath.Length, (0x1000 | 0x2000), 0X40);
+            IntPtr lpAddress = VirtualAllocEx(hndProc, (IntPtr)null, (IntPtr)byteCount, (0x1000 | 0x2000), 0X40);
 
             if (lpAddress == INTPTR_ZERO) {
                 return false;
             }
 
-            byte[] bytes = Encoding.ASCII.GetBytes(sDllPath);
-
-            if (WriteProcessMemory(hndProc, lpAddress, bytes, (uint)bytes.Length, 0) == 0) {
+            int writtenBytes = 0;
+            if (WriteProcessMemory(hndProc, lpAddress, bytes, (uint)byteCount, ref writtenBytes) == 0) {
                 return false;
             }
 
@@ -152,19 +154,22 @@ namespace GijSoft.DllInjection {
 
             IntPtr lpLLAddress = GetProcAddress(GetModuleHandle("kernel32.dll"), "FreeLibrary");
 
+            byte[] bytes = Encoding.Unicode.GetBytes(sDllPath);
+            int byteCount = Encoding.Unicode.GetByteCount(sDllPath);
+
             if (lpLLAddress == INTPTR_ZERO) {
                 return false;
             }
 
-            IntPtr lpAddress = VirtualAllocEx(hndProc, (IntPtr)null, (IntPtr)sDllPath.Length, (0x1000 | 0x2000), 0X40);
+            IntPtr lpAddress = VirtualAllocEx(hndProc, (IntPtr)null, (IntPtr)byteCount, (0x1000 | 0x2000), 0X40);
 
             if (lpAddress == INTPTR_ZERO) {
                 return false;
             }
 
-            byte[] bytes = Encoding.ASCII.GetBytes(sDllPath);
+            int refTemp = 0;
 
-            if (WriteProcessMemory(hndProc, lpAddress, bytes, (uint)bytes.Length, 0) == 0) {
+            if (WriteProcessMemory(hndProc, lpAddress, bytes, (uint)byteCount, ref refTemp) == 0) {
                 return false;
             }
 
