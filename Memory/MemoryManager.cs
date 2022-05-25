@@ -6,6 +6,7 @@ using OriWotW.GameWorld;
 using OriWotW.Memory;
 using OriWotW.UberController;
 using Tem.TemClass;
+using System.IO;
 
 namespace OriWotW {
     public partial class MemoryManager {
@@ -1691,9 +1692,9 @@ namespace OriWotW {
                 if (Program != null && !Program.HasExited) {
                     MemoryReader.Update64Bit(Program);
                     FindIl2Cpp.InitializeIl2Cpp(Program);
-                    Module64 module = Program.Module64("GameAssembly.dll");
                     UnityPlayer = Program.Module64("UnityPlayer.dll");
                     GameAssembly = Program.Module64("GameAssembly.dll");
+
                     MemoryManager.Version = PointerVersion.All;
                     if (GameAssembly != null) {
                         switch (GameAssembly.MemorySize) {

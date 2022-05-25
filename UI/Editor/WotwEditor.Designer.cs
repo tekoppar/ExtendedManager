@@ -23,7 +23,7 @@ namespace OriWotW.UI {
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing) {
-            this.Manager.rawInput.AddMessageFilter();
+            Manager._Instance.rawInput.AddMessageFilter();
             if (disposing && (components != null)) {
                 components.Dispose();
             }
@@ -226,7 +226,7 @@ namespace OriWotW.UI {
             // button3
             // 
             this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button3.Location = new System.Drawing.Point(560, 814);
+            this.button3.Location = new System.Drawing.Point(1093, 814);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(75, 23);
             this.button3.TabIndex = 17;
@@ -237,7 +237,7 @@ namespace OriWotW.UI {
             // btnLoadWorld
             // 
             this.btnLoadWorld.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnLoadWorld.Location = new System.Drawing.Point(472, 814);
+            this.btnLoadWorld.Location = new System.Drawing.Point(1005, 814);
             this.btnLoadWorld.Name = "btnLoadWorld";
             this.btnLoadWorld.Size = new System.Drawing.Size(82, 23);
             this.btnLoadWorld.TabIndex = 18;
@@ -255,7 +255,7 @@ namespace OriWotW.UI {
             this.FieldsPropertiesTree.Location = new System.Drawing.Point(627, 89);
             this.FieldsPropertiesTree.MaximumSize = new System.Drawing.Size(800, 1200);
             this.FieldsPropertiesTree.Name = "FieldsPropertiesTree";
-            this.FieldsPropertiesTree.Size = new System.Drawing.Size(13, 719);
+            this.FieldsPropertiesTree.Size = new System.Drawing.Size(546, 719);
             this.FieldsPropertiesTree.TabIndex = 19;
             this.FieldsPropertiesTree.Visible = false;
             this.FieldsPropertiesTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.FieldsPropertiesTree_AfterSelect);
@@ -439,7 +439,7 @@ namespace OriWotW.UI {
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.ClientSize = new System.Drawing.Size(647, 845);
+            this.ClientSize = new System.Drawing.Size(1180, 845);
             this.Controls.Add(this.btnNewScene);
             this.Controls.Add(this.selectedFieldProperty);
             this.Controls.Add(this.flowLayoutPanel1);

@@ -7,20 +7,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Communication.Inject;
 
 namespace OriWotW.UI {
     public partial class BackupsaveUI : Form {
-        public Manager Manager;
         public List<Backupsave> Backupsaves = new List<Backupsave>();
         private int BackupSaveCount = 0;
-        public BackupsaveUI(Manager manager) {
-            Manager = manager;
+        public BackupsaveUI() {
             InitializeComponent();
-            this.Manager.InjectCommunication.AddCall("CALL30");
+            InjectCommunication._Instance.AddCall("CALL30");
         }
 
         private void butRefresh_Click(object sender, EventArgs e) {
-            this.Manager.InjectCommunication.AddCall("CALL30");
+            InjectCommunication._Instance.AddCall("CALL30");
         }
 
         public void RefreshSaves() {
@@ -41,9 +40,9 @@ namespace OriWotW.UI {
 
         private void button1_Click(object sender, EventArgs e) {
             if (BackupSaveCount < 10) {
-                this.Manager.InjectCommunication.AddCall("CALL29PAR" + (this.backupsavesList.Controls.Count).ToString());
+                InjectCommunication._Instance.AddCall("CALL29PAR" + (this.backupsavesList.Controls.Count).ToString());
                 BackupSaveCount++;
-                this.Manager.InjectCommunication.AddCall("CALL30");
+                InjectCommunication._Instance.AddCall("CALL30");
             } else {
                 this.butCreateBackupsave.Visible = false;
             }

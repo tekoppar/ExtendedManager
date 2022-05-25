@@ -64,6 +64,7 @@ namespace OriWotW {
             this.lblInputInts = new System.Windows.Forms.Label();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.managerStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.randomInfo = new System.Windows.Forms.Label();
             this.flowLayoutPanel1.SuspendLayout();
             this.panelTotalFPS.SuspendLayout();
             this.panelHPEN.SuspendLayout();
@@ -77,7 +78,7 @@ namespace OriWotW {
             this.lblNote.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblNote.Location = new System.Drawing.Point(0, 0);
             this.lblNote.Name = "lblNote";
-            this.lblNote.Size = new System.Drawing.Size(459, 321);
+            this.lblNote.Size = new System.Drawing.Size(459, 339);
             this.lblNote.TabIndex = 15;
             this.lblNote.Text = "Not available";
             this.lblNote.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -247,10 +248,11 @@ namespace OriWotW {
             this.flowLayoutPanel1.Controls.Add(this.inputsDown);
             this.flowLayoutPanel1.Controls.Add(this.lblInputInts);
             this.flowLayoutPanel1.Controls.Add(this.possibleCombos);
+            this.flowLayoutPanel1.Controls.Add(this.randomInfo);
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(456, 294);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(456, 307);
             this.flowLayoutPanel1.TabIndex = 32;
             this.flowLayoutPanel1.WrapContents = false;
             // 
@@ -356,7 +358,7 @@ namespace OriWotW {
             this.statusStrip1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.managerStatus});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 299);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 317);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
             this.statusStrip1.Size = new System.Drawing.Size(459, 22);
@@ -369,6 +371,14 @@ namespace OriWotW {
             this.managerStatus.Name = "managerStatus";
             this.managerStatus.Size = new System.Drawing.Size(0, 17);
             // 
+            // randomInfo
+            // 
+            this.randomInfo.AutoSize = true;
+            this.randomInfo.Location = new System.Drawing.Point(3, 294);
+            this.randomInfo.Name = "randomInfo";
+            this.randomInfo.Size = new System.Drawing.Size(0, 13);
+            this.randomInfo.TabIndex = 42;
+            // 
             // Manager
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -376,7 +386,7 @@ namespace OriWotW {
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BackColor = System.Drawing.Color.Black;
-            this.ClientSize = new System.Drawing.Size(459, 321);
+            this.ClientSize = new System.Drawing.Size(459, 339);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.lblNote);
@@ -432,5 +442,6 @@ namespace OriWotW {
         private System.Windows.Forms.FlowLayoutPanel flowInputIcons;
         private StatusStrip statusStrip1;
         public ToolStripStatusLabel managerStatus;
+        public Label randomInfo;
     }
 }

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Globalization;
 using Tem.TemClass;
+using Communication.Inject;
 
 namespace OriWotW.UI {
     public partial class HitboxSplit : Form {
@@ -28,7 +29,7 @@ namespace OriWotW.UI {
             hitboxSplitValues.SetValue(this.Rect);
 
             if (this.Visible == true) {
-                Manager.InjectCommunication.AddCall("CALL22PAR" + this.Rect.ToString());
+                InjectCommunication._Instance.AddCall("CALL22PAR" + this.Rect.ToString());
             }
         }
 
@@ -41,11 +42,11 @@ namespace OriWotW.UI {
             hitboxSplitValues.SetValue(this.Rect);
 
             hitboxSplitCopy.Text = this.Rect.ToString();
-            Manager.InjectCommunication.AddCall("CALL22PAR" + this.Rect.ToString());
+            InjectCommunication._Instance.AddCall("CALL22PAR" + this.Rect.ToString());
         }
 
         private void createHitbox_Click(object sender, EventArgs e) {
-            Manager.InjectCommunication.AddCall("CALL22PAR" + this.Rect.ToString());
+            InjectCommunication._Instance.AddCall("CALL22PAR" + this.Rect.ToString());
         }
 
         private void input_Enter(object sender, EventArgs e) {
@@ -64,7 +65,7 @@ namespace OriWotW.UI {
 
         private void hitboxSplitValues_OnValueChangedNoArgs(object sender, EventArgs e) {
             hitboxSplitCopy.Text = this.Rect.ToString();
-            Manager.InjectCommunication.AddCall("CALL22PAR" + this.Rect.ToString());
+            InjectCommunication._Instance.AddCall("CALL22PAR" + this.Rect.ToString());
         }
     }
 }

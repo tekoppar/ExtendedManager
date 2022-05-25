@@ -1,4 +1,6 @@
-﻿namespace OriWotW.UI {
+﻿using Communication.Inject;
+
+namespace OriWotW.UI {
     partial class HitboxSplit {
         /// <summary>
         /// Required designer variable.
@@ -13,7 +15,7 @@
             if (disposing && (components != null)) {
                 components.Dispose();
             }
-            Manager.InjectCommunication.AddCall("CALL23");
+            InjectCommunication._Instance.AddCall("CALL23");
             base.Dispose(disposing);
         }
 

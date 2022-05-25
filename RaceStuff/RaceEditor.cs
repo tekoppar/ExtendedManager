@@ -14,6 +14,7 @@ using System.Drawing.Drawing2D;
 using OriWotW.RaceStuff;
 using OriWotW.Properties;
 using Tem.TemClass;
+using Communication.Inject;
 
 namespace OriWotW.UI {
 
@@ -523,7 +524,7 @@ namespace OriWotW.UI {
             startX.Value = (decimal)RaceSettings.GetStart().X;
             startY.Value = (decimal)RaceSettings.GetStart().Y;
             startZ.Value = (decimal)RaceSettings.GetStart().Z;
-            Manager.InjectCommunication.AddCall("CALL21");
+            InjectCommunication._Instance.AddCall("CALL21");
         }
 
         private void setFinish_Click(object sender, EventArgs e) {
@@ -540,7 +541,7 @@ namespace OriWotW.UI {
         private void createCheckpoint_Click(object sender, EventArgs e) {
             RaceSettings.AddCheckpoint(Manager.Memory.Position());
             Vector3 pos = Manager.Memory.Position();
-            Manager.InjectCommunication.AddCall("CALL13PAR" + pos.ToString());
+            InjectCommunication._Instance.AddCall("CALL13PAR" + pos.ToString());
             InsertCheckpoint(pos);
         }
 
@@ -651,7 +652,7 @@ namespace OriWotW.UI {
             RaceSettings.SetRacePath(racePath);
 
             if (File.Exists(racePath + RaceSettings.GetRaceName() + ".race"))
-                this.Manager.InjectCommunication.AddCall("CALL16PAR" + racePath + RaceSettings.GetRaceName() + ".race" + "|" + (!isEditor).ToString());
+                InjectCommunication._Instance.AddCall("CALL16PAR" + racePath + RaceSettings.GetRaceName() + ".race" + "|" + (!isEditor).ToString());
         }
 
         private void UpdateAbilitiesStates() {
@@ -726,7 +727,7 @@ namespace OriWotW.UI {
 
         private void removeCheckpoint_Click(object sender, EventArgs e) {
             RaceSettings.RemoveCheckpoint(SelectedCheckpointIndex);
-            Manager.InjectCommunication.AddCall("CALL15PAR" + SelectedCheckpointIndex.ToString());
+            InjectCommunication._Instance.AddCall("CALL15PAR" + SelectedCheckpointIndex.ToString());
             checkpointList.Items.Remove(checkpointList.Items[SelectedCheckpointIndex]);
         }
 
@@ -759,7 +760,7 @@ namespace OriWotW.UI {
 
         private void position_ValueChanged(object sender, EventArgs e) {
             if (UserChangedValue == true) {
-                this.Manager.InjectCommunication.AddCall("CALL18PAR" + positionX.Value.ToString("F4", CultureInfo.CreateSpecificCulture("en-US")) + ";" + positionY.Value.ToString("F4", CultureInfo.CreateSpecificCulture("en-US")) +
+                InjectCommunication._Instance.AddCall("CALL18PAR" + positionX.Value.ToString("F4", CultureInfo.CreateSpecificCulture("en-US")) + ";" + positionY.Value.ToString("F4", CultureInfo.CreateSpecificCulture("en-US")) +
                     "|" + sizeX.Value.ToString("F3", CultureInfo.CreateSpecificCulture("en-US")) + ";" + sizeY.Value.ToString("F3", CultureInfo.CreateSpecificCulture("en-US")) + ";0|" + SelectedCheckpointIndex);
                 this.checkpointList.FocusedItem.SubItems[1].Text = positionX.Value.ToString("F4", CultureInfo.CreateSpecificCulture("en-US"));
                 this.checkpointList.FocusedItem.SubItems[2].Text = positionY.Value.ToString("F4", CultureInfo.CreateSpecificCulture("en-US"));
@@ -821,18 +822,18 @@ namespace OriWotW.UI {
                 LoadRace(isEditor);
 
             if (File.Exists(RaceSettings.GetRacePath() + RaceSettings.GetRaceName() + ".race"))
-                this.Manager.InjectCommunication.AddCall("CALL14PAR" + RaceSettings.GetRacePath() + RaceSettings.GetRaceName() + ".race");
+                InjectCommunication._Instance.AddCall("CALL14PAR" + RaceSettings.GetRacePath() + RaceSettings.GetRaceName() + ".race");
         }
 
         public void LoadAndRun(bool isEditor = false) {
             CleanRaceEditor();
             LoadRace(isEditor);
 
-            this.Manager.InjectCommunication.AddCall("CALL14PAR" + RaceSettings.GetRacePath() + RaceSettings.GetRaceName() + ".race");
+            InjectCommunication._Instance.AddCall("CALL14PAR" + RaceSettings.GetRacePath() + RaceSettings.GetRaceName() + ".race");
         }
 
         private void button1_Click(object sender, EventArgs e) {
-            this.Manager.InjectCommunication.AddCall("CALL20");
+            InjectCommunication._Instance.AddCall("CALL20");
         }
 
         private void seinFaceDirection_CheckedChanged(object sender, EventArgs e) {
@@ -984,11 +985,11 @@ namespace OriWotW.UI {
         }
 
         private void butSaveUber_Click(object sender, EventArgs e) {
-            Manager.InjectCommunication.AddCall("CALL26");
+            InjectCommunication._Instance.AddCall("CALL26");
         }
 
         private void butLoadUber_Click(object sender, EventArgs e) {
-            Manager.InjectCommunication.AddCall("CALL27");
+            InjectCommunication._Instance.AddCall("CALL27");
         }
 
         private void butSaveAs_Click(object sender, EventArgs e) {

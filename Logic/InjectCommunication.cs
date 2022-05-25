@@ -1,22 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.IO.Pipes;
 using System.Windows.Forms;
 using System.Globalization;
-using System.Text.RegularExpressions;
-using System.Threading;
 using OriWotW.RaceStuff;
 using OriWotW.UI;
 using System.Security.Principal;
 using System.Security.AccessControl;
 using Tem.Utility;
 
-namespace OriWotW.Logic {
-    enum MessageType {
+namespace OriWotW.Logic.Inject {
+    public enum MessageType {
         EndThread = 0,
         GameCompletion = 1,
         CreateCheckpoint = 2,
@@ -66,28 +62,31 @@ namespace OriWotW.Logic {
         AddCollisionPosition = 46,
         GetFieldsPropertiesGameObject = 47,
         StoppedRace = 48,
-        ManagerInitialized = 49
+        ManagerInitialized = 49,
+        PlaybackInputs = 50,
+        ShowInfo = 51,
     };
 
     public class InjectCommunication {
+        static public InjectCommunication _Instance = null;
+
         public NamedPipeServerStream NamedPipeServer;
         public NamedPipeServerStream NamedPipeServerDLL;
         public StreamReader StreamReader;
         public StreamWriter StreamWriter;
-        private Manager Manager;
+        private ToolStripStatusLabel StatusLabel;
         public IAsyncResult DLLResult;
         public IAsyncResult ManagerResult;
         public List<string> Messages = new List<string>();
         private bool ConnectionIsEstablished = false;
         private bool isWriting = false;
 
-        public InjectCommunication(Manager manager) {
-            this.Manager = manager;
+        public InjectCommunication(ToolStripStatusLabel statusLabel) {
+            InjectCommunication._Instance = this;
+            this.StatusLabel = statusLabel;
 
-            this.Manager.managerStatus.Text = "Starting Pipes";
             Task serverTask = RunServerAsync("wotw-manager-pipe");
             Task serverTask1 = ReadServerAsync("injectdll-manager-pipe");
-            this.Manager.canStart = true;
             //Task.WaitAll(serverTask);
             //Task clientTask = RunClientAsync("my-very-cool-pipe-example");
             //this.NamedPipeServer = new NamedPipeServerStream("my-very-cool-pipe-example", PipeDirection.InOut, 1, PipeTransmissionMode.Byte);
@@ -133,10 +132,10 @@ namespace OriWotW.Logic {
                     (cb, state) => this.NamedPipeServerDLL.BeginWaitForConnection(cb, state),
                     ar => this.NamedPipeServerDLL.EndWaitForConnection(ar),
                     null);
-            } catch (Exception e) { this.Manager.managerStatus.Text = e.Message; return; }
+            } catch (Exception e) { this.StatusLabel.Text = e.Message; return; }
             this.StreamReader = new StreamReader(this.NamedPipeServerDLL);
             this.ConnectionIsEstablished = true;
-            this.Manager.managerStatus.Text = "Piped DLL server connected";
+            this.StatusLabel.Text = "Piped DLL server connected";
             File.AppendAllText("C:\\moon\\manager_error.log", "Pipe reader started\r\n");
 
             this.Read();
@@ -152,15 +151,23 @@ namespace OriWotW.Logic {
                     (cb, state) => this.NamedPipeServer.BeginWaitForConnection(cb, state),
                     ar => this.NamedPipeServer.EndWaitForConnection(ar),
                     null);
-            } catch (Exception e) { this.Manager.managerStatus.Text = e.Message; return; }
+            } catch (Exception e) { this.StatusLabel.Text = e.Message; return; }
 
             this.StreamWriter = new StreamWriter(this.NamedPipeServer);
             this.StreamWriter.AutoFlush = true;
 
-            this.Manager.managerStatus.Text = "Piped Manager server connected";
+            this.StatusLabel.Text = "Piped Manager server connected";
             File.AppendAllText("C:\\moon\\manager_error.log", "Pipe writer started\r\n");
 
             this.Send();
+        }
+
+        public void CallMessage(MessageType messageType, string message = "") {
+            if (message == "") {
+                this.AddCall("CALL" + (int)messageType);
+            } else {
+                this.AddCall("CALL" + (int)messageType + "PAR" + message);
+            }
         }
 
         private async void Read() {
@@ -183,25 +190,26 @@ namespace OriWotW.Logic {
                                 type = (MessageType)int.Parse(s);
 
                             switch (type) {
-                                case MessageType.GameCompletion: this.Manager.GameCompletion = float.Parse(values, CultureInfo.InvariantCulture.NumberFormat); break;
-                                case MessageType.GetSeinFaces: this.Manager.RaceEditor.SeinFacesDirection = int.Parse(values); break;
-                                case MessageType.FinishedRace: this.Manager.IsRacing = RaceState.FinishedRacing; break;
-                                case MessageType.StartedRace: this.Manager.IsRacing = RaceState.IsRacing; break;
-                                case MessageType.StoppedRace: this.Manager.WindowState = FormWindowState.Normal; this.Manager.IsRacing = RaceState.Waiting; break;
-                                case MessageType.ManagerInitialized: this.Manager.ManagerInitialized(); break;
-                                case MessageType.GetSceneHierarchy: this.Manager.transformEditor.SetSceneHierarchy(values); break;
-                                case MessageType.ExpandSceneHierarchy: this.Manager.transformEditor.AddStringToSceneHierarchy(values); break;
-                                case MessageType.GetFieldsProperties: this.Manager.transformEditor.LoadFieldsProperties(values); break;
+#if _WOTW_MANAGER
+                                case MessageType.GameCompletion: Manager._Instance.SetGameCompletion(float.Parse(values, CultureInfo.InvariantCulture.NumberFormat)); break;
+                                case MessageType.GetSeinFaces: Manager._Instance.SetSeinFacesDirection(int.Parse(values)); break;
+                                case MessageType.FinishedRace: Manager._Instance.IsRacing = RaceState.FinishedRacing; break;
+                                case MessageType.StartedRace: Manager._Instance.IsRacing = RaceState.IsRacing; break;
+                                case MessageType.StoppedRace: Manager._Instance.WindowState = FormWindowState.Normal; Manager._Instance.IsRacing = RaceState.Waiting; break;
+                                case MessageType.ManagerInitialized: Manager._Instance.ManagerInitialized(); break;
+                                case MessageType.GetSceneHierarchy: Manager._Instance.transformEditor.SetSceneHierarchy(values); break;
+                                case MessageType.ExpandSceneHierarchy: Manager._Instance.transformEditor.AddStringToSceneHierarchy(values); break;
+                                case MessageType.GetFieldsProperties: Manager._Instance.transformEditor.LoadFieldsProperties(values); break;
                                 case MessageType.GetFieldsPropertiesGameObject: {
                                         string[] splitValues = values.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
-                                        this.Manager.transformEditor.LoadFieldsProperties(splitValues[0], TE.StringToIntVector(splitValues[1], ","));
+                                        Manager._Instance.transformEditor.LoadFieldsProperties(splitValues[0], TE.StringToIntVector(splitValues[1], ","));
                                     }
                                     break;
-                                case MessageType.CloneGameObject: this.Manager.transformEditor.AddStringToSceneHierarchy(values); break;
-                                case MessageType.SetSelectedGameObject: this.Manager.transformEditor.SetSelectedGameObject(values); break;
+                                case MessageType.CloneGameObject: Manager._Instance.transformEditor.AddStringToSceneHierarchy(values); break;
+                                case MessageType.SetSelectedGameObject: Manager._Instance.transformEditor.SetSelectedGameObject(values); break;
                                 case MessageType.GetSaveInfo: {
                                         var backupsaves = values.Split(';');
-                                        this.Manager.backupsaveUI.Backupsaves.Clear();
+                                        Manager._Instance.backupsaveUI.Backupsaves.Clear();
 
                                         for (int i = 0; i < backupsaves.Length; i += 10) {
                                             if (backupsaves[i] != "") {
@@ -229,13 +237,16 @@ namespace OriWotW.Logic {
                                                 int killed = int.Parse(backupsaves[i + 8]);
                                                 backupsave.WasKilled = killed == 0 ? false : true;
                                                 backupsave.BackupIndex = int.Parse(backupsaves[i + 9]);
-                                                this.Manager.backupsaveUI.Backupsaves.Add(backupsave);
+                                                Manager._Instance.backupsaveUI.Backupsaves.Add(backupsave);
                                             }
                                         }
 
-                                        this.Manager.backupsaveUI.RefreshSaves();
+                                        Manager._Instance.backupsaveUI.RefreshSaves();
                                     }
                                     break;
+
+                                case MessageType.ShowInfo: Manager._Instance.randomInfo.Text = values;  break;
+#endif
                             }
                         }
 

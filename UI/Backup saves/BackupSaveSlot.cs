@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Communication.Inject;
 
 namespace OriWotW.UI {
     public partial class BackupSaveSlot : UserControl {
@@ -22,7 +23,7 @@ namespace OriWotW.UI {
         }
 
         private void button1_Click(object sender, EventArgs e) {
-            this.BackupsaveUI.Manager.InjectCommunication.AddCall("CALL29PAR" + this.Index.Text);
+            InjectCommunication._Instance.AddCall("CALL29PAR" + this.Index.Text);
         }
     }
 }

@@ -143,8 +143,8 @@ namespace OriWotW {
             Module64[] modules = p.Modules64();
             return modules == null || modules.Length == 0 ? null : modules[0];
         }
-        public static Module64 Module64(this Process p, string moduleName) {
-            Module64[] modules = p.Modules64();
+        public static Module64 Module64(this Process p, string moduleName, bool clearCache = false) {
+            Module64[] modules = p.Modules64(clearCache);
             if (modules != null) {
                 for (int i = 0; i < modules.Length; i++) {
                     Module64 module = modules[i];
@@ -155,9 +155,40 @@ namespace OriWotW {
             }
             return null;
         }
-        public static Module64[] Modules64(this Process p) {
+        public static void ClearCache(this Process p) {
             lock (ModuleCache) {
-                if (ModuleCache.Count > 100) { ModuleCache.Clear(); }
+                ModuleCache.Clear();
+            }
+        }
+        public static bool IsModuleLoaded(this Process p, string name) {
+            bool results = false;
+            IntPtr[] buffer = new IntPtr[1024];
+            uint cb = (uint)(IntPtr.Size * buffer.Length);
+
+            if (!WinAPI.EnumProcessModulesEx(p.Handle, buffer, cb, out uint totalModules, 3u)) {
+                return false;
+            }
+            uint moduleSize = totalModules / (uint)IntPtr.Size;
+
+            StringBuilder stringBuilder = new StringBuilder(260);
+            int count = 0;
+            while ((long)count < (long)((ulong)moduleSize)) {
+                if (WinAPI.GetModuleBaseName(p.Handle, buffer[count], stringBuilder, (uint)stringBuilder.Capacity) == 0u) {
+                    return false;
+                }
+                string moduleName = stringBuilder.ToString();
+
+                if (moduleName == name)
+                    results = true;
+
+                count++;
+            }
+            buffer = new IntPtr[1024];
+            return results;
+        }
+        public static Module64[] Modules64(this Process p, bool clearCache = false) {
+            lock (ModuleCache) {
+                if (ModuleCache.Count > 100 || clearCache == true) { ModuleCache.Clear(); }
 
                 IntPtr[] buffer = new IntPtr[1024];
                 uint cb = (uint)(IntPtr.Size * buffer.Length);

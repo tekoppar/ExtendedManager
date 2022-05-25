@@ -1,4 +1,6 @@
-﻿using System;
+﻿#define _WOTW_EDITOR
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -10,6 +12,7 @@ using System.Windows.Forms;
 using System.Text.Json;
 using OriWotW.UI;
 using OriWotW.UI.Editor;
+using Communication.Inject;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Timers;
@@ -19,7 +22,9 @@ using Tem.Utility;
 
 namespace OriWotW.UI {
     public partial class WotwEditor : Form {
-        private Manager Manager;
+        public static WotwEditor _Instance = null;
+        public static bool BlockValueChanges = false;
+
         private SceneHierarchy MSceneHierarchy;
         private TreeNode SelectedTreeNodeGameObject;
         private SceneHierarchy SelectedSceneHierarchyGameObject;
@@ -27,34 +32,33 @@ namespace OriWotW.UI {
         private SceneHierarchy SelectedSceneHierarchyComponent;
         private bool UserChanged = true;
         private bool UserExpanded = true;
-        static public bool BlockValueChanges = false;
         private System.Timers.Timer ValueChangedTimer = new System.Timers.Timer(50);
-        public WotwEditor(Manager manager) {
+        public WotwEditor() {
+            WotwEditor._Instance = this;
             InitializeComponent();
-            this.Manager = manager;
-            this.Manager.InjectCommunication.AddCall("CALL34");
-            this.Manager.InjectCommunication.AddCall("CALL36");
+            InjectCommunication._Instance.AddCall("CALL34");
+            InjectCommunication._Instance.AddCall("CALL36");
             ValueChangedTimer.Elapsed += OnTimedEvent;
             ValueChangedTimer.AutoReset = false;
         }
 
         private void input_Enter(object sender, EventArgs e) {
-            this.Manager.rawInput.RemoveMessageFilter();
+            Manager._Instance.rawInput.RemoveMessageFilter();
         }
 
         private void input_Leave(object sender, EventArgs e) {
-            this.Manager.rawInput.AddMessageFilter();
+            Manager._Instance.rawInput.AddMessageFilter();
         }
 
         public void SetSelectedGameObject(string name) {
             lblSelectedObject.Text = name;
            
             if (name != "None")
-                this.Manager.InjectCommunication.AddCall("CALL34");
+                InjectCommunication._Instance.AddCall("CALL34");
         }
 
         private void MoveGameObjectInHierarchy(string currentHierarchy, string newHierarcy) {
-            this.Manager.InjectCommunication.AddCall("CALL39PAR" + currentHierarchy + "|" + newHierarcy);
+            InjectCommunication._Instance.AddCall("CALL39PAR" + currentHierarchy + "|" + newHierarcy);
 
             var path1 = TE.StringToIntVector(currentHierarchy, ",");
             var path2 = TE.StringToIntVector(newHierarcy, ",");
@@ -155,8 +159,8 @@ namespace OriWotW.UI {
                         SceneHierarchy.UpdateHierarchyIndex(ref parentHierarchy);
                     }
 
-                    this.Manager.InjectCommunication.AddCall("CALL37PAR" + TE.IntVectorToString(temp.SceneIndexHierarchy, ","));
-                    this.Manager.InjectCommunication.AddCall("CALL42PAR" + TE.IntVectorToString(temp.SceneIndexHierarchy, ","));
+                    InjectCommunication._Instance.AddCall("CALL37PAR" + TE.IntVectorToString(temp.SceneIndexHierarchy, ","));
+                    InjectCommunication._Instance.AddCall("CALL42PAR" + TE.IntVectorToString(temp.SceneIndexHierarchy, ","));
                     SelectedTreeNodeGameObject = e.Node;
                     SelectedSceneHierarchyGameObject = MSceneHierarchy.GetHierarchyByIndexPath(temp.SceneIndexHierarchy, MSceneHierarchy);
                 } else if (sceneHierarchyTree.SelectedNode.Tag.ToString() == "Component") {
@@ -247,7 +251,7 @@ namespace OriWotW.UI {
                     SceneHierarchy.UpdateHierarchyIndex(ref parentHierarchy);
                 }
 
-                this.Manager.InjectCommunication.AddCall("CALL40PAR" + TE.IntVectorToString(temp.SceneIndexHierarchy, ","));
+                InjectCommunication._Instance.AddCall("CALL40PAR" + TE.IntVectorToString(temp.SceneIndexHierarchy, ","));
             }
         }
 
@@ -261,9 +265,9 @@ namespace OriWotW.UI {
                         SceneHierarchy.UpdateHierarchyIndex(ref parentHierarchy);
                     }
 
-                    this.Manager.InjectCommunication.AddCall("CALL41PAR" + TE.IntVectorToString(temp.SceneIndexHierarchy, ","));
+                    InjectCommunication._Instance.AddCall("CALL41PAR" + TE.IntVectorToString(temp.SceneIndexHierarchy, ","));
                 } else if (e.Node.Text == "Scene Roots") {
-                    this.Manager.InjectCommunication.AddCall("CALL41PAR999");
+                    InjectCommunication._Instance.AddCall("CALL41PAR999");
                 } else {
                     switch (e.Node.Tag.ToString()) {
 
@@ -276,7 +280,7 @@ namespace OriWotW.UI {
                                         SceneHierarchy.UpdateHierarchyIndex(ref parentHierarchy);
                                     }
 
-                                    this.Manager.InjectCommunication.AddCall("CALL42PAR" + TE.IntVectorToString(temp.SceneIndexHierarchy, ","));
+                                    InjectCommunication._Instance.AddCall("CALL42PAR" + TE.IntVectorToString(temp.SceneIndexHierarchy, ","));
                                     SelectedTreeNodeGameObject = e.Node.Parent;
                                     SelectedSceneHierarchyGameObject = MSceneHierarchy.GetHierarchyByIndexPath(temp.SceneIndexHierarchy, MSceneHierarchy);
                                 }
@@ -442,7 +446,7 @@ namespace OriWotW.UI {
                 case VariableType.String: {
                         TextBox temp = control as TextBox;
                         newValue = temp.Text;
-                        this.Manager.InjectCommunication.AddCall("CALL43PAR" + hierarchyIndex + "|" + componentName + "|" + fieldPropPath + "|" + fieldPropName + "|" + temp.Text + "|" + isField.ToString());
+                        InjectCommunication._Instance.AddCall("CALL43PAR" + hierarchyIndex + "|" + componentName + "|" + fieldPropPath + "|" + fieldPropName + "|" + temp.Text + "|" + isField.ToString());
                     }
                     break;
                 case VariableType.Short:
@@ -453,91 +457,91 @@ namespace OriWotW.UI {
                 case VariableType.ULong: {
                         NumericUpDown temp = control as NumericUpDown;
                         newValue = temp.Value.ToString(CultureInfo.CreateSpecificCulture("en-US"));
-                        this.Manager.InjectCommunication.AddCall("CALL43PAR" + hierarchyIndex + "|" + componentName + "|" + fieldPropPath + "|" + fieldPropName + "|" + temp.Value.ToString(CultureInfo.CreateSpecificCulture("en-US")) + "|" + isField.ToString());
+                        InjectCommunication._Instance.AddCall("CALL43PAR" + hierarchyIndex + "|" + componentName + "|" + fieldPropPath + "|" + fieldPropName + "|" + temp.Value.ToString(CultureInfo.CreateSpecificCulture("en-US")) + "|" + isField.ToString());
                     }
                     break;
                 case VariableType.Char: {
                         TextBox temp = control as TextBox;
                         newValue = temp.Text;
-                        this.Manager.InjectCommunication.AddCall("CALL43PAR" + hierarchyIndex + "|" + componentName + "|" + fieldPropPath + "|" + fieldPropName + "|" + temp.Text + "|" + isField.ToString());
+                        InjectCommunication._Instance.AddCall("CALL43PAR" + hierarchyIndex + "|" + componentName + "|" + fieldPropPath + "|" + fieldPropName + "|" + temp.Text + "|" + isField.ToString());
                     }
                     break;
                 case VariableType.Pointer: {
                         TextBox temp = control as TextBox;
                         newValue = temp.Text;
-                        this.Manager.InjectCommunication.AddCall("CALL43PAR" + hierarchyIndex + "|" + componentName + "|" + fieldPropPath + "|" + fieldPropName + "|" + temp.Text + "|" + isField.ToString());
+                        InjectCommunication._Instance.AddCall("CALL43PAR" + hierarchyIndex + "|" + componentName + "|" + fieldPropPath + "|" + fieldPropName + "|" + temp.Text + "|" + isField.ToString());
                     }
                     break;
                 case VariableType.Vector: {
                         TextBox temp = control as TextBox;
                         newValue = temp.Text;
-                        this.Manager.InjectCommunication.AddCall("CALL43PAR" + hierarchyIndex + "|" + componentName + "|" + fieldPropPath + "|" + fieldPropName + "|" + temp.Text + "|" + isField.ToString());
+                        InjectCommunication._Instance.AddCall("CALL43PAR" + hierarchyIndex + "|" + componentName + "|" + fieldPropPath + "|" + fieldPropName + "|" + temp.Text + "|" + isField.ToString());
                     }
                     break;
                 case VariableType.Map: {
                         TextBox temp = control as TextBox;
                         newValue = temp.Text;
-                        this.Manager.InjectCommunication.AddCall("CALL43PAR" + hierarchyIndex + "|" + componentName + "|" + fieldPropPath + "|" + fieldPropName + "|" + temp.Text + "|" + isField.ToString());
+                        InjectCommunication._Instance.AddCall("CALL43PAR" + hierarchyIndex + "|" + componentName + "|" + fieldPropPath + "|" + fieldPropName + "|" + temp.Text + "|" + isField.ToString());
                     }
                     break;
                 case VariableType.Float: {
                         NumericUpDown temp = control as NumericUpDown;
                         newValue = temp.Value.ToString(CultureInfo.CreateSpecificCulture("en-US"));
-                        this.Manager.InjectCommunication.AddCall("CALL43PAR" + hierarchyIndex + "|" + componentName + "|" + fieldPropPath + "|" + fieldPropName + "|" + temp.Value.ToString(CultureInfo.CreateSpecificCulture("en-US")) + "|" + isField.ToString());
+                        InjectCommunication._Instance.AddCall("CALL43PAR" + hierarchyIndex + "|" + componentName + "|" + fieldPropPath + "|" + fieldPropName + "|" + temp.Value.ToString(CultureInfo.CreateSpecificCulture("en-US")) + "|" + isField.ToString());
                     }
                     break;
                 case VariableType.Bool: {
                         CheckBox temp = control as CheckBox;
                         newValue = temp.Checked.ToString();
-                        this.Manager.InjectCommunication.AddCall("CALL43PAR" + hierarchyIndex + "|" + componentName + "|" + fieldPropPath + "|" + fieldPropName + "|" + temp.Checked.ToString() + "|" + isField.ToString());
+                        InjectCommunication._Instance.AddCall("CALL43PAR" + hierarchyIndex + "|" + componentName + "|" + fieldPropPath + "|" + fieldPropName + "|" + temp.Checked.ToString() + "|" + isField.ToString());
                     }
                     break;
                 case VariableType.Vector4: {
                         Vector4Control temp = control as Vector4Control;
                         newValue = temp.GetValue().ToString();
-                        this.Manager.InjectCommunication.AddCall("CALL43PAR" + hierarchyIndex + "|" + componentName + "|" + fieldPropPath + "|" + fieldPropName + "|" + temp.GetValue().ToString() + "|" + isField.ToString());
+                        InjectCommunication._Instance.AddCall("CALL43PAR" + hierarchyIndex + "|" + componentName + "|" + fieldPropPath + "|" + fieldPropName + "|" + temp.GetValue().ToString() + "|" + isField.ToString());
                     }
                     break;
                 case VariableType.Color: {
                         Vector4Control temp = control as Vector4Control;
                         newValue = temp.GetValue().ToString();
-                        this.Manager.InjectCommunication.AddCall("CALL43PAR" + hierarchyIndex + "|" + componentName + "|" + fieldPropPath + "|" + fieldPropName + "|" + temp.GetValue().ToString() + "|" + isField.ToString());
+                        InjectCommunication._Instance.AddCall("CALL43PAR" + hierarchyIndex + "|" + componentName + "|" + fieldPropPath + "|" + fieldPropName + "|" + temp.GetValue().ToString() + "|" + isField.ToString());
                     }
                     break;
                 case VariableType.Vector3: {
                         Vector3Control temp = control as Vector3Control;
                         newValue = temp.GetValue().ToString();
-                        this.Manager.InjectCommunication.AddCall("CALL43PAR" + hierarchyIndex + "|" + componentName + "|" + fieldPropPath + "|" + fieldPropName + "|" + temp.GetValue().ToString() + "|" + isField.ToString());
+                        InjectCommunication._Instance.AddCall("CALL43PAR" + hierarchyIndex + "|" + componentName + "|" + fieldPropPath + "|" + fieldPropName + "|" + temp.GetValue().ToString() + "|" + isField.ToString());
                     }
                     break;
                 case VariableType.Rect: {
                         Vector4Control temp = control as Vector4Control;
                         newValue = temp.GetValue().ToString();
-                        this.Manager.InjectCommunication.AddCall("CALL43PAR" + hierarchyIndex + "|" + componentName + "|" + fieldPropPath + "|" + fieldPropName + "|" + temp.GetValue().ToString() + "|" + isField.ToString());
+                        InjectCommunication._Instance.AddCall("CALL43PAR" + hierarchyIndex + "|" + componentName + "|" + fieldPropPath + "|" + fieldPropName + "|" + temp.GetValue().ToString() + "|" + isField.ToString());
                     }
                     break;
                 case VariableType.Vector2: {
                         Vector2Control temp = control as Vector2Control;
                         newValue = temp.GetValue().ToString();
-                        this.Manager.InjectCommunication.AddCall("CALL43PAR" + hierarchyIndex + "|" + componentName + "|" + fieldPropPath + "|" + fieldPropName + "|" + temp.GetValue().ToString() + "|" + isField.ToString());
+                        InjectCommunication._Instance.AddCall("CALL43PAR" + hierarchyIndex + "|" + componentName + "|" + fieldPropPath + "|" + fieldPropName + "|" + temp.GetValue().ToString() + "|" + isField.ToString());
                     }
                     break;
                 case VariableType.Enum: {
                         TextBox temp = control as TextBox;
                         newValue = temp.Text;
-                        this.Manager.InjectCommunication.AddCall("CALL43PAR" + hierarchyIndex + "|" + componentName + "|" + fieldPropPath + "|" + fieldPropName + "|" + temp.Text + "|" + isField.ToString());
+                        InjectCommunication._Instance.AddCall("CALL43PAR" + hierarchyIndex + "|" + componentName + "|" + fieldPropPath + "|" + fieldPropName + "|" + temp.Text + "|" + isField.ToString());
                     }
                     break;
                 case VariableType.Bounds: {
                         BoundsControl temp = control as BoundsControl;
                         newValue = temp.GetValue().ToString();
-                        this.Manager.InjectCommunication.AddCall("CALL43PAR" + hierarchyIndex + "|" + componentName + "|" + fieldPropPath + "|" + fieldPropName + "|" + temp.GetValue().ToString() + "|" + isField.ToString());
+                        InjectCommunication._Instance.AddCall("CALL43PAR" + hierarchyIndex + "|" + componentName + "|" + fieldPropPath + "|" + fieldPropName + "|" + temp.GetValue().ToString() + "|" + isField.ToString());
                     }
                     break;
                 case VariableType.Matrix4x4: {
                         TextBox temp = control as TextBox;
                         newValue = temp.Text;
-                        this.Manager.InjectCommunication.AddCall("CALL43PAR" + hierarchyIndex + "|" + componentName + "|" + fieldPropPath + "|" + fieldPropName + "|" + temp.Text + "|" + isField.ToString());
+                        InjectCommunication._Instance.AddCall("CALL43PAR" + hierarchyIndex + "|" + componentName + "|" + fieldPropPath + "|" + fieldPropName + "|" + temp.Text + "|" + isField.ToString());
                     }
                     break;
             }
@@ -552,19 +556,19 @@ namespace OriWotW.UI {
         }
 
         private void button3_Click(object sender, EventArgs e) {
-            this.Manager.InjectCommunication.AddCall("CALL44");
+            InjectCommunication._Instance.AddCall("CALL44");
         }
 
         private void btnLoadWorld_Click(object sender, EventArgs e) {
-            this.Manager.InjectCommunication.AddCall("CALL45");
+            InjectCommunication._Instance.AddCall("CALL45");
         }
 
         private void WotwEditor_Enter(object sender, EventArgs e) {
-            this.Manager.rawInput.RemoveMessageFilter();
+            Manager._Instance.rawInput.RemoveMessageFilter();
         }
 
         private void WotwEditor_Leave(object sender, EventArgs e) {
-            this.Manager.rawInput.AddMessageFilter();
+            Manager._Instance.rawInput.AddMessageFilter();
         }
 
         private void FieldsPropertiesTree_AfterSelect(object sender, TreeViewEventArgs e) {
@@ -709,15 +713,15 @@ namespace OriWotW.UI {
                     SceneHierarchy parentHierarchy = temp.ParentObject;
                     SceneHierarchy.UpdateHierarchyIndex(ref parentHierarchy);
                 }
-                this.Manager.InjectCommunication.AddCall("CALL47PAR" + TE.IntVectorToString(temp.SceneIndexHierarchy, ","));
+                InjectCommunication._Instance.AddCall("CALL47PAR" + TE.IntVectorToString(temp.SceneIndexHierarchy, ","));
             }
         }
 
         private void btnNewScene_Click(object sender, EventArgs e) {
-            SceneCreator sceneCreator = new SceneCreator(this.Manager);
+            SceneCreator sceneCreator = new SceneCreator(Manager._Instance);
 
             if (sceneCreator.ShowDialog() == DialogResult.OK)
-                this.Manager.InjectCommunication.AddCall("CALL8PAR" + sceneCreator.ReturnName + "|" + sceneCreator.ReturnPosition.ToString() + "|" + sceneCreator.ReturnSize.ToString() + "|" + sceneCreator.ReturnLoadingRect.ToString());
+                InjectCommunication._Instance.AddCall("CALL8PAR" + sceneCreator.ReturnName + "|" + sceneCreator.ReturnPosition.ToString() + "|" + sceneCreator.ReturnSize.ToString() + "|" + sceneCreator.ReturnLoadingRect.ToString());
         }
     }
 

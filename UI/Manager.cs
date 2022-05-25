@@ -1,5 +1,6 @@
-﻿#define IL2CPP
-#define WOTWMODDINGFALSE
+﻿#define _WOTW_MANAGER
+#define IL2CPP
+#define WOTWMODDING
 
 using System;
 using System.IO;
@@ -26,7 +27,7 @@ using OriWotW.UI.Input;
 using System.Diagnostics.Eventing.Reader;
 using OriWotW.UberController;
 using GijSoft.DllInjection;
-using OriWotW.Logic;
+using Communication.Inject;
 using OriWotW.GameWorld;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
@@ -38,11 +39,13 @@ using Tem.TemClass;
 using Tem.Utility;
 
 namespace OriWotW {
-    public partial class Manager : Form {
+    public partial class Manager : Form, InjectObject {
         public static bool IsDisposingNow = false;
         private static int AverageFPSLength = 25;
+        public static Manager _Instance;
         public MemoryManager Memory { get; set; }
         private TemAutoUpdater.ManagerAutoUpdater ManagerAutoUpdater;
+        private bool ShouldInject = true;
         private Thread timerLoop;
         private Thread DLLCommunication;
         private bool useLivesplitColors = true;
@@ -70,8 +73,8 @@ namespace OriWotW {
         public SeinStateUI SeinStateUI;
         public RaceTimer RaceTimer;
         public UberStateController UberStateController;
-        public DllInjector DllInjector;
-        public InjectCommunication InjectCommunication;
+        private DllInjector DllInjector;
+        private InjectCommunication InjectCommunication;
         public bool canStart = false;
         public float GameCompletion = 0.0f;
         public RaceEditor RaceEditor;
@@ -88,13 +91,13 @@ namespace OriWotW {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Manager managerWindow = new Manager();
-            TemAutoUpdater.ManagerAutoUpdater ManagerAutoUpdater = new TemAutoUpdater.ManagerAutoUpdater(true);
-            if (ManagerAutoUpdater.IsDisposed == false)
-                Application.Run(ManagerAutoUpdater);
-
+            //TemAutoUpdater.ManagerAutoUpdater ManagerAutoUpdater = new TemAutoUpdater.ManagerAutoUpdater(true);
+            //if (ManagerAutoUpdater.IsDisposed == false)
+            //    Application.Run(ManagerAutoUpdater);
             Application.Run(managerWindow);
         }
         public Manager() {
+            Manager._Instance = this;
             this.DoubleBuffered = true;
             this.TopLevel = true;
             InitializeComponent();
@@ -138,7 +141,9 @@ namespace OriWotW {
             sw.Start();
 
             Memory = new MemoryManager();
-            this.InjectCommunication = new InjectCommunication(this);
+            this.InjectCommunication = new InjectCommunication(this, this.managerStatus);
+            this.managerStatus.Text = "Starting Pipes";
+            this.canStart = true;
             StartUpdateLoop();
             StartDLLCommunicationLoop();
 
@@ -147,6 +152,77 @@ namespace OriWotW {
             HitboxSplit = new HitboxSplit(this);
             inputTrainer = new InputTrainer(this);
             managerStatus.Text = "Manager has been initialized";
+        }
+
+        public void Initialized() {
+            this.ManagerInitialized();
+        }
+        public void SetGameCompletion(float value) {
+            this.GameCompletion = value;
+        }
+        public void SetSeinFacesDirection(int direction) {
+            this.RaceEditor.SeinFacesDirection = direction;
+        }
+        public void SetIsRacing(int value) {
+            this.IsRacing = (RaceState)value;
+        }
+        public void SetWindowState(FormWindowState value) {
+            this.WindowState = value;
+        }
+        public void SetSceneHierarchy(string values) {
+            this.transformEditor.SetSceneHierarchy(values);
+        }
+        public void AddStringToSceneHierarchy(string values) {
+            this.transformEditor.AddStringToSceneHierarchy(values);
+        }
+        public void LoadFieldsProperties(string values) {
+            this.transformEditor.LoadFieldsProperties(values);
+        }
+        public void LoadFieldsProperties(string values, List<int> hierarchyIndex) {
+            this.transformEditor.LoadFieldsProperties(values, hierarchyIndex);
+        }
+        public void SetSelectedGameObject(string values) {
+            this.transformEditor.SetSelectedGameObject(values);
+        }
+        public void RefreshSaves() {
+            this.backupsaveUI.RefreshSaves();
+        }
+        public void ClearBackupSaves() {
+            this.backupsaveUI.Backupsaves.Clear();
+        }
+        public void AddBackupSave(string[] backupsaves) {
+            for (int i = 0; i < backupsaves.Length; i += 10) {
+                if (backupsaves[i] != "") {
+                    Backupsave backupsave = new Backupsave();
+                    backupsave.AreaName = backupsaves[i];
+                    backupsave.Completion = int.Parse(backupsaves[i + 1]);
+
+                    var health = backupsaves[i + 2].Split('/');
+                    backupsave.Health = int.Parse(health[0]);
+                    backupsave.MaxHealth = int.Parse(health[1]);
+
+                    var energy = backupsaves[i + 3].Split('/');
+                    backupsave.Energy = int.Parse(energy[0]);
+                    backupsave.MaxEnergy = int.Parse(energy[1]);
+
+                    backupsave.Order = int.Parse(backupsaves[i + 4]);
+                    backupsave.Difficulty = (DifficultyMode)int.Parse(backupsaves[i + 5]);
+
+                    var time = backupsaves[i + 6].Split(':');
+                    backupsave.Hours = int.Parse(time[0]);
+                    backupsave.Minutes = int.Parse(time[1]);
+                    backupsave.Seconds = int.Parse(time[2]);
+
+                    backupsave.DebugOn = int.Parse(backupsaves[i + 7]);
+                    int killed = int.Parse(backupsaves[i + 8]);
+                    backupsave.WasKilled = killed == 0 ? false : true;
+                    backupsave.BackupIndex = int.Parse(backupsaves[i + 9]);
+                    this.backupsaveUI.Backupsaves.Add(backupsave);
+                }
+            }
+        }
+        public void RandomInfo(string values) {
+           this.randomInfo.Text = values;
         }
 
         public void StartUpdateLoop() {
@@ -217,7 +293,10 @@ namespace OriWotW {
                 }
             }
 
-            this.InjectCommunication.Send();
+            InjectCommunication._Instance.Send();
+        }
+        public void SetStatusWindow(string text) {
+            this.managerStatus.Text = text;
         }
 
         public void CheckGameInputs() {
@@ -402,7 +481,7 @@ namespace OriWotW {
         }
 
         public void ManagerInitialized() {
-            visualEditor = new SeinVisualEditor(this, false);
+            visualEditor = new SeinVisualEditor(false);
             this.managerStatus.Text = "DLL has initialized";
             this.statusStrip1.Visible = false;
         }
@@ -441,13 +520,34 @@ namespace OriWotW {
             else
                 IsUsingController = false;
 
-            if (this.canStart == true && this.DllInjector == null) { //&& gameState != GameState.TitleScreen
+            if (this.canStart == true && this.DllInjector == null && this.ShouldInject == true) { //&& gameState != GameState.TitleScreen
                 this.DllInjector = DllInjector.GetInstance;
                 Memory.PatchNoPause(true);
-                DllInjectionResult result = this.DllInjector.Inject("oriwotw", AppDomain.CurrentDomain.BaseDirectory + "\\injectdll.dll");
+
+                string injectDllFileName = "";
+                string injectDllName = "";
+                switch (MemoryManager.Version) {
+                    case PointerVersion.P1:
+                    case PointerVersion.P2:
+                        injectDllFileName = "\\injectdll_patch2.dll";
+                        injectDllName = "injectdll_patch2.dll";
+                        break;
+                    case PointerVersion.P3:
+                    case PointerVersion.P4:
+                        injectDllFileName = "\\injectdll.dll";
+                        injectDllName = "injectdll.dll";
+                        break;
+                }
+
+                //try ansi injection first
+                DllInjectionResult result = this.DllInjector.InjectA("oriwotw", AppDomain.CurrentDomain.BaseDirectory + injectDllFileName);
+
+                if (this.DllInjector.bModuleLoaded("oriwotw", injectDllName) == false && result != DllInjectionResult.Success) {
+                    result = this.DllInjector.Inject("oriwotw", AppDomain.CurrentDomain.BaseDirectory + injectDllFileName);
+                }
 
                 if (result == DllInjectionResult.GameProcessNotFound)
-                    result = this.DllInjector.Inject("oriandthewillofthewisps-pc", AppDomain.CurrentDomain.BaseDirectory + "\\injectdll.dll");
+                    result = this.DllInjector.Inject("oriandthewillofthewisps-pc", AppDomain.CurrentDomain.BaseDirectory + injectDllFileName);
 
                 File.AppendAllText("C:\\moon\\manager_error.log", "DLL Handle intptr: " + DllInjector.DllHandle.ToString() + " DLL adress1: " + DllInjector.DllPtr.ToString() + " DLL adress2: " + DllInjector.DllPtr2.ToString() + " Injection result: " + result.ToString() + "\r\n");
 
@@ -455,6 +555,10 @@ namespace OriWotW {
                     managerStatus.Text = "Injection failed, reason: " + result.ToString();
                 else
                     managerStatus.Text = "Injection was successful";
+
+                if (this.DllInjector.bModuleLoaded("oriwotw", injectDllName) == false) {
+                    File.AppendAllText("C:\\moon\\manager_error.log", "inject dll not found.\r\n");
+                }
 
                 this.InjectCommunication.AddCall("CALL19PAR" + AppDomain.CurrentDomain.BaseDirectory);
 
@@ -475,7 +579,7 @@ namespace OriWotW {
 
                         this.Bindings.AllKeyBindings.Add(keyBind);
 
-                        if (this.Bindings.AllKeyBindingsMap.ContainsKey(keyBind.ActualBind) == false)
+                        if (this.Bindings.AllKeyBindingsMap.ContainsKey(keyBind.ActualBind) == false && this.Bindings.AllKeyBindingsNamedMap.ContainsKey(keyBind.ActualBind) == false)
                             this.Bindings.AllKeyBindingsNamedMap.Add(keyBind.ActualBind, keyBind);
                     }
                     this.Bindings.GenerateKeyBindindMap();
@@ -524,16 +628,6 @@ namespace OriWotW {
             lblSpeedLocal.Text = "SpeedLocal: " + seinCharacter.SeinPlatformBehaviour.SeinPlatformMovement.m_localSpeed.X.ToString("G20", CultureInfo.CreateSpecificCulture("en-US")) + ", " + seinCharacter.SeinPlatformBehaviour.SeinPlatformMovement.m_localSpeed.Y.ToString("G20", CultureInfo.CreateSpecificCulture("en-US"));
             lblAdditiveLocalSpeed.Text = "AdditiveLocalSpeed: " + seinCharacter.SeinPlatformBehaviour.SeinPlatformMovement.AdditiveLocalSpeed.X.ToString("G20", CultureInfo.CreateSpecificCulture("en-US")) + ", " + seinCharacter.SeinPlatformBehaviour.SeinPlatformMovement.AdditiveLocalSpeed.Y.ToString("G20", CultureInfo.CreateSpecificCulture("en-US"));
 
-            //string lblInputS = "";
-
-            if (this.InputLockTimer > 1000) {
-                //Memory.LockPlayer();
-            }
-            if (this.InputLockTimer > 3000) {
-                //Memory.UnlockPlayer();
-                this.InputLockTimer = 0;
-            }
-
             lblMap.Text = $"Total: {runtimeArea.m_completionAmount:0.00}%";
             lblArea.Text = $"Area: {area} - {areaCompletion:0.00}%";
             lblScene.Text = $"Scene: {scene}";
@@ -551,7 +645,7 @@ namespace OriWotW {
             foreach (float ff in AverageFPS) {
                 averageFPS += ff;
             }
-            averageFPS = averageFPS / AverageFPS.Count;
+            averageFPS /= AverageFPS.Count;
 
             lblFPS.Text = $"FPS: {averageFPS:0.0}";
 
@@ -587,6 +681,7 @@ namespace OriWotW {
             ToolStripMenuItem menuCreateCheckpoint = new ToolStripMenuItem("Create Checkpoint");
             ToolStripMenuItem menuSeinVisualEditor = new ToolStripMenuItem("Sein Visual Editor");
             ToolStripMenuItem menuTransformEditor = new ToolStripMenuItem("Transform Editor");
+            ToolStripMenuItem menuPlaybackEditor = new ToolStripMenuItem("Playback Editor");
 
             List<string> visibilityMenuItemsNames = new List<string> { "Visibility Health", "Visibility Energy", "Visibility Area", "Visibility Scene", "Visibility Ore", "Visibility Keys", "Visibility Save",
             "Visibility Total", "Visibility FPS", "Visibility Debug", "Visibility Position", "Visibility Speed", "Visibility SpeedLocal", "Visibility AdditiveLocalSpeed", "Visibility AirNoDeceleration", "Visibility SpeedFactor", "ManagerAlwaysOnTop"};
@@ -634,6 +729,7 @@ namespace OriWotW {
             menuCreateCheckpoint.Name = "Create Checkpoint";
             menuSeinVisualEditor.Name = "Sein Visual Editor";
             menuTransformEditor.Name = "Transform Editor";
+            menuPlaybackEditor.Name = "Playback Editor";
 
 #if IL2CPP
             foreach (var name in debugMenuItemsNames) {
@@ -655,6 +751,7 @@ namespace OriWotW {
             menuCreateCheckpoint.Click += menuItem_Click;
             menuSeinVisualEditor.Click += menuItem_Click;
             menuTransformEditor.Click += menuItem_Click;
+            menuPlaybackEditor.Click += menuItem_Click;
 
             menuCopyPosition.ToolTipText = "Copies the position values to the clipboard, bound to F1.";
             menuCopySpeed.ToolTipText = "Copies the position values to the clipboard, bound to F2.";
@@ -695,6 +792,7 @@ namespace OriWotW {
 #if WOTWMODDING
             menuStrip.Items.Add(menuTransformEditor);
 #endif
+            menuStrip.Items.Add(menuPlaybackEditor);
             menuStrip.Items.Add("-");
             menuStrip.Items.Add(menuItem);
             menuStrip.Items.Add(menuDebugActions);
@@ -955,7 +1053,7 @@ namespace OriWotW {
                         break;
 
                     case "Backup Save":
-                        backupsaveUI = new BackupsaveUI(this);
+                        backupsaveUI = new BackupsaveUI();
 
                         if (backupsaveUI.Visible == false)
                             backupsaveUI.Show(this);
@@ -969,7 +1067,7 @@ namespace OriWotW {
                     case "Sein Visual Editor":
                         rawInput.RemoveMessageFilter();
                         if (visualEditor == null || visualEditor.IsDisposed == true)
-                            visualEditor = new SeinVisualEditor(this);
+                            visualEditor = new SeinVisualEditor();
 
                         if (visualEditor.Visible == false) {
                             visualEditor.Show(this);
@@ -981,8 +1079,15 @@ namespace OriWotW {
 
                     case "Transform Editor":
                         rawInput.RemoveMessageFilter();
-                        transformEditor = new WotwEditor(this);
+                        transformEditor = new WotwEditor();
                         transformEditor.Show(this);
+                        break;
+
+                    case "Playback Editor":
+                        rawInput.RemoveMessageFilter();
+                        PlaybackEditor playbackEditor = new PlaybackEditor();
+                        playbackEditor.SetManager(this);
+                        playbackEditor.Show(this);
                         break;
                 };
 
@@ -991,7 +1096,7 @@ namespace OriWotW {
                 } else if (menuItem.Name.Equals("Teleport") == true) {
                     rawInput.RemoveMessageFilter();
                     TeleportUI teleportUI = new TeleportUI();
-                    teleportUI.SetMemoryManager(Memory, this);
+                    teleportUI.SetMemoryManager(Memory);
                     teleportUI.SetDefaultPosition(lastPosition.X, lastPosition.Y);
                     teleportUI.Show(this);
                     rawInput.AddMessageFilter();
@@ -1160,13 +1265,14 @@ namespace OriWotW {
                 keyCombos.Add(new Tuple<String, int, long>(keyString1, currentFrame, sw.ElapsedMilliseconds));
 
                 switch (keyString1) {
-                    case "F4": this.InjectCommunication.AddCall("CALL46"); break;
-                    case "F5": this.InjectCommunication.AddCall("CALL9"); break;
-                    case "F6": this.InjectCommunication.AddCall("CALL10"); break;
+                    case "F4": this.InjectCommunication.CallMessage(Communication.Inject.MessageType.AddCollisionPosition); break;
+                    case "F5": this.InjectCommunication.CallMessage(Communication.Inject.MessageType.FrameStep); break;
+                    case "F6": this.InjectCommunication.CallMessage(Communication.Inject.MessageType.FrameStepStop); break;
+                    case "F7": this.InjectCommunication.CallMessage(Communication.Inject.MessageType.PlaybackInputs); break;
                     case "F9": this.RaceEditor.StartRace(); break;
-                    case "F10": this.InjectCommunication.AddCall("CALL24"); break;
+                    case "F10": this.InjectCommunication.CallMessage(Communication.Inject.MessageType.RestartRace); break;
                     case "F11": {
-                            this.InjectCommunication.AddCall("CALL25");
+                            this.InjectCommunication.CallMessage(Communication.Inject.MessageType.StopRace);
                             this.Show();
                             this.IsRacing = RaceState.Waiting;
                             this.Invalidate();

@@ -13,6 +13,7 @@ using System.IO;
 using System.Globalization;
 using System.Text.Json.Serialization.Converters;
 using System.Reflection;
+using Communication.Inject;
 using Tem.TemClass;
 using Tem.TemUI;
 using Tem.Utility;
@@ -22,13 +23,12 @@ namespace OriWotW.UI {
         private SeinVisualSettings VisualSettings;
         private SeinVisualSetting SeinVisualSettings;
         private VisualEditorSettings VisualEditorSettings;
-        private Manager Manager;
         private bool IsSettingsLoaded = false;
         private ColorWheel ColorWheel = new ColorWheel();
         private Dictionary<string, int> ExistingVisualSettings = new Dictionary<string, int>();
         private Dictionary<string, FlowLayoutPanel> PickerLayouts = new Dictionary<string, FlowLayoutPanel>();
 
-        public SeinVisualEditor(Manager manager, bool LoadSettings = true) {
+        public SeinVisualEditor(bool LoadSettings = true) {
             Application.EnableVisualStyles();
             InitializeComponent();
 
@@ -52,7 +52,6 @@ namespace OriWotW.UI {
                         allControls.Add(control1);
             }
 
-            this.Manager = manager;
             this.LoadVisualSettings(LoadSettings);
         }
 
@@ -84,7 +83,7 @@ namespace OriWotW.UI {
                     this.ApplyVisualSettings();
                     if (VisualEditorSettings.AutoApplyOnStartup == true) {
                         this.SaveVisualSettings();
-                        this.Manager.InjectCommunication.AddCall("CALL32PAR" + AppDomain.CurrentDomain.BaseDirectory + "\\visuals.settings");
+                        InjectCommunication._Instance.AddCall("CALL32PAR" + AppDomain.CurrentDomain.BaseDirectory + "\\visuals.settings");
                     }
                     IsSettingsLoaded = true;
                 }
@@ -186,6 +185,7 @@ namespace OriWotW.UI {
 
                 TColorPicker picker = (TColorPicker)property;
                 TColorPicker pickerNew = (TColorPicker)propertyNew;
+                pickerNew.SetInitialized();
                 FlowLayoutPanel layout = picker.Parent as FlowLayoutPanel;
                 int index = layout.Controls.IndexOf(picker);
                 layout.SuspendLayout();
@@ -201,7 +201,7 @@ namespace OriWotW.UI {
             this.ResumeLayout();
 
             if (VisualEditorSettings.AutoApplyOnStartup == true)
-                this.Manager.InjectCommunication.AddCall("CALL32PAR" + AppDomain.CurrentDomain.BaseDirectory + "\\visuals.settings");
+                InjectCommunication._Instance.AddCall("CALL32PAR" + AppDomain.CurrentDomain.BaseDirectory + "\\visuals.settings");
         }
 
         private void SaveVisualSettings() {
@@ -258,7 +258,7 @@ FileErrorBrowseAgain:
 
         private void button1_Click(object sender, EventArgs e) {
             this.SaveVisualSettings();
-            this.Manager.InjectCommunication.AddCall("CALL32PAR" + AppDomain.CurrentDomain.BaseDirectory + "\\visuals.settings");
+            InjectCommunication._Instance.AddCall("CALL32PAR" + AppDomain.CurrentDomain.BaseDirectory + "\\visuals.settings");
         }
 
         private void chkbHideGlow_CheckedChanged(object sender, EventArgs e) {
@@ -296,11 +296,11 @@ FileErrorBrowseAgain:
         }
 
         private void input_Enter(object sender, EventArgs e) {
-            this.Manager.rawInput.RemoveMessageFilter();
+            Manager._Instance.rawInput.RemoveMessageFilter();
         }
 
         private void input_Leave(object sender, EventArgs e) {
-            this.Manager.rawInput.AddMessageFilter();
+            Manager._Instance.rawInput.AddMessageFilter();
         }
 
         private void resetActiveSettingsToolStripMenuItem_Click(object sender, EventArgs e) {
@@ -356,7 +356,7 @@ FileErrorBrowseAgain:
         }
 
         private void defaultGameSettingsToolStripMenuItem_Click(object sender, EventArgs e) {
-            this.Manager.InjectCommunication.AddCall("CALL35");
+            InjectCommunication._Instance.AddCall("CALL35");
         }
 
         private void newSettingToolStripMenuItem_Click(object sender, EventArgs e) {

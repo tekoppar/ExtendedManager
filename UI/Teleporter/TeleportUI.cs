@@ -12,11 +12,11 @@ using OriWotW.Memory;
 using System.Globalization;
 using System.IO;
 using Tem.Utility;
+using Communication.Inject;
 
 namespace OriWotW.UI.Teleporter {
     public partial class TeleportUI : Form {
         private MemoryManager MemoryManager;
-        private Manager Manager;
         private float X, Y;
         private double previousX, previousY;
         private List<string> ExistingAreas = new List<string>();
@@ -98,9 +98,8 @@ namespace OriWotW.UI.Teleporter {
             this.Dispose();
         }
 
-        public void SetMemoryManager(MemoryManager memory, Manager manager) {
+        public void SetMemoryManager(MemoryManager memory) {
             this.MemoryManager = memory;
-            this.Manager = manager;
         }
 
         public void SetDefaultPosition(float x, float y) {
@@ -111,15 +110,15 @@ namespace OriWotW.UI.Teleporter {
         }
 
         private void positionX_Enter(object sender, EventArgs e) {
-            this.Manager.rawInput.RemoveMessageFilter();
+            Manager._Instance.rawInput.RemoveMessageFilter();
         }
 
         private void positionX_Leave(object sender, EventArgs e) {
-            this.Manager.rawInput.AddMessageFilter();
+            Manager._Instance.rawInput.AddMessageFilter();
         }
 
         private void Teleport(bool createUI = true) {
-            this.Manager.InjectCommunication.AddCall("CALL28PAR" + ((float)this.positionX.Value).ToString() + ";" + ((float)this.positionY.Value).ToString());
+            InjectCommunication._Instance.AddCall("CALL28PAR" + ((float)this.positionX.Value).ToString(CultureInfo.CreateSpecificCulture("en-US")) + "," + ((float)this.positionY.Value).ToString(CultureInfo.CreateSpecificCulture("en-US")));
 
             if (createUI == true && (this.previousX.IsEqualTo(double.Parse(this.positionX.Value.ToString()), 0.001) == false || this.previousY.IsEqualTo(double.Parse(this.positionY.Value.ToString()), 0.001) == false)) {
                 TeleportLocation teleport = new TeleportLocation(this);
